@@ -70,12 +70,8 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         int SECTION = getArguments().getInt(ARG_SECTION_NUMBER);
-
-
         mLabelText = (TextView) view.findViewById(R.id.section_label);
-        mLabelText.setText("" + SECTION);
         mListView = (ListView) view.findViewById(android.R.id.list);
-
 
         new ApiClient().request();
 
@@ -129,7 +125,6 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onStart() {
                     Log.anchor();
-                    mLabelText.setText("2015年2月份 start...");
                 }
 
                 @Override
