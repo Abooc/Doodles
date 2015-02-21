@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="App.Theme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/App.ActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="App.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@drawable/ic_actionbar_background</item>
+        <item name="android:titleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Subtitle
+        </item>
+    </style>
+
+    <style name="App.TextAppearance.Widget.ActionBar.Subtitle" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+
+</resources>
