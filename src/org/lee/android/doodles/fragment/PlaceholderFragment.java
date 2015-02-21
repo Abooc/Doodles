@@ -6,10 +6,24 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.apache.http.Header;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.volley.FileUtils;
+import org.lee.android.doodles.volley.HttpHandler;
+import org.lee.android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -33,7 +47,17 @@ public class PlaceholderFragment extends Fragment {
         return fragment;
     }
 
+    private TextView mLabelText;
+    private ListView mListView;
+
     public PlaceholderFragment() {
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((MainActivity) activity).onSectionAttached(
+                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
@@ -48,14 +72,101 @@ public class PlaceholderFragment extends Fragment {
         int SECTION = getArguments().getInt(ARG_SECTION_NUMBER);
 
 
-        TextView labelText = (TextView) view.findViewById(R.id.section_label);
-        labelText.setText("" + SECTION);
+        mLabelText = (TextView) view.findViewById(R.id.section_label);
+        mLabelText.setText("" + SECTION);
+        mListView = (ListView) view.findViewById(android.R.id.list);
+
+
+        new ApiClient().request();
+
+//        Tester.JsonObj();
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+    class ApiClient {
+
+                String url = "http://www.woolom.com";
+//        String url = "https://www.google.com/doodles/json/2015/2?hl=zh_CN";
+
+        void request() {
+            ad();
+//            getList();
+        }
+
+
+        void getList(){
+            httpClient.get(url, null, new HttpHandler<JsonElement>() {
+                @Override
+                public void onStart() {
+                    Log.anchor();
+                    mLabelText.setText("start...");
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.anchor();
+                }
+
+                @Override
+                public void onFailure(int statusCode, String error) {
+
+                    mLabelText.setText(error);
+                }
+
+                @Override
+                public void onSuccess(int i, Header[] headers, String s, JsonElement jsonElement) {
+
+
+
+                    mLabelText.setText(s.toString());
+                }
+            });
+        }
+
+        AsyncHttpClient httpClient = new AsyncHttpClient();
+
+        void ad() {
+            httpClient.get(url, null, new TextHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    Log.anchor();
+                    mLabelText.setText("2015年2月份 start...");
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.anchor();
+                    String s = "";
+                    try {
+                        InputStream inputStream = getActivity().getAssets().open("data/doodles.json");
+                        s = FileUtils.readInStream(inputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Gson gson = new Gson();
+                    Doodle[] doodles = gson.fromJson(s, Doodle[].class);
+
+                    Log.anchor(doodles == null ? "null" : doodles.length);
+                    setAdapter(doodles);
+                }
+
+                @Override
+                public void onFailure(int i, Header[] headers, String s, Throwable throwable) {
+                    mLabelText.setText(throwable.toString());
+
+                }
+
+                @Override
+                public void onSuccess(int i, Header[] headers, String s) {
+
+                }
+            });
+        }
     }
+
+    private void setAdapter(Doodle[] doodles){
+        DoodleAdapter adapter = new DoodleAdapter(getActivity(), 0, doodles);
+        mListView.setAdapter(adapter);
+    }
+
 }

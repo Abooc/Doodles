@@ -50,11 +50,15 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        switch (position) {
+            case 1:
+                // update the main content by replacing fragments
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                return;
+        }
     }
 
     public void onSectionAttached(int number) {
@@ -68,13 +72,21 @@ public class MainActivity extends FragmentActivity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+
+                break;
         }
+    }
+
+    public void onAboutDoodles(View view){
+        AboutDoodlesActivity.launch(this, "https://www.google.com/doodles/about");
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setTitle(mTitle);
     }
 

@@ -11,6 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
+    <orderEntry type="library" name="java-json" level="project" />
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="android-support-v4" level="application" />
@@ -18,6 +19,8 @@
     <orderEntry type="library" name="org.lee.android.util-v14.0218.1655.debug" level="application" />
     <orderEntry type="library" name="com.google.android.Volley" level="application" />
     <orderEntry type="library" name="android-support-annotations" level="application" />
+    <orderEntry type="library" name="android-async-http-1.4.6" level="application" />
+    <orderEntry type="library" scope="TEST" name="junit-4.10" level="application" />
   </component>
 </module>
 
