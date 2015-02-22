@@ -1,24 +1,24 @@
 package org.lee.android.doodles.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+import org.lee.android.doodles.fragment.DoodlesListFragment;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.fragment.PlaceholderFragment;
 
 
+/**
+ * Created by author:李瑞宇
+ * email:allnet@live.cn
+ * on 15-2-22.
+ */
 public class MainActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -51,11 +51,11 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         switch (position) {
-            case 1:
+            case 0:
                 // update the main content by replacing fragments
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .replace(R.id.container, DoodlesListFragment.newInstance(position + 1))
                         .commit();
                 return;
         }
@@ -64,20 +64,15 @@ public class MainActivity extends FragmentActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-            case 4:
 
                 break;
         }
     }
 
+    /**
+     * 打开关于页面
+     * @param view
+     */
     public void onAboutDoodles(View view){
         AboutDoodlesActivity.launch(this, "https://www.google.com/doodles/about");
     }

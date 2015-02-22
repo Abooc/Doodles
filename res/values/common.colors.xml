@@ -24,8 +24,8 @@
     <drawable name="BLUE">#770000ff</drawable>
     <drawable name="GREEN">#7700ff00</drawable>
     <drawable name="YELLOW">#77ffff00</drawable>
-    <drawable name="GRAY_DARK">#666</drawable>
-    <drawable name="GRAY_LIGHT">#999</drawable>
+    <drawable name="GRAY_DARK">#999</drawable>
+    <drawable name="GRAY_LIGHT">#CCC</drawable>
     <drawable name="TRANSLUCENT">#28000000</drawable>
     <drawable name="TRANSPARENT">#00000000</drawable>
     <drawable name="TRANSLUCENT_50">#50000000</drawable>

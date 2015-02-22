@@ -3,6 +3,7 @@
 
     <item android:drawable="@drawable/GRAY_LIGHT" android:state_selected="true"/>
     <item android:drawable="@drawable/GRAY_LIGHT" android:state_pressed="true"/>
+    <item android:drawable="@drawable/GRAY_LIGHT" android:state_checked="true"/>
     <item android:drawable="@drawable/TRANSPARENT"/>
 
 </selector>

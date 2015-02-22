@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     tools:context=".fragment.PlaceholderFragment">
 
     <TextView
@@ -10,8 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="2015年2月份"
-        android:textStyle="bold"
-        android:paddingRight="@dimen/activity_horizontal_margin"/>
+        android:textStyle="bold"/>
 
     <ListView
         android:id="@android:id/list"

@@ -28,7 +28,7 @@ import java.io.InputStream;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class DoodlesListFragment extends Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -39,8 +39,8 @@ public class PlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(int sectionNumber) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
+    public static DoodlesListFragment newInstance(int sectionNumber) {
+        DoodlesListFragment fragment = new DoodlesListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -50,7 +50,7 @@ public class PlaceholderFragment extends Fragment {
     private TextView mLabelText;
     private ListView mListView;
 
-    public PlaceholderFragment() {
+    public DoodlesListFragment() {
     }
 
     @Override

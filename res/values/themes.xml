@@ -15,7 +15,7 @@
     <style name="App.TextAppearance.Widget.ActionBar.Subtitle" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Holo.Large</item>
     </style>
 
 

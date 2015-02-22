@@ -20,14 +20,7 @@
         android:dividerHeight="0dp"
         tools:context=".NavigationDrawerFragment" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_section5"
-        android:clickable="true"
-        android:onClick="onAboutDoodles"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+    <include layout="@layout/line_h_gray" />
 
     <TextView
         android:layout_width="match_parent"
@@ -40,17 +33,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="设置"
+        android:text="@string/title_section5"
         android:clickable="true"
+        android:onClick="onAboutDoodles"
         android:padding="@dimen/activity_horizontal_margin"
         android:background="@drawable/default_item_selector" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="升级为VIP"
+        android:text="设置"
         android:clickable="true"
         android:padding="@dimen/activity_horizontal_margin"
         android:background="@drawable/default_item_selector" />
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="升级为VIP"-->
+    <!--android:clickable="true"-->
+    <!--android:padding="@dimen/activity_horizontal_margin"-->
+    <!--android:background="@drawable/default_item_selector" />-->
 
 </LinearLayout>

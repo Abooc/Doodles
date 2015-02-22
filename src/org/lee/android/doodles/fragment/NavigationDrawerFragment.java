@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.lee.android.doodles.R;
@@ -105,11 +106,17 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                        getString(R.string.title_section4)
-                }));
+                        getString(R.string.title_section1)
+                }){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.drawer_menu_item, null);
+                TextView titleText = (TextView) convertView.findViewById(R.id.Title);
+                String title = getItem(position);
+                titleText.setText(title);
+                return convertView;
+            }
+        });
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return container;
     }

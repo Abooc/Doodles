@@ -16,7 +16,8 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/App.Theme"
-            android:icon="@drawable/TRANSPARENT"
+            android:logo="@drawable/TRANSPARENT"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
