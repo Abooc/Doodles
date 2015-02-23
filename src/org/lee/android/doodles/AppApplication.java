@@ -56,7 +56,7 @@ public class AppApplication extends Application {
     }
 
 
-    private static String title = "标题title";
+    private static String title = "分享Google涂鸦应用";
     private static String content = "分享个应用，可以看海量美女、帅哥、汽车，还有‘宅男女神’的专属图片等图片！"
             + "\n点击看一下\n" + GOOGLE_PLAY;
 

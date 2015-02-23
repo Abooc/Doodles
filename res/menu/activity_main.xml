@@ -7,13 +7,13 @@
         <!--android:showAsAction="never" />-->
 
     <item
-        android:id="@+id/Purchase"
-        android:title="@string/Purchase"
+        android:id="@+id/RemoveAd"
+        android:title="@string/RemoveAd"
         android:showAsAction="never" />
 
     <item
-        android:id="@+id/About"
-        android:title="@string/About"
+        android:id="@+id/AboutDoodles"
+        android:title="@string/AboutDoodles"
         android:showAsAction="never" />
 
     <item

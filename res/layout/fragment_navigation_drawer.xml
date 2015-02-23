@@ -23,6 +23,7 @@
     <include layout="@layout/line_h_gray" />
 
     <TextView
+        android:id="@+id/Commit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_section4"
@@ -31,15 +32,25 @@
         android:background="@drawable/default_item_selector" />
 
     <TextView
+        android:id="@+id/AboutDoodles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_section5"
         android:clickable="true"
-        android:onClick="onAboutDoodles"
         android:padding="@dimen/activity_horizontal_margin"
         android:background="@drawable/default_item_selector" />
 
     <TextView
+        android:id="@+id/RemoveAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="删除广告"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@drawable/default_item_selector" />
+
+    <TextView
+        android:id="@+id/Settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="设置"
@@ -54,5 +65,26 @@
     <!--android:clickable="true"-->
     <!--android:padding="@dimen/activity_horizontal_margin"-->
     <!--android:background="@drawable/default_item_selector" />-->
+
+
+    <include layout="@layout/line_h_gray" />
+
+    <TextView
+        android:id="@+id/Evaluate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="给应用打个评分"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@drawable/default_item_selector" />
+
+    <TextView
+        android:id="@+id/Share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="将此应用告诉朋友"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@drawable/default_item_selector" />
 
 </LinearLayout>

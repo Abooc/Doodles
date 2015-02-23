@@ -8,14 +8,16 @@
     <!-- ActionBar styles -->
     <style name="App.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@drawable/ic_actionbar_background</item>
-        <item name="android:titleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Subtitle
-        </item>
+        <item name="android:titleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Title</item>
+        <item name="android:subtitleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Subtitle</item>
     </style>
 
-    <style name="App.TextAppearance.Widget.ActionBar.Subtitle" parent="@android:style/TextAppearance.Small">
+    <style name="App.TextAppearance.Widget.ActionBar.Title" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="App.TextAppearance.Widget.ActionBar.Subtitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Holo.Large</item>
     </style>
 
 

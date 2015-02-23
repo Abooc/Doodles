@@ -29,7 +29,7 @@ public class DoodleAdapter extends ArrayAdapter {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
-                    .inflate(R.layout.fragment_main_list_item, null);
+                    .inflate(R.layout.fragment_doodles_list_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
@@ -52,8 +52,8 @@ public class DoodleAdapter extends ArrayAdapter {
             titleText = (TextView) convertView.findViewById(R.id.Title);
             dateText = (TextView) convertView.findViewById(R.id.Date);
 
-            imageView.setDefaultImageResId(R.drawable.logo11w);
-            imageView.setErrorImageResId(R.drawable.unnamed);
+            imageView.setDefaultImageResId(R.drawable.ic_doodle_default);
+            imageView.setErrorImageResId(R.drawable.ic_doodle_error);
         }
 
         private void attachData(Doodle doodle) {

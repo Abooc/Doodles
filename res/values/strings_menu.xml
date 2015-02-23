@@ -2,8 +2,8 @@
 <resources>
     <!--MainActivity-->
     <string name="Settings">设置</string>
-    <string name="Purchase">升级为VIP</string>
-    <string name="About">关于</string>
+    <string name="RemoveAd">移除广告</string>
+    <string name="AboutDoodles">关于Google涂鸦</string>
     <string name="pingfen">给应用打个评分</string>
     <string name="Share">将此应用告诉朋友</string>
 </resources>

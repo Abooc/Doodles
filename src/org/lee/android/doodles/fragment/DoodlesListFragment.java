@@ -1,25 +1,29 @@
 package org.lee.android.doodles.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.FileUtils;
-import org.lee.android.doodles.volley.HttpHandler;
 import org.lee.android.util.Log;
 
 import java.io.IOException;
@@ -28,7 +32,7 @@ import java.io.InputStream;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DoodlesListFragment extends Fragment {
+public class DoodlesListFragment extends Fragment implements AdapterView.OnItemClickListener{
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -47,8 +51,10 @@ public class DoodlesListFragment extends Fragment {
         return fragment;
     }
 
+    private ProgressBar mProgressBar;
     private TextView mLabelText;
     private ListView mListView;
+    private ApiClient mApiClient = new ApiClient();
 
     public DoodlesListFragment() {
     }
@@ -58,12 +64,19 @@ public class DoodlesListFragment extends Fragment {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
+
+        ActionBar actionBar = activity.getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(activity,
+                R.array.menu, android.R.layout.simple_spinner_dropdown_item);
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_doodles_list, container, false);
         return rootView;
     }
 
@@ -71,95 +84,69 @@ public class DoodlesListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         int SECTION = getArguments().getInt(ARG_SECTION_NUMBER);
         mLabelText = (TextView) view.findViewById(R.id.section_label);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.ProgressBar);
         mListView = (ListView) view.findViewById(android.R.id.list);
-
-        new ApiClient().request();
-
-//        Tester.JsonObj();
+        mListView.setOnItemClickListener(this);
     }
 
-    class ApiClient {
-
-                String url = "http://www.woolom.com";
-//        String url = "https://www.google.com/doodles/json/2015/2?hl=zh_CN";
-
-        void request() {
-            ad();
-//            getList();
+    private ActionBar.OnNavigationListener mOnNavigationListener =
+            new ActionBar.OnNavigationListener() {
+        @Override
+        public boolean onNavigationItemSelected(int position, long itemId) {
+            mApiClient.requestDoodles(2015 - position, 2, callbacks);
+            return true;
         }
+    };
 
-
-        void getList(){
-            httpClient.get(url, null, new HttpHandler<JsonElement>() {
-                @Override
-                public void onStart() {
-                    Log.anchor();
-                    mLabelText.setText("start...");
-                }
-
-                @Override
-                public void onFinish() {
-                    Log.anchor();
-                }
-
-                @Override
-                public void onFailure(int statusCode, String error) {
-
-                    mLabelText.setText(error);
-                }
-
-                @Override
-                public void onSuccess(int i, Header[] headers, String s, JsonElement jsonElement) {
-
-
-
-                    mLabelText.setText(s.toString());
-                }
-            });
-        }
-
-        AsyncHttpClient httpClient = new AsyncHttpClient();
-
-        void ad() {
-            httpClient.get(url, null, new TextHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    Log.anchor();
-                }
-
-                @Override
-                public void onFinish() {
-                    Log.anchor();
-                    String s = "";
-                    try {
-                        InputStream inputStream = getActivity().getAssets().open("data/doodles.json");
-                        s = FileUtils.readInStream(inputStream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Gson gson = new Gson();
-                    Doodle[] doodles = gson.fromJson(s, Doodle[].class);
-
-                    Log.anchor(doodles == null ? "null" : doodles.length);
-                    setAdapter(doodles);
-                }
-
-                @Override
-                public void onFailure(int i, Header[] headers, String s, Throwable throwable) {
-                    mLabelText.setText(throwable.toString());
-
-                }
-
-                @Override
-                public void onSuccess(int i, Header[] headers, String s) {
-
-                }
-            });
-        }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        DoodleAdapter doodleAdapter = (DoodleAdapter) parent.getAdapter();
+        Doodle doodle = (Doodle) doodleAdapter.getItem(position);
+        WebViewActivity.launch(getActivity(), doodle.alternate_url, null);
     }
 
-    private void setAdapter(Doodle[] doodles){
+    private TextHttpResponseHandler callbacks = new TextHttpResponseHandler() {
+        @Override
+        public void onStart() {
+            Log.anchor();
+            mProgressBar.setVisibility(View.VISIBLE);
+            try {
+                InputStream inputStream = getActivity().getAssets().open("data/doodles.json");
+                String sources = FileUtils.readInStream(inputStream);
+                attachData(sources);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            Log.anchor();
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onFailure(int i, Header[] headers, String sources, Throwable throwable) {
+            mLabelText.setText(throwable.toString());
+//            try {
+//                InputStream inputStream = getActivity().getAssets().open("data/doodles.json");
+//                sources = FileUtils.readInStream(inputStream);
+//                attachData(sources);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+
+        @Override
+        public void onSuccess(int i, Header[] headers, String sources) {
+            attachData(sources);
+        }
+    };
+
+    private void attachData(String doodlesJson){
+        Gson gson = new Gson();
+        Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
+        Log.anchor(doodles == null ? "null" : doodles.length);
         DoodleAdapter adapter = new DoodleAdapter(getActivity(), 0, doodles);
         mListView.setAdapter(adapter);
     }

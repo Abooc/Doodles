@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="menu">
+        <item >2015年</item>
+        <item >2014年</item>
+        <item >2013年</item>
+        <item >2012年</item>
+        <item >2011年</item>
+
+        <item >2010年</item>
+        <item >2009年</item>
+        <item >2008年</item>
+        <item >2007年</item>
+        <item >2006年</item>
+
+
+        <item >2005年</item>
+        <item >2004年</item>
+        <item >2003年</item>
+        <item >2002年</item>
+        <item >2001年</item>
+
+        <item >2000年</item>
+        <item >1999年</item>
+    </string-array>
+</resources>

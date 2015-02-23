@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -16,14 +17,15 @@ import android.webkit.WebViewClient;
 /**
  * Created by dayu on 14-11-17.
  */
-public class AboutDoodlesActivity extends Activity implements View.OnClickListener {
+public class WebViewActivity extends Activity implements View.OnClickListener {
 
     private WebView iWebView;
-    private final String AboutGoogleDoodlesUrl = "file:///android_asset/html/AboutGoogleDoodles.html";
+    private String mTitle;
 
-    public static void launch(Context context, String url){
-        Intent intent = new Intent(context, AboutDoodlesActivity.class);
+    public static void launch(Context context, String url, String title){
+        Intent intent = new Intent(context, WebViewActivity.class);
         intent.setData(Uri.parse(url));
+        intent.putExtra("title", title);
         context.startActivity(intent);
     }
 
@@ -32,10 +34,12 @@ public class AboutDoodlesActivity extends Activity implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
-        String url = AboutGoogleDoodlesUrl;
+        String url = "about:blank";
         if (getIntent().getData() != null){
             url = getIntent().getData().toString();
         }
+        mTitle = getIntent().getStringExtra("title");
+        setTitle(mTitle);
 
         iWebView = new WebView(this);
         setContentView(iWebView);
@@ -51,12 +55,7 @@ public class AboutDoodlesActivity extends Activity implements View.OnClickListen
         webSettings.setSupportZoom(true);
 
         iWebView.setWebChromeClient(iWebChromeClient);
-        iWebView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                view.loadUrl(AboutGoogleDoodlesUrl);
-            }
-        });
+        iWebView.setWebViewClient(new WebViewClient());
 
         iWebView.loadUrl(url);
 
@@ -91,6 +90,12 @@ public class AboutDoodlesActivity extends Activity implements View.OnClickListen
         public void onProgressChanged(WebView view, int newProgress) {
             setProgress(newProgress * 100);
 
+        }
+
+        @Override
+        public void onReceivedTitle(WebView view, String title) {
+            if(TextUtils.isEmpty(mTitle))
+                setTitle(title);
         }
     };
 
