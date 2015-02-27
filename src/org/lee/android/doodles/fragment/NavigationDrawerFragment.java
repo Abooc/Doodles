@@ -2,12 +2,15 @@ package org.lee.android.doodles.fragment;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.AboutDoodlesActivity;
+import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 /**
@@ -32,7 +36,18 @@ import org.lee.android.util.Toast;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener{
+public class NavigationDrawerFragment extends Fragment implements View.OnClickListener,
+        DrawerLayout.DrawerListener {
+
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
+    public static interface NavigationDrawerCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationDrawerItemSelected(int position);
+    }
 
     /**
      * Remember the position of the selected item.
@@ -90,6 +105,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             mFromSavedInstanceState = true;
         }
 
+        mDrawerMenuAdapter = new DrawerMenuAdapter<String>(
+                getActivity(), 0,
+                new String[]{
+                        "今天",
+                        getString(R.string.title_section1),
+                        "搜索更多涂鸦"
+                });
+
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
     }
@@ -117,22 +140,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1)
-                }){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.drawer_menu_item, null);
-                TextView titleText = (TextView) convertView.findViewById(R.id.Title);
-                String title = getItem(position);
-                titleText.setText(title);
-                return convertView;
-            }
-        });
+        mDrawerListView.setAdapter(mDrawerMenuAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return container;
     }
@@ -157,7 +165,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUpDrawerMenu(int fragmentId, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
@@ -177,30 +185,13 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                NavigationDrawerFragment.this.onDrawerClosed(drawerView);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if (!isAdded()) {
-                    return;
-                }
-
-                if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
-                }
-
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                NavigationDrawerFragment.this.onDrawerOpened(drawerView);
             }
         };
 
@@ -219,6 +210,44 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (!mUserLearnedDrawer) {
+            // The user manually opened the drawer; store this flag to prevent auto-showing
+            // the navigation drawer automatically in the future.
+            mUserLearnedDrawer = true;
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+        }
+
+        getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        if (!isAdded()) {
+            return;
+        }
+
+        getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 
     private void selectItem(int position) {
@@ -241,6 +270,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * 侧滑菜单打开或关闭时，
+     *
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // If the drawer is open, show the global app actions in the action bar. See also
@@ -248,10 +283,21 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if (mDrawerLayout != null && isDrawerOpen()) {
             inflater.inflate(R.menu.global, menu);
             showGlobalContextActionBar();
+        } else {
+//            if (mCurrentSelectedPosition == 1) {
+//                ActionBar actionBar = getActionBar();
+//                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//            }
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+     * ActionBar菜单事件
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -282,20 +328,20 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     /**
-     * Callbacks interface that all activities using this fragment must implement.
+     * 侧滑菜单部分按钮事件
+     *
+     * @param v
      */
-    public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
-    }
-
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.Commit:
-                Toast.show("Commit my doodle...");
+                Toast.show("贡献我的涂鸦作品...");
+                Intent data = new Intent(Intent.ACTION_SENDTO);
+                data.setData(Uri.parse("mailto:allnet@live.cn"));
+                data.putExtra(Intent.EXTRA_SUBJECT, "这是标题");
+                data.putExtra(Intent.EXTRA_TEXT, "这是内容");
+                startActivity(data);
                 return;
             case R.id.AboutDoodles:
                 AboutDoodlesActivity.launch(getActivity(), "https://www.google.com/doodles/about");
@@ -328,4 +374,23 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
+    /**
+     * 侧滑菜单ListView Adapter
+     */
+    private DrawerMenuAdapter<String> mDrawerMenuAdapter;
+
+    private class DrawerMenuAdapter<T> extends  ArrayAdapter{
+
+        public DrawerMenuAdapter(Context context, int resource, Object[] objects) {
+            super(context, resource, objects);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.drawer_menu_item, null);
+            TextView titleText = (TextView) convertView.findViewById(R.id.Title);
+            String title = (String) getItem(position);
+            titleText.setText(title);
+            return convertView;
+        }
+    }
 }

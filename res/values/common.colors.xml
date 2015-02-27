@@ -67,4 +67,12 @@
     <!-- 消息列表的背景 -->
     <drawable name="message_selected_background_normal">#FFF</drawable>
 
+
+    <!-- 标签文字 可点击，可选择 -->
+    <drawable name="tag_d_background_selected">#10000000</drawable>
+    <drawable name="tag_d_background_press">#10111111</drawable>
+
+    <drawable name="date_background">#ffC74B46</drawable>
+
+
 </resources>

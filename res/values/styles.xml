@@ -1,3 +1,16 @@
 <resources>
 
+
+    <style name="DateTextStyle">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/tag_item_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">8dip</item>
+        <item name="android:paddingBottom">8dip</item>
+        <item name="android:text">3月份</item>
+        <item name="android:textColor">@color/WHITE</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:drawableRight">@drawable/home_divider</item>
+    </style>
 </resources>

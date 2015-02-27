@@ -1,0 +1,9 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tag_item_selector"
+    android:gravity="center"
+    android:padding="8dip"
+    android:text="@string/app_name"
+    android:textColor="@color/WHITE"
+    android:textStyle="italic" />

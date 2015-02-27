@@ -57,7 +57,7 @@ public class DoodleAdapter extends ArrayAdapter {
         }
 
         private void attachData(Doodle doodle) {
-            imageView.setImageUrl(doodle.alternate_url, VolleyLoader.getInstance().getImageLoader());
+            imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
             titleText.setText(doodle.title);
             dateText.setText(doodle.getDate());
         }
