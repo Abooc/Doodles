@@ -26,6 +26,10 @@ public class ApiClient {
         httpClient.get(url, null, callbacks);
     }
 
+    public void searchDoodles(String q, int start){
+
+    }
+
     public String fixUrl(int year, int monthOfYear){
         String url = "https://www.google.com/doodles/json/{y}/{m}?hl=zh_CN";
         url = url.replace("{y}", String.valueOf(year));

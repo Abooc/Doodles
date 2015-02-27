@@ -4,19 +4,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.SpinnerAdapter;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.TabsAdapter;
-import org.lee.android.doodles.bean.Doodle;
-import org.lee.android.util.Log;
 
 /**
  * 浏览涂鸦列表
@@ -29,8 +25,6 @@ public class PagerFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    private LinearLayout mDateList;
 
     @Override
     public void onAttach(Activity activity) {
@@ -59,33 +53,49 @@ public class PagerFragment extends Fragment {
         return rootView;
     }
 
+    private IFragmentPagerAdapter mIFragmentPagerAdapter;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mDateList = (LinearLayout) view.findViewById(R.id.DateList);
 
         ViewPager pager = (ViewPager) view.findViewById(R.id.ViewPager);
-        TabsAdapter adapter = new TabsAdapter(getActivity(), pager);
-//        adapter.addTab(TodayFragment.class, null);
-        adapter = addTab(adapter);
-        pager.setAdapter(adapter);
 
-        attachListener();
+        // ViewPager and its adapters use support library fragments, so we must use
+        // getSupportFragmentManager.
+        mIFragmentPagerAdapter = new IFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        pager.setOffscreenPageLimit(5);
+        pager.setAdapter(mIFragmentPagerAdapter);
     }
 
-    private void attachListener() {
-        int count = mDateList.getChildCount();
-        for (int i = 0; i < count; i++) {
-            mDateList.getChildAt(i).setOnClickListener(dateEvent);
+    /**
+     * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment
+     * representing an object in the collection.
+     */
+    public static class IFragmentPagerAdapter extends FragmentStatePagerAdapter {
+
+        public IFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
-    }
 
-    private View.OnClickListener dateEvent = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-            int month = mDateList.indexOfChild(v);
-//            mApiClient.requestDoodles(2014, 12 - month, callbacks);
+        public Fragment getItem(int i) {
+            Fragment fragment = new DoodlesListFragment();
+            Bundle args = new Bundle();
+            args.putInt("year", 2014);
+            args.putInt("month", 12-i);
+            fragment.setArguments(args);
+            return fragment;
         }
-    };
+
+        @Override
+        public int getCount() {
+            return 12;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return (12 - position) + "月份" ;
+        }
+    }
 
     private TabsAdapter addTab(TabsAdapter adapter){
         int count = 12;

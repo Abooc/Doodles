@@ -73,6 +73,7 @@
     <drawable name="tag_d_background_press">#10111111</drawable>
 
     <drawable name="date_background">#ffC74B46</drawable>
+    <drawable name="date_background_blue">#33b5e5</drawable>
 
 
 </resources>

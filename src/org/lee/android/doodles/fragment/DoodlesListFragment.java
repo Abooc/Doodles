@@ -47,9 +47,12 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
     public DoodlesListFragment() {
     }
 
+    private Activity mActivity;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mActivity = activity;
 //        ((MainActivity) activity).onSectionAttached(
 //                getArguments().getInt(ARG_SECTION_NUMBER));
 
@@ -141,7 +144,8 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
     private void attachData(String doodlesJson) {
         Gson gson = new Gson();
         Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
-        DoodleAdapter adapter = new DoodleAdapter(getActivity(), 0, doodles);
+        if(doodles == null || doodles.length == 0) return;
+        DoodleAdapter adapter = new DoodleAdapter(mActivity, 0, doodles);
         mListView.setAdapter(adapter);
     }
 
