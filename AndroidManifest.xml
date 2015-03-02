@@ -24,17 +24,33 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.WebViewActivity"
+        <activity
+            android:name=".activity.WebViewActivity"
             android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/TRANSPARENT"
             android:theme="@style/App.Theme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.AboutDoodlesActivity"
+        <activity
+            android:name=".properties.SettingsActivity"
+            android:icon="@drawable/TRANSPARENT"
+            android:label="设置"
+            android:theme="@style/App.Theme"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".properties.AboutUsActivity"
+            android:icon="@drawable/TRANSPARENT"
+            android:label="关于我们"
+            android:theme="@style/App.Theme"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.AboutDoodlesActivity"
             android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="@string/title_section5"
             android:theme="@style/App.Theme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

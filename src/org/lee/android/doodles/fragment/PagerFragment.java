@@ -8,16 +8,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.TabsAdapter;
+import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.fragment.CategorysFragment.Year;
+import org.lee.android.util.Log;
+
+import java.util.Calendar;
 
 /**
  * 浏览涂鸦列表
  */
 public class PagerFragment extends Fragment {
+
+    private ViewPager mViewPager;
+    private Year mYear = new Year("2015", "i_2002");
 
     public static PagerFragment newInstance() {
         PagerFragment fragment = new PagerFragment();
@@ -29,6 +37,8 @@ public class PagerFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        setHasOptionsMenu(true);
+//        ((MainActivity) activity).onShowFragment(this);
 //        ActionBar actionBar = activity.getActionBar();
 //        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 //
@@ -53,27 +63,105 @@ public class PagerFragment extends Fragment {
         return rootView;
     }
 
-    private IFragmentPagerAdapter mIFragmentPagerAdapter;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        ViewPager pager = (ViewPager) view.findViewById(R.id.ViewPager);
-
-        // ViewPager and its adapters use support library fragments, so we must use
-        // getSupportFragmentManager.
-        mIFragmentPagerAdapter = new IFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-        pager.setOffscreenPageLimit(5);
-        pager.setAdapter(mIFragmentPagerAdapter);
+        mViewPager = (ViewPager) view.findViewById(R.id.ViewPager);
+        if (savedInstanceState != null) {
+            mYear = (Year) savedInstanceState.getSerializable("year");
+            Log.anchor("mYear = " + mYear);
+        }
+        attachData(mYear);
+        Log.anchor(mYear);
     }
 
-    /**
-     * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment
-     * representing an object in the collection.
-     */
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.anchor(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).onShowFragment(this);
+        Log.anchor();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.anchor();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.anchor();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.RemoveAd:
+                attachData(new Year("2015", "i_2000"));
+                return true;
+            case R.id.AboutDoodles:
+                attachData(new Year("2014", "i_2000"));
+
+                return true;
+            case R.id.Share:
+                attachData(new Year("2013", "i_2000"));
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void attachData(Year year) {
+        int count;
+        int currYear = Calendar.getInstance().get(Calendar.YEAR);
+        if (currYear > Integer.valueOf(year.name)) {
+            count = 12;
+        } else {
+            count = Calendar.getInstance().get(Calendar.MONTH);
+        }
+
+        IFragmentPagerAdapter adapter = new IFragmentPagerAdapter(
+                getActivity().getSupportFragmentManager());
+        adapter.setYear(year.name);
+        adapter.setCount(0);
+        mViewPager.setAdapter(adapter);
+        adapter.setCount(count);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void setYear(Year year) {
+        mYear = year;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.anchor();
+        outState.putSerializable("year", mYear);
+    }
+
     public static class IFragmentPagerAdapter extends FragmentStatePagerAdapter {
+
+        private int count = 12;
+        private String year;
 
         public IFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        public void setYear(String year) {
+            this.year = year;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
         }
 
         @Override
@@ -81,31 +169,21 @@ public class PagerFragment extends Fragment {
             Fragment fragment = new DoodlesListFragment();
             Bundle args = new Bundle();
             args.putInt("year", 2014);
-            args.putInt("month", 12-i);
+            args.putInt("month", count - i);
             fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return 12;
+            return count;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return (12 - position) + "月份" ;
+            int month = count - position;
+            return year + "-" + (month < 10 ? "0" + month : month);
         }
-    }
-
-    private TabsAdapter addTab(TabsAdapter adapter){
-        int count = 12;
-        for (int i = count; i > 0; i--){
-            Bundle iBundle = new Bundle();
-            iBundle.putInt("year", 2014);
-            iBundle.putInt("month", i);
-            adapter.addTab(DoodlesListFragment.class, iBundle);
-        }
-        return adapter;
     }
 
 }

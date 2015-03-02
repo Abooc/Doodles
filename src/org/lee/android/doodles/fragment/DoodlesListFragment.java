@@ -2,7 +2,9 @@ package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +16,20 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.lee.android.doodles.ApiClient;
+import org.lee.android.doodles.AppContext;
 import org.lee.android.doodles.MessageView;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.volley.FileUtils;
 import org.lee.android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 浏览涂鸦列表
- *
+ * <p/>
  * Created by author:李瑞宇
  * email:allnet@live.cn
  * on 15-2-22.
@@ -53,9 +60,21 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;
-//        ((MainActivity) activity).onSectionAttached(
-//                getArguments().getInt(ARG_SECTION_NUMBER));
 
+    }
+
+    private int year;
+    private int month;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            doodlesJson = savedInstanceState.getString("data");
+        }
+        year = getArguments().getInt("year");
+        month = getArguments().getInt("month");
+        Log.anchor("year:" + year + ", month:" + month);
     }
 
     @Override
@@ -67,18 +86,68 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        int year = getArguments().getInt("year");
-        int month = getArguments().getInt("month");
-        Log.anchor("year:" + year + ", month:" + month);
         mMessageView = (MessageView) view.findViewById(R.id.MessageView);
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setOnItemClickListener(this);
+        mListView.setEmptyView(mMessageView);
+//        mListView.setOnItemClickListener(this);
 
-        mApiClient.requestDoodles(year, month, callbacks);
+        if (TextUtils.isEmpty(doodlesJson)) {
+//            mApiClient.requestDoodles(year, month, callbacks);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    useTest();
+                }
+            }, 1 * 1000);
+        } else {
+            attachData(doodlesJson);
+        }
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.anchor("year:" + year + ", month:" + month);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.anchor("year:" + year + ", month:" + month);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.anchor("year:" + year + ", month:" + month);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.anchor("year:" + year + ", month:" + month);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.anchor("year:" + year + ", month:" + month);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.anchor("year:" + year + ", month:" + month);
+    }
+
 
     /**
      * Doodles列表每一项点击事件
+     *
      * @param parent
      * @param view
      * @param position
@@ -88,7 +157,7 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DoodleAdapter doodleAdapter = (DoodleAdapter) parent.getAdapter();
         Doodle doodle = (Doodle) doodleAdapter.getItem(position);
-        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, null);
+        WebViewActivity.launch(AppContext.getContext(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, null);
     }
 
     /**
@@ -102,13 +171,6 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
             mListView.setAdapter(null);
             mMessageView.loading();
 
-//            try {
-//                InputStream inputStream = getActivity().getAssets().open("data/doodles.json");
-//                String sources = FileUtils.readInStream(inputStream);
-//                attachData(sources);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
         }
 
         @Override
@@ -121,13 +183,6 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
         public void onFailure(int i, Header[] headers, String sources, Throwable throwable) {
             mMessageView.setMessage(throwable.getMessage());
             mMessageView.setRetryEnable(true);
-//            try {
-//                InputStream inputStream = getActivity().getAssets().open("data/doodles.json");
-//                sources = FileUtils.readInStream(inputStream);
-//                attachData(sources);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
         }
 
         @Override
@@ -139,14 +194,35 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
 
     /**
      * 将Doodles列表的Json数据解析并显示到ListView
+     *
      * @param doodlesJson
      */
     private void attachData(String doodlesJson) {
         Gson gson = new Gson();
         Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
-        if(doodles == null || doodles.length == 0) return;
+        if (doodles == null || doodles.length == 0) return;
         DoodleAdapter adapter = new DoodleAdapter(mActivity, 0, doodles);
         mListView.setAdapter(adapter);
+        this.doodlesJson = doodlesJson;
     }
 
+    private void useTest() {
+        try {
+            InputStream inputStream = AppContext.getContext().getAssets().open("data/doodles.json");
+            String sources = FileUtils.readInStream(inputStream);
+            attachData(sources);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String doodlesJson;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (!TextUtils.isEmpty(doodlesJson)) {
+            outState.putString("data", doodlesJson);
+            Log.anchor();
+        }
+    }
 }

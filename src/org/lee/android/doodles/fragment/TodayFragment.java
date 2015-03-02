@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.TabsAdapter;
+import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.util.Log;
 
 /**
  */
@@ -31,6 +31,7 @@ public class TodayFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        ((MainActivity) activity).onShowFragment(this);
         ActionBar actionBar = activity.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
@@ -40,7 +41,6 @@ public class TodayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_today, container, false);
-//        return rootView;
         return rootView;
     }
 
@@ -48,7 +48,6 @@ public class TodayFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-//        mWebView = new WebView(getActivity());
         mWebView = (WebView) view.findViewById(R.id.WebView);
         mWebView.setHorizontalScrollBarEnabled(false);//水平不显示
         mWebView.setVerticalScrollBarEnabled(false); //垂直不显示
@@ -64,6 +63,32 @@ public class TodayFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient());
 //        mWebView.loadUrl("https://www.google.com/doodles");
         mWebView.loadUrl(AboutGoogleDoodlesUrl);
+
+
+        ViewPager mViewPager = (ViewPager) view.findViewById(R.id.ViewPager);
+
+        PagerFragment.IFragmentPagerAdapter adapter = new PagerFragment.IFragmentPagerAdapter(
+                getActivity().getSupportFragmentManager());
+        adapter.setYear("2016");
+        adapter.setCount(0);
+        mViewPager.setAdapter(adapter);
+        adapter.setCount(5);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).onShowFragment(this);
+        Log.anchor();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.anchor();
     }
 
 
@@ -79,4 +104,27 @@ public class TodayFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.anchor();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.anchor();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.anchor();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.anchor();
+    }
 }

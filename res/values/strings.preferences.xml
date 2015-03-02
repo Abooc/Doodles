@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 设置页面的Keys -->
+    <string name="pre_key_clear_cache">"clear"</string>
+    <string name="pre_key_about_us">"about_us"</string>
+
+    <!-- Preferences页面的Keys -->
+    <string name="pre_key_about">"about"</string>
+    <string name="pre_key_version">"version"</string>
+    <string name="pre_key_new">"version"</string>
+    <string name="pre_key_feedback">"feedback"</string>
+    <string name="pre_key_update">"update"</string>
+
+    <!-- Preferences页面的Text -->
+    <string name="pre_aboutus">"关于我们"</string>
+    <string name="pre_title">@string/app_name</string>
+    <string name="pre_title_summary">"基于Android系统平台的网络图片浏览器"</string>
+    <string name="pre_version_title">"版本号"</string>
+    <string name="pre_new_title">"如果标题栏显示「新」？"</string>
+    <string name="pre_new_summary">"说明有新的版本需要升级，升级后「新」字自动消失！"</string>
+    <string name="pre_feedback_title">"你还可以打个评分！"</string>
+    <string name="pre_feedback_summary">"我们很希望你能给个评分！"</string>
+    <string name="pre_update_title">"查看最新版本？"</string>
+    <string name="pre_update_summary">"我们的最新版本提供更完善的功能，且旧版本会停止服务！"</string>
+
+</resources>

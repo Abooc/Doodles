@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.lee.android.util.Log;
 

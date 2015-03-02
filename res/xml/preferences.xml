@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pre_aboutus" >
+        <PreferenceScreen
+            android:key="@string/pre_key_about"
+            android:summary="@string/pre_title_summary"
+            android:title="@string/pre_title" />
+        <PreferenceScreen
+            android:key="@string/pre_key_version"
+            android:summary="@string/versionCode"
+            android:title="@string/pre_version_title" />
+        <PreferenceScreen
+            android:key="@string/pre_key_version"
+            android:summary="「维护用户，做用户喜欢的精致产品」是我们的理念！"
+            android:title="我们的宗旨" />
+        <PreferenceScreen
+            android:icon="@drawable/ic_menu_play_128"
+            android:key="@string/pre_key_feedback"
+            android:summary="@string/pre_feedback_summary"
+            android:title="@string/pre_feedback_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/google_paly_app_url" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:icon="@drawable/ic_update"
+            android:key="@string/pre_key_update"
+            android:summary="@string/pre_update_summary"
+            android:title="@string/pre_update_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/google_paly_app_url" >
+            </intent>
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="热爱公益" >
+        <PreferenceScreen
+            android:summary="其实每个人都有公益的心，举手之劳，施善于人，助人也是助己！我们会做的更好！"
+            android:title="为什么会有公益广告？" />
+        <PreferenceScreen
+            android:summary="@string/versionGYCode"
+            android:title="公益版本" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="运营与服务" >
+        <PreferenceScreen
+            android:summary="为保障我们产品能有资本运作，会在部分页面加入广告，但我们尽量不干扰到用户，且广告真实可信！"
+            android:title="广告在部分页面" />
+        <PreferenceScreen android:widgetLayout="@layout/messageview" />
+        <PreferenceScreen
+            android:summary="@string/versionKINGCode"
+            android:title="KING版本" />
+    </PreferenceCategory>
+
+    <!--
+    <PreferenceCategory
+        android:summary="设置"
+        android:title="常用功能设置" >
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/auto_check_update"
+            android:summary="推荐开启自动检查更新功能"
+            android:title="自动检查更新" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="@string/auto_check_update"
+            android:key="@string/auto_update_when_wifi_enabled"
+            android:summaryOff="状态关闭"
+            android:summaryOn="状态:开启"
+            android:title="仅在wifi网络下自动更新" />
+    </PreferenceCategory>
+    <PreferenceCategory android:layout="@layout/settings_line_h" >
+        <ListPreference
+            android:defaultValue="10"
+            android:dialogTitle="每页加载条数"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entryvalues_list_preference"
+            android:key="@string/key_onepage_count_listpreferences"
+            android:summary="同时也是自动加载下一页数"
+            android:title="每页加载图片数" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autofill_enabled"
+            android:summary="CheckBox勾选设置项"
+            android:title="CheckBox" />
+
+        <PreferenceScreen
+            android:key="open_next_fragment"
+            android:summary="打开一个新的Fragment页面"
+            android:title="打开Fragment" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.lee.android.app.preferences.GesturePreferencesFragment"
+                android:targetPackage="com.lee.android.app" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    -->
+
+</PreferenceScreen>

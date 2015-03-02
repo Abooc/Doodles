@@ -52,8 +52,8 @@ public class DoodleAdapter extends ArrayAdapter {
             titleText = (TextView) convertView.findViewById(R.id.Title);
             dateText = (TextView) convertView.findViewById(R.id.Date);
 
-            imageView.setDefaultImageResId(R.drawable.ic_doodle_default);
-            imageView.setErrorImageResId(R.drawable.ic_doodle_error);
+            imageView.setDefaultImageResId(R.drawable.ic_doodle_error);
+            imageView.setErrorImageResId(R.drawable.ic_google_birthday);
         }
 
         private void attachData(Doodle doodle) {

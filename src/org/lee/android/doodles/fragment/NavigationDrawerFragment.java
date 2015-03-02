@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -28,7 +27,7 @@ import android.widget.TextView;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.AboutDoodlesActivity;
-import org.lee.android.util.Log;
+import org.lee.android.doodles.properties.SettingsActivity;
 import org.lee.android.util.Toast;
 
 /**
@@ -37,7 +36,7 @@ import org.lee.android.util.Toast;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment implements View.OnClickListener,
-        DrawerLayout.DrawerListener {
+        DrawerLayout.DrawerListener, AdapterView.OnItemClickListener {
 
     /**
      * Callbacks interface that all activities using this fragment must implement.
@@ -109,12 +108,13 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 getActivity(), 0,
                 new String[]{
                         "今天",
-                        getString(R.string.title_section1),
-                        "搜索更多涂鸦"
+                        "年份",
+                        getString(R.string.title_section1)
+//                        "搜索更多涂鸦"
                 });
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+        onItemClick(null, null, mCurrentSelectedPosition, 0);
     }
 
     @Override
@@ -134,12 +134,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         container = (ViewGroup) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView = (ListView) container.findViewById(R.id.ListView);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
+        mDrawerListView.setOnItemClickListener(this);
         mDrawerListView.setAdapter(mDrawerMenuAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return container;
@@ -157,6 +152,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    }
+
+    public void toggleDrawer() {
+        if (isDrawerOpen()) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        } else {
+            mDrawerLayout.openDrawer(mFragmentContainerView);
+        }
     }
 
     /**
@@ -250,7 +253,19 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     }
 
-    private void selectItem(int position) {
+    public void setMenuSelection(int position){
+        mDrawerListView.performItemClick(null, position, 0);
+    }
+
+    /**
+     * 侧滑菜单ListView每一项点击事件
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -303,12 +318,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        if (item.getItemId() == R.id.Share) {
-            Toast.show("Example action.");
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -324,7 +333,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     private ActionBar getActionBar() {
-        return ((FragmentActivity) getActivity()).getActionBar();
+        return (getActivity()).getActionBar();
     }
 
     /**
@@ -334,6 +343,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public void onClick(View v) {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        }
         switch (v.getId()) {
             case R.id.Commit:
                 Toast.show("贡献我的涂鸦作品...");
@@ -350,7 +362,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 Toast.show("RemoveAd...");
                 return;
             case R.id.Settings:
-                Toast.show("Settings...");
+//                AboutUsActivity.launch(getActivity());
+                SettingsActivity.launch(getActivity());
                 return;
             case R.id.Evaluate:
                 AppApplication.openGooglePlay(getActivity());
@@ -379,11 +392,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     private DrawerMenuAdapter<String> mDrawerMenuAdapter;
 
-    private class DrawerMenuAdapter<T> extends  ArrayAdapter{
+    private class DrawerMenuAdapter<T> extends ArrayAdapter {
 
         public DrawerMenuAdapter(Context context, int resource, Object[] objects) {
             super(context, resource, objects);
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.drawer_menu_item, null);

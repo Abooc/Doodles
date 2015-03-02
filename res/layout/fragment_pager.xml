@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:background="@drawable/date_background"
+        android:textSize="16dp"
         android:textColor="#fff"
         android:paddingTop="6dp"
         android:paddingBottom="6dp" />

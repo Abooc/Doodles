@@ -13,6 +13,7 @@ import org.lee.android.doodles.DoubleClickBackExit;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.fragment.CategorysFragment;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.PagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
@@ -30,7 +31,8 @@ import java.util.ArrayList;
  * on 15-2-22.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        CategorysFragment.OnYearChangedListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -55,7 +57,6 @@ public class MainActivity extends FragmentActivity
         actionBar.setDisplayShowHomeEnabled(false);
         setContentView(R.layout.activity_main);
 
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -71,40 +72,80 @@ public class MainActivity extends FragmentActivity
         actionBar.setTitle(mTitle);
     }
 
+    private int section;
+
     /**
-     * 侧滑菜单
+     * 侧滑菜单ListView
      *
      * @param position
      */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Fragment fragment = mFragmentHandler.getItem(position);
+        section = position;
         TabInfo tabInfo = mFragmentHandler.getTabInfo(position);
+        Fragment fragment = mFragmentHandler.getItem(position);
         mFragmentHandler.show(fragment, tabInfo.title);
     }
 
     private ArrayList<TabInfo> getTabInfos() {
         int index = 0;
-        String[] names = {"今天", "涂鸦存档", "搜索更多涂鸦"};
+        String[] names = {"今天", "年份", "涂鸦存档"
+//                , "搜索更多涂鸦"
+        };
         ArrayList<TabInfo> tabInfos = new ArrayList<TabInfo>();
         tabInfos.add(new TabInfo(TodayFragment.class, names[index++], null));
+        tabInfos.add(new TabInfo(CategorysFragment.class, names[index++], null));
         tabInfos.add(new TabInfo(PagerFragment.class, names[index++], null));
-        tabInfos.add(new TabInfo(SearchFragment.class, names[index++], null));
+//        tabInfos.add(new TabInfo(SearchFragment.class, names[index++], null));
         return tabInfos;
     }
 
+    /**
+     * 当前正在显示的Fragment
+     *
+     * @param fragment
+     */
+    public void onShowFragment(Fragment fragment) {
+        if (fragment instanceof TodayFragment) {
+            TabInfo tabInfo = mFragmentHandler.getTabInfo(0);
+            mTitle = tabInfo.title;
+            return;
+        }
+        if (fragment instanceof CategorysFragment) {
+            ((CategorysFragment) fragment).setOnYearChangedListener(this);
+            TabInfo tabInfo = mFragmentHandler.getTabInfo(1);
+            mTitle = tabInfo.title;
+            return;
+        }
+        if (fragment instanceof PagerFragment) {
+            TabInfo tabInfo = mFragmentHandler.getTabInfo(2);
+            mTitle = tabInfo.title;
+            if (mYear != null) {
+                ((PagerFragment) fragment).setYear(mYear);
+                ((PagerFragment) fragment).attachData(mYear);
+                mYear = null;
+            }
+            return;
+        }
+        if (fragment instanceof SearchFragment) {
+            TabInfo tabInfo = mFragmentHandler.getTabInfo(3);
+            mTitle = tabInfo.title;
+            return;
+        }
+    }
+
+    private CategorysFragment.Year mYear;
 
     /**
-     * 侧滑菜单选中指定Fragment
-     *
-     * @param number
+     * 年份切换事件
      */
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 0:
-                mTitle = getResources().getString(R.string.title_section1);
-                break;
-        }
+    @Override
+    public void onYearChanged(CategorysFragment.Year newYear) {
+        mYear = newYear;
+        mNavigationDrawerFragment.setMenuSelection(2);
+        TabInfo tabInfo = mFragmentHandler.getTabInfo(2);
+        mTitle = tabInfo.title;
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -120,27 +161,39 @@ public class MainActivity extends FragmentActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * ActionBar菜单事件
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.Settings:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        if (DoubleClickBackExit.onBackPressed()) {
-            super.onBackPressed();
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
+            mNavigationDrawerFragment.toggleDrawer();
+            return;
+        }
+        if (section == 0) {
+            if (DoubleClickBackExit.onBackPressed()) {
+                finish();
+            } else {
+                Toast.show("双击返回键退出");
+            }
         } else {
-            Toast.show("双击返回键退出");
+            super.onBackPressed();
         }
     }
 }

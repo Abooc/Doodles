@@ -1,90 +1,86 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:clickable="true"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#fff">
+    android:fillViewport="true">
 
-    <ListView
-        android:id="@+id/ListView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:choiceMode="singleChoice"
-        android:listSelector="@drawable/default_item_selector"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        tools:context=".NavigationDrawerFragment" />
-
-    <include layout="@layout/line_h_gray" />
-
-    <TextView
-        android:id="@+id/Commit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_section4"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:clickable="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:background="#fff">
 
-    <TextView
-        android:id="@+id/AboutDoodles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_section5"
-        android:clickable="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+        <ListView
+            android:id="@+id/ListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice"
+            android:listSelector="@drawable/default_item_selector"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            tools:context=".NavigationDrawerFragment" />
 
-    <TextView
-        android:id="@+id/RemoveAd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="删除广告"
-        android:clickable="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+        <include layout="@layout/line_h_gray" />
 
-    <TextView
-        android:id="@+id/Settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="设置"
-        android:clickable="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+        <TextView
+            android:id="@+id/Commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_section4"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/default_item_selector" />
 
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="升级为VIP"-->
-    <!--android:clickable="true"-->
-    <!--android:padding="@dimen/activity_horizontal_margin"-->
-    <!--android:background="@drawable/default_item_selector" />-->
+        <TextView
+            android:id="@+id/AboutDoodles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_section5"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/default_item_selector" />
 
+        <TextView
+            android:id="@+id/RemoveAd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="删除广告"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/default_item_selector" />
 
-    <include layout="@layout/line_h_gray" />
+        <TextView
+            android:id="@+id/Settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/default_item_selector" />
 
-    <TextView
-        android:id="@+id/Evaluate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="给应用打个评分"
-        android:clickable="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+        <include layout="@layout/line_h_gray" />
 
-    <TextView
-        android:id="@+id/Share"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="将此应用告诉朋友"
-        android:clickable="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/default_item_selector" />
+        <TextView
+            android:id="@+id/Evaluate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="给应用打个评分"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/default_item_selector" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/Share"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="将此应用告诉朋友"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@drawable/default_item_selector" />
+
+    </LinearLayout>
+</ScrollView>

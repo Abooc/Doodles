@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+
+    <string name="google_trackingId">UA-48543944-5</string>
+    <string name="google_AD_UNIT_ID">"a15327f94d498db"</string>
+
+    <!-- 是否父子类别显示 -->
+    <bool name="menu_mode">true</bool>
+    <!-- Home页预置数据 -->
+    <string name="preset_hot">json/home_hotwords.json</string>
+    <string name="preset_banner">json/home_banner.json</string>
+
+    <!-- 版权标识 -->
+    <string name="woolom_inc">"WOOLOM INC.图"</string>
+    <string name="woolom_address">"http://www.woolom.com"</string>
+
+    <!-- Home page -->
+    <string name="home">"首页"</string>
+    <string name="leftPageTitleSohu">"搜狐图片"</string>
+    <string name="leftPageUrlSohu">"http://m.sohu.com/c/5933/?_once_=000025_top_tuku_v3"</string>
+    <string name="leftPageTitle">"Google图片"</string>
+    <string name="leftPageUrl" formatted="false" >"https://www.google.com.hk/webhp?hl=zh-CN&amp;tbm=isch&amp;tab=ii"</string>
+    <string name="leftPageTitle2">"内涵图片"</string>
+    <string name="leftPageUrl2" formatted="false" >"http://m.image.so.com/i?src=m_www&amp;q=%E5%86%85%E6%B6%B5"</string>
+    <string name="rightPageTitle">"花瓣图片"</string>
+    <string name="rightPageUrl">"http://huaban.com/"</string>
+
+    <!-- 版本号 -->
+    <string name="versionCode_label">"新版本号："</string>
+    <string name="versionCode">"v4.0 No.04191"</string>
+    <string name="versionGYCode">"GY-04.4190"</string>
+    <string name="versionKINGCode">"K-04419 android-app@king.woolom.com Apr 2014"</string>
+    <!-- 版本名称 -->
+    <string name="versionName_label">"版本名称："</string>
+    <string name="versionName">4.0正式版</string>
+
+    <integer name="versionCode">404191</integer>
+
+    <!-- 通知发布 -->
+    <string name="notify_package">"com.woolom"</string>
+
+    <!-- 已升级用户 -->
+    <string name="versionUpdated_label">"用户好评度："</string>
+    <string name="versionUpdated">"91.37%"</string>
+
+    <!-- 发布日期 -->
+    <string name="versionDate_label">"发布日期："</string>
+    <string name="versionDate">2014-04-19</string>
+    <!-- 更新内容 -->
+    <string name="versionContent_label">"更新内容："</string>
+    <string name="versionContent">"1.全新桌面图标；\n
+2.支持全屏看图，支持自由缩放；\n
+3.支持保存图片到手机；\n
+4.更新界面，更漂亮，优化体验，看图更方便；\n
+5.解决多个错误问题；\n"</string>
+
+    <!-- 通知Api -->
+    <string name="get_noti_url">"http://www.lvyuely.com/api/notify/app/{package}/"</string>
+    <!-- Google play 链接地址 -->
+    <string name="google_paly">"https://play.google.com/store/apps/details?id="</string>
+    <string name="package_kantu">org.lee.android.simples.baidupicture</string>
+    <string name="package_lvyou">com.woolom.android.lvyou</string>
+    <string name="google_paly_app_url">"market://details?id=org.lee.android.simples.baidupicture"</string>
+    <!-- apk下载地址 来自Dropbox云盘 -->
+    <!-- 搜搜看图(原百度图库) -->
+    <string name="apk_download_url" formatted="false">http://3.cn/3tEgHc</string>
+
+</resources>

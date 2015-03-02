@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.android.volley.toolbox.Volley;
-
 import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Toast;
 
@@ -27,6 +25,7 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         Toast.init(this);
+        AppContext.getInstance().setContext(this);
         VolleyLoader.initialize(this);
 
     }

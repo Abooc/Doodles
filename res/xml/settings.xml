@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="应用" >
+        <PreferenceScreen
+            android:key="@string/pre_key_clear_cache"
+            android:summary="@string/versionCode"
+            android:title="清除缓存" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="关于" >
+        <PreferenceScreen
+            android:key="@string/pre_key_about_us"
+            android:summary="「维护用户，做用户喜欢的精致产品」是我们的理念！"
+            android:title="关于我们" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
