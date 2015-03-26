@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical"
+    android:padding="12dip">
+
+    <TextView
+        android:id="@+id/Text"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="@drawable/ic_actionbar_background_green"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="4dip"
+        android:text="A"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
+</LinearLayout>
