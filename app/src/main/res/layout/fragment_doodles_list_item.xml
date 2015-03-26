@@ -1,5 +1,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.SampleDashboard.Card"
     android:id="@+id/cardview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -13,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp"
+        android:padding="2dp"
         tools:context=".MainActivity">
 
         <com.android.volley.toolbox.NetworkImageView

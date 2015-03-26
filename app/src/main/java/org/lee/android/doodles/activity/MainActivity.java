@@ -2,7 +2,6 @@ package org.lee.android.doodles.activity;
 
 import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.common.activities.SampleActivityBase;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -28,7 +27,7 @@ import org.lee.android.util.Toast;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class MainActivity extends SampleActivityBase
+public class MainActivity extends LoggerActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         CategorysFragment.OnYearChangedListener {
 
