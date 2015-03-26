@@ -1,6 +1,5 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,22 +40,7 @@ public class PagerFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
-//        ActionBar actionBar = activity.getActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//
-//        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(activity,
-//                R.array.menu, android.R.layout.simple_spinner_dropdown_item);
-//        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
     }
-
-    private ActionBar.OnNavigationListener mOnNavigationListener =
-            new ActionBar.OnNavigationListener() {
-                @Override
-                public boolean onNavigationItemSelected(int position, long itemId) {
-//                    mApiClient.requestDoodles(2014 - position, 2, callbacks);
-                    return true;
-                }
-            };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

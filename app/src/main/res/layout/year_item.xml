@@ -7,12 +7,22 @@
     android:padding="@dimen/activity_horizontal_margin"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/ImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="90dp"
-        android:src="@drawable/ic_google_birthday"
-        android:scaleType="centerInside" />
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="80dp"
+        card_view:cardBackgroundColor="#FFF"
+        card_view:cardCornerRadius="4dp">
+
+        <ImageView
+            android:id="@+id/ImageView"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_google_birthday"
+            android:scaleType="centerInside" />
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/Title"
@@ -24,6 +34,6 @@
         android:textColor="@color/color_clickable_white_gray"
         android:textStyle="bold"
         android:padding="4dp"
-        android:background="@drawable/ic_tag_background"/>
+        android:background="@drawable/ic_tag_background" />
 
 </LinearLayout>
