@@ -152,7 +152,7 @@ public class CategorysFragment extends Fragment implements AdapterView.OnItemCli
 
         Year[] years = new Year[yearNames.length];
         for (int i = 0; i < yearNames.length; i++) {
-            Year year = new Year(yearNames[i], imageIds[i]);
+            Year year = new Year(yearNames[i] + "年", imageIds[i]);
             years[i] = year;
         }
         return years;

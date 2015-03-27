@@ -1,5 +1,5 @@
 <!--
-  Copyright 2013 The Android Open Source Project
+  Copyright 2014 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,8 +15,5 @@
   -->
 
 <resources>
-
-    <dimen name="card_padding">-1dp</dimen>
-    <dimen name="card_margin">8dp</dimen>
-    
+    <drawable name="GRAY_LIGHT_ALPHA">#30AAAAAA</drawable>
 </resources>

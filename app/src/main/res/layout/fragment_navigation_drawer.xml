@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_section4"
+            android:textColor="@color/BLACK"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin"
             android:background="@drawable/default_item_selector" />
@@ -40,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_section5"
+            android:textColor="@color/BLACK"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin"
             android:background="@drawable/default_item_selector" />
@@ -49,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="删除广告"
+            android:textColor="@color/BLACK"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin"
             android:background="@drawable/default_item_selector" />
@@ -58,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="设置"
+            android:textColor="@color/BLACK"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin"
             android:background="@drawable/default_item_selector" />
@@ -69,6 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="给应用打个评分"
+            android:textColor="@color/BLACK"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin"
             android:background="@drawable/default_item_selector" />
@@ -78,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:text="将此应用告诉朋友"
+            android:textColor="@color/BLACK"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin"
             android:background="@drawable/default_item_selector" />

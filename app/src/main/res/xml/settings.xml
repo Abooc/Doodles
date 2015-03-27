@@ -6,6 +6,11 @@
             android:key="@string/pre_key_clear_cache"
             android:summary="@string/versionCode"
             android:title="清除缓存" />
+
+        <CheckBoxPreference
+            android:key="@string/OpenDevMode"
+            android:title="开发者选项"
+            android:checked="true" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="关于" >

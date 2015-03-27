@@ -3,10 +3,12 @@ package org.lee.android.doodles.bean;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import java.io.Serializable;
+
 /**
  *
  */
-public class Doodle {
+public class Doodle implements Serializable{
     public String name;
     public String title;
     public String url;

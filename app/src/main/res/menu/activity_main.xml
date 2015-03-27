@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_toggle_log"
-        android:title="show log"
-        android:showAsAction="always" />
+        android:title="@string/OpenDevMode"
+        support:showAsAction="always" />
 
     <!--<item-->
     <!--android:id="@+id/Settings"-->
@@ -14,21 +15,21 @@
     <item
         android:id="@+id/RemoveAd"
         android:title="@string/RemoveAd"
-        android:showAsAction="never" />
+        support:showAsAction="never" />
 
     <item
         android:id="@+id/AboutDoodles"
         android:title="@string/AboutDoodles"
-        android:showAsAction="never" />
+        support:showAsAction="never" />
 
     <item
         android:id="@+id/pingfen"
         android:title="@string/pingfen"
-        android:showAsAction="never" />
+        support:showAsAction="never" />
 
     <item
         android:id="@+id/Share"
         android:title="@string/Share"
-        android:showAsAction="never" />
+        support:showAsAction="never" />
 
 </menu>

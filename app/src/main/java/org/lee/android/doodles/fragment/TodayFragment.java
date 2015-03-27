@@ -1,35 +1,34 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 
-import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.AppContext;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
-import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.FileUtils;
-import org.lee.android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  */
-public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
@@ -41,13 +40,15 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private ViewPager mViewPager;
     private ListView mListView;
+    private ActionBar mActionBar;
+    private FragmentRunningListener mFrunningListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onShowFragment(this);
-        ActionBar actionBar = activity.getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        MainActivity mainActivity = (MainActivity)activity;
+        mFrunningListener = mainActivity;
+        mActionBar = mainActivity.getSupportActionBar();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_today, container, false);
 
-        mListView  = (ListView) container.findViewById(R.id.ListView);
+        mListView = (ListView) container.findViewById(R.id.ListView);
         mListView.setOnItemClickListener(this);
         useTest();
 
@@ -94,19 +95,39 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mFrunningListener.onResume(this);
+    }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            ((MainActivity) getActivity()).onShowFragment(this);
-        }
+    public void onPause() {
+        super.onPause();
+        mFrunningListener.onPause(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Doodle doodle = (Doodle) parent.getAdapter().getItem(position);
 //        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, doodle.title);
-        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_SEARCH + doodle.query, doodle.title);
+//        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_SEARCH + doodle.query, doodle.title);
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.tabcontent,
+                        DoodleDetailsFragment.newInstance(doodle,
+                                (int) view.getX(), (int) view.getY(),
+                                view.getWidth(), view.getHeight())
+                )
+                .addToBackStack("detail")
+                .commit();
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return AnimationUtils.loadAnimation(getActivity(),
+                enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
     private class DoodlePagerAdapter extends FragmentStatePagerAdapter {

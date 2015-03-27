@@ -31,7 +31,6 @@ public class SettingsActivity extends PreferenceActivity implements PreferencesK
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.settings);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);

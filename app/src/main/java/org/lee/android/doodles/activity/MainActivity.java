@@ -1,23 +1,24 @@
 package org.lee.android.doodles.activity;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.lee.android.doodles.DoubleClickBackExit;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.CategorysFragment;
+import org.lee.android.doodles.fragment.DoodleDetailsFragment;
+import org.lee.android.doodles.fragment.FragmentRunningListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.PagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
-import org.lee.android.util.Toast;
+import org.lee.android.util.Log;
 
 
 /**
@@ -29,7 +30,8 @@ import org.lee.android.util.Toast;
  */
 public class MainActivity extends LoggerActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        CategorysFragment.OnYearChangedListener {
+        CategorysFragment.OnYearChangedListener
+        , FragmentRunningListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -48,7 +50,7 @@ public class MainActivity extends LoggerActivity
     protected void onCreate(Bundle savedInstanceState) {
         mFragmentManager = getSupportFragmentManager();
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
         mTitle = getTitle();
@@ -66,7 +68,7 @@ public class MainActivity extends LoggerActivity
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(mTitle);
     }
 
@@ -85,12 +87,33 @@ public class MainActivity extends LoggerActivity
         mFragmentHandler.show(fragment, tabInfo.title);
     }
 
+    @Override
+    public void onResume(Fragment fragment) {
+        if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.setHasOptionsMenu(false);
+            return;
+        }
+    }
+
+    @Override
+    public void onPause(Fragment fragment) {
+        if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.setHasOptionsMenu(true);
+            return;
+        }
+    }
+
     /**
      * 当前正在显示的Fragment
      *
      * @param fragment
      */
     public void onShowFragment(Fragment fragment) {
+        if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.setHasOptionsMenu(false);
+            return;
+        }
+        mNavigationDrawerFragment.setHasOptionsMenu(true);
         if (fragment instanceof TodayFragment) {
             TabInfo tabInfo = mFragmentHandler.getTabInfo(0);
             mTitle = tabInfo.title;
@@ -154,6 +177,9 @@ public class MainActivity extends LoggerActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+//        super.onOptionsItemSelected(item);
+        Log.anchor();
+//        if() return true;
         switch (item.getItemId()) {
             case R.id.Settings:
                 return true;
@@ -174,15 +200,18 @@ public class MainActivity extends LoggerActivity
             mNavigationDrawerFragment.toggleDrawer();
             return;
         }
-        if (section == 0) {
-            if (DoubleClickBackExit.onBackPressed()) {
-                finish();
-            } else {
-                Toast.show("双击返回键退出");
-            }
-        } else {
-            super.onBackPressed();
-        }
+//        if (section == 0) {
+//            if (DoubleClickBackExit.onBackPressed()) {
+//                finish();
+//            } else {
+//                Toast.show("双击返回键退出");
+//            }
+//        } else {
+//            super.onBackPressed();
+//        }
+
+        super.onBackPressed();
+
     }
 
 }

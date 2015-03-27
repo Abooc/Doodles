@@ -1,6 +1,5 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,8 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,9 +28,9 @@ import android.widget.TextView;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.activity.AboutDoodlesActivity;
 import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.properties.SettingsActivity;
+import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 import java.util.ArrayList;
@@ -116,9 +117,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return mTabInfoList;
     }
 
+    private ActionBar mActionBar;
         @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+            mActionBar = ((ActionBarActivity)activity).getSupportActionBar();
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
@@ -141,19 +144,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         mDrawerMenuAdapter = new DrawerMenuAdapter<String>(
                 getActivity(), 0, mNames);
-
-//        onItemClick(null, null, mCurrentSelectedPosition, 0);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
-
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setHomeButtonEnabled(true);
     }
 
     @Override
@@ -344,10 +342,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item);
     }
 
     /**
@@ -362,7 +358,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     private ActionBar getActionBar() {
-        return (getActivity()).getActionBar();
+        return mActionBar;
     }
 
     /**

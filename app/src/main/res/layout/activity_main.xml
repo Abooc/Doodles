@@ -10,15 +10,18 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:id="@+id/sample_main_layout">
 
         <ViewAnimator
             android:id="@+id/sample_output"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:visibility="gone"
             android:layout_weight="1">
 
             <ScrollView
+                android:id="@+id/SampleMessage"
                 style="@style/Widget.SampleMessageTile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -26,7 +29,7 @@
                 <TextView
                     style="@style/Widget.SampleMessage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingLeft="@dimen/horizontal_page_margin"
                     android:paddingRight="@dimen/horizontal_page_margin"
                     android:paddingTop="@dimen/vertical_page_margin"

@@ -9,6 +9,7 @@
         android:id="@+id/ListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:listSelector="@drawable/TRANSPARENT"
         android:dividerHeight="0dp"
         android:divider="@drawable/TRANSPARENT"/>
 
