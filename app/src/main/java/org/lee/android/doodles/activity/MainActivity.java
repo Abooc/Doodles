@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -61,15 +62,25 @@ public class MainActivity extends LoggerActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mFragmentHandler = new FragmentHandlerAdapter(mFragmentManager, this,
                 mNavigationDrawerFragment.getTabInfos());
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawerFragment.setUpDrawerMenu(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                R.id.navigation_drawer, drawerLayout );
         mNavigationDrawerFragment.setMenuSelection(0);
+
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle(){
+        return mNavigationDrawerFragment.getDrawerToggle();
+    }
+
+
+    public NavigationDrawerFragment getNavigationDrawerFragment(){
+        return mNavigationDrawerFragment;
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(mTitle);
+//        actionBar.setTitle(mTitle);
     }
 
     private int section;
@@ -89,6 +100,7 @@ public class MainActivity extends LoggerActivity
 
     @Override
     public void onResume(Fragment fragment) {
+        Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
             mNavigationDrawerFragment.setHasOptionsMenu(false);
             return;
@@ -97,6 +109,7 @@ public class MainActivity extends LoggerActivity
 
     @Override
     public void onPause(Fragment fragment) {
+        Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
             mNavigationDrawerFragment.setHasOptionsMenu(true);
             return;
@@ -109,6 +122,7 @@ public class MainActivity extends LoggerActivity
      * @param fragment
      */
     public void onShowFragment(Fragment fragment) {
+        if(true) return;
         if (fragment instanceof DoodleDetailsFragment) {
             mNavigationDrawerFragment.setHasOptionsMenu(false);
             return;

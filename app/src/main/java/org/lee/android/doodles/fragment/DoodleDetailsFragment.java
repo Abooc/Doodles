@@ -64,14 +64,15 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
 
     private ActionBar mActionBar;
     private FragmentRunningListener mFrunningListener;
+    private MainActivity mMainActivity;
 
     @Override
     public void onAttach(Activity activity) {
         setHasOptionsMenu(true);
         super.onAttach(activity);
-        MainActivity mainActivity = (MainActivity)activity;
-        mActionBar = mainActivity.getSupportActionBar();
-        mFrunningListener = mainActivity;
+        mMainActivity = (MainActivity)activity;
+        mActionBar = mMainActivity.getSupportActionBar();
+        mFrunningListener = mMainActivity;
     }
 
     @Override
@@ -222,7 +223,10 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
         // There is nothing we need to do in this sample.
 
         mActionBar.setTitle(mDoodle.getDate());
-        mActionBar.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+//        mActionBar.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+//        mMainActivity.getDrawerToggle().syncState();
+        mMainActivity.getNavigationDrawerFragment().toggle();
+
     }
 
     @Override
@@ -251,6 +255,10 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
     public void onDestroy() {
         super.onDestroy();
         mActionBar.setTitle(mTitle);
-        mActionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+//        mActionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+
+//        mMainActivity.getDrawerToggle().syncState();
+        mMainActivity.getNavigationDrawerFragment().toggle();
+
     }
 }

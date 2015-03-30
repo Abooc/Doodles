@@ -8,12 +8,12 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -152,6 +152,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         setHasOptionsMenu(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setHomeButtonEnabled(true);
+
     }
 
     @Override
@@ -174,6 +175,21 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         view.findViewById(R.id.Settings).setOnClickListener(this);
         view.findViewById(R.id.Evaluate).setOnClickListener(this);
         view.findViewById(R.id.Share).setOnClickListener(this);
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle(){
+        return mDrawerToggle;
+    }
+
+    private boolean actionbarToggle;
+    public void toggle(){
+        if (actionbarToggle) {
+            mDrawerToggle.onDrawerClosed(mFragmentContainerView);
+            actionbarToggle = false;
+        } else {
+            mDrawerToggle.onDrawerOpened(mFragmentContainerView);
+            actionbarToggle = true;
+        }
     }
 
     public boolean isDrawerOpen() {
@@ -207,7 +223,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -239,6 +254,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
     }
 
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +31,15 @@ public class CategorysFragment extends Fragment implements AdapterView.OnItemCli
         return fragment;
     }
 
+    private ActionBar mActionBar;
+    private FragmentRunningListener mFrunningListener;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onShowFragment(this);
+        MainActivity mainActivity = (MainActivity)activity;
+        mFrunningListener = mainActivity;
+        mActionBar = mainActivity.getSupportActionBar();
     }
 
     @Override
@@ -50,11 +56,25 @@ public class CategorysFragment extends Fragment implements AdapterView.OnItemCli
         attachData(iGridView);
     }
 
+//    @Override
+//    public void onHiddenChanged(boolean hidden) {
+//        if (!hidden) {
+//            ((MainActivity) getActivity()).onShowFragment(this);
+//        }
+//    }
+
+
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            ((MainActivity) getActivity()).onShowFragment(this);
-        }
+    public void onResume() {
+        super.onResume();
+        mActionBar.setTitle(getTag());
+//        mFrunningListener.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        mFrunningListener.onPause(this);
     }
 
     private void attachData(final GridView iGridView) {
@@ -109,21 +129,6 @@ public class CategorysFragment extends Fragment implements AdapterView.OnItemCli
     public void setOnYearChangedListener(OnYearChangedListener listener) {
         mOnYearChangedListener = listener;
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.anchor();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.anchor();
-    }
-
 
     @Override
     public void onStop() {

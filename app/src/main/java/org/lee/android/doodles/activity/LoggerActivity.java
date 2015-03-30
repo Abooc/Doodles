@@ -1,7 +1,5 @@
 package org.lee.android.doodles.activity;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.common.activities.SampleActivityBase;
 import android.support.common.logger.Log;
 import android.support.common.logger.LogFragment;

@@ -98,6 +98,7 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     @Override
     public void onResume() {
         super.onResume();
+        mActionBar.setTitle(getTag());
         mFrunningListener.onResume(this);
     }
 
