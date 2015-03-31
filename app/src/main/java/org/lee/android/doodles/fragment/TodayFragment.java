@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -58,13 +58,18 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         MainActivity mainActivity = (MainActivity) activity;
         mFrunningListener = mainActivity;
         mActionBar = mainActivity.getSupportActionBar();
+        mActionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
+            @Override
+            public void onMenuVisibilityChanged(boolean b) {
+                Log.anchor(b);
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_today, container, false);
-
         mListView = (ListView) container.findViewById(R.id.ListView);
         mListView.setOnItemClickListener(this);
         mListView.setOnTouchListener(this);
@@ -93,6 +98,21 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.MATCH_PARENT);
         View app_searcher = getLayoutInflater(savedInstanceState).inflate(R.layout.app_searcher, null);
         toolbar.addView(app_searcher, params);
+
+        final View menu = app_searcher.findViewById(R.id.Menu);
+        EditText iEditText = (EditText) app_searcher.findViewById(R.id.EditText);
+        iEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    menu.setVisibility(View.VISIBLE);
+                    mActionBar.hide();
+                } else {
+                    menu.setVisibility(View.GONE);
+                    mActionBar.show();
+                }
+            }
+        });
 
     }
 
@@ -134,13 +154,39 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         mFrunningListener.onPause(this);
     }
 
+
+    private float yy;
+    private boolean hasHandle;
+    private boolean blockTouch;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            v.requestFocus();
-            return AppFunction.hideInputMethod(getActivity(), v);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                blockTouch = false;
+                v.requestFocus();
+                blockTouch = AppFunction.hideInputMethod(getActivity(), v);
+                if (blockTouch) {
+                    return blockTouch;
+                }
+
+                hasHandle = false;
+                yy = event.getY();
+                return blockTouch;
+            case MotionEvent.ACTION_MOVE:
+                if (!hasHandle) {
+                    float y = event.getY();
+                    if ((y - yy) > 40) {
+                        hasHandle = true;
+                        mActionBar.show();
+                    } else if ((y - yy) < -40) {
+                        hasHandle = true;
+                        mActionBar.hide();
+                    }
+                }
+                return blockTouch;
         }
-        return false;
+        return blockTouch;
     }
 
     @Override

@@ -16,8 +16,6 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:background">@color/actionBar_background</item>
-        <!--<item name="android:titleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Title</item>-->
-        <!--<item name="android:subtitleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Subtitle</item>-->
     </style>
 
     <!-- ActionBar styles -->

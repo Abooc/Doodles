@@ -63,6 +63,7 @@ public class MainActivity extends LoggerActivity
         // Retrieve the Toolbar from our content view, and set it as the action bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -239,6 +240,12 @@ public class MainActivity extends LoggerActivity
     public void onBackPressed() {
         if (mNavigationDrawerFragment.isDrawerOpen()) {
             mNavigationDrawerFragment.toggleDrawer();
+            return;
+        }
+        View view = getWindow().getDecorView();
+        if(AppFunction.hideInputMethod(this, view)){
+            view.requestFocus();
+            Log.anchor();
             return;
         }
 //        if (section == 0) {
