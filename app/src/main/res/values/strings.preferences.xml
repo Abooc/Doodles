@@ -2,7 +2,7 @@
 <resources>
 
     <!-- 设置页面的Keys -->
-    <string name="pre_key_dev">"dev"</string>
+    <string name="pre_key_open_devmode">"dev"</string>
     <string name="pre_key_clear_cache">"clear"</string>
     <string name="pre_key_about_us">"about_us"</string>
 

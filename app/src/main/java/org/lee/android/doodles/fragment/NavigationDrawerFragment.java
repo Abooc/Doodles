@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,7 +31,6 @@ import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.properties.SettingsActivity;
-import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 import java.util.ArrayList;
@@ -87,9 +87,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private String[] mNames = {
 //            "A",
 //            "B",
-                "最新",
-                "年份",
-                "涂鸦存档"
+            "最新",
+            "年份",
+            "涂鸦存档"
 //                , "搜索更多涂鸦"
     };
 
@@ -113,15 +113,25 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return tabInfos;
     }
 
+    private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
+        DrawerMenuItem[] menuItems = {
+                new DrawerMenuItem(names[0], iconIds[0]),
+                new DrawerMenuItem(names[1], iconIds[1]),
+                new DrawerMenuItem(names[2], iconIds[2])
+        };
+        return menuItems;
+    }
+
     public ArrayList<TabInfo> getTabInfos() {
         return mTabInfoList;
     }
 
     private ActionBar mActionBar;
-        @Override
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-            mActionBar = ((ActionBarActivity)activity).getSupportActionBar();
+        mActionBar = ((ActionBarActivity) activity).getSupportActionBar();
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
@@ -142,16 +152,18 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             mFromSavedInstanceState = true;
         }
 
-        mDrawerMenuAdapter = new DrawerMenuAdapter<String>(
-                getActivity(), 0, mNames);
+        DrawerMenuItem[] menuItems = getMenus(mNames,
+                new int[]{R.drawable.ic_menu_sort_by_size,
+                        R.drawable.ic_menu_today,
+                        R.drawable.ic_menu_find});
+        mDrawerMenuAdapter = new DrawerMenuAdapter(
+                getActivity(), 0, menuItems);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
 
     }
 
@@ -177,12 +189,13 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         view.findViewById(R.id.Share).setOnClickListener(this);
     }
 
-    public ActionBarDrawerToggle getDrawerToggle(){
+    public ActionBarDrawerToggle getDrawerToggle() {
         return mDrawerToggle;
     }
 
     private boolean actionbarToggle;
-    public void toggle(){
+
+    public void toggle() {
         if (actionbarToggle) {
             mDrawerToggle.onDrawerClosed(mFragmentContainerView);
             actionbarToggle = false;
@@ -339,13 +352,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
-            showGlobalContextActionBar();
+            menu.setGroupVisible(R.id.Menu, false);
         } else {
-//            if (mCurrentSelectedPosition == 1) {
-//                ActionBar actionBar = getActionBar();
-//                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//            }
+            menu.setGroupVisible(R.id.Menu, true);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -430,10 +439,20 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
+    private static class DrawerMenuItem {
+        final String name;
+        final int iconId;
+
+        public DrawerMenuItem(String name, int iconId) {
+            this.name = name;
+            this.iconId = iconId;
+        }
+    }
+
     /**
      * 侧滑菜单ListView Adapter
      */
-    private DrawerMenuAdapter<String> mDrawerMenuAdapter;
+    private DrawerMenuAdapter<DrawerMenuItem> mDrawerMenuAdapter;
 
     private class DrawerMenuAdapter<T> extends ArrayAdapter {
 
@@ -445,8 +464,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.drawer_menu_item, null);
             TextView titleText = (TextView) convertView.findViewById(R.id.Title);
-            String title = (String) getItem(position);
-            titleText.setText(title);
+            ImageView iconView = (ImageView) convertView.findViewById(R.id.ImageView);
+            DrawerMenuItem menuItem = (DrawerMenuItem) getItem(position);
+            titleText.setText(menuItem.name);
+            iconView.setImageResource(menuItem.iconId);
             return convertView;
         }
     }

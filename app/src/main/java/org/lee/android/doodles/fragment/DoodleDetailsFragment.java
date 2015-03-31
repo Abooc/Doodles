@@ -26,12 +26,9 @@ import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Log;
 
 /**
+ * Doodle详情页面
  */
-public class DoodleDetailsFragment extends Fragment  implements Animation.AnimationListener{
-
-    private TextView mTitleView;
-    private NetworkImageView mImageView;
-    private Doodle mDoodle;
+public class DoodleDetailsFragment extends Fragment implements Animation.AnimationListener {
 
     private static final String ARG_DOODLE = "doodle";
     private static final String ARG_X = "x";
@@ -39,18 +36,22 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
     private static final String ARG_WIDTH = "width";
     private static final String ARG_HEIGHT = "height";
 
+    private TextView mTitleView;
+    private Doodle mDoodle;
+    private NetworkImageView mImageView;
+
     /**
      * Create a new instance of DetailFragment.
      *
      * @param doodle The title of the image
-     * @param x The horizontal position of the grid item in pixel
-     * @param y The vertical position of the grid item in pixel
-     * @param width The width of the grid item in pixel
+     * @param x      The horizontal position of the grid item in pixel
+     * @param y      The vertical position of the grid item in pixel
+     * @param width  The width of the grid item in pixel
      * @param height The height of the grid item in pixel
      * @return a new instance of DetailFragment
      */
     public static DoodleDetailsFragment newInstance(Doodle doodle,
-                                             int x, int y, int width, int height) {
+                                                    int x, int y, int width, int height) {
         DoodleDetailsFragment fragment = new DoodleDetailsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DOODLE, new Gson().toJson(doodle));
@@ -70,7 +71,7 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
     public void onAttach(Activity activity) {
         setHasOptionsMenu(true);
         super.onAttach(activity);
-        mMainActivity = (MainActivity)activity;
+        mMainActivity = (MainActivity) activity;
         mActionBar = mMainActivity.getSupportActionBar();
         mFrunningListener = mMainActivity;
     }
@@ -87,9 +88,9 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         String json;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             json = savedInstanceState.getString(ARG_DOODLE);
-        }else{
+        } else {
             json = getArguments().getString(ARG_DOODLE);
         }
         Gson gson = new Gson();
@@ -122,8 +123,8 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
 
 //        mImageView.setImageUrl(mDoodle.hires_url, VolleyLoader.getInstance().getImageLoader());
 
-        // We adjust the position of the initial image with LayoutParams using the values supplied
-        // as the fragment arguments.
+    // We adjust the position of the initial image with LayoutParams using the values supplied
+    // as the fragment arguments.
 //        Bundle args = getArguments();
 //        FrameLayout.LayoutParams params = null;
 //        if (args != null) {
@@ -223,8 +224,6 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
         // There is nothing we need to do in this sample.
 
         mActionBar.setTitle(mDoodle.getDate());
-//        mActionBar.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-//        mMainActivity.getDrawerToggle().syncState();
         mMainActivity.getNavigationDrawerFragment().toggle();
 
     }
@@ -255,9 +254,6 @@ public class DoodleDetailsFragment extends Fragment  implements Animation.Animat
     public void onDestroy() {
         super.onDestroy();
         mActionBar.setTitle(mTitle);
-//        mActionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
-
-//        mMainActivity.getDrawerToggle().syncState();
         mMainActivity.getNavigationDrawerFragment().toggle();
 
     }

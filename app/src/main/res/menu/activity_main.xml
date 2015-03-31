@@ -2,34 +2,36 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:support="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_toggle_log"
-        android:title="@string/OpenDevMode"
-        support:showAsAction="always" />
+    <group android:id="@+id/Menu">
+        <item
+            android:id="@+id/menu_toggle_log"
+            android:title="@string/OpenDevMode"
+            support:showAsAction="always"
+            android:visible="false"/>
 
-    <!--<item-->
-    <!--android:id="@+id/Settings"-->
-    <!--android:title="@string/Settings"-->
-    <!--android:showAsAction="never" />-->
+        <!--<item-->
+        <!--android:id="@+id/Settings"-->
+        <!--android:title="@string/Settings"-->
+        <!--android:showAsAction="never" />-->
 
-    <item
-        android:id="@+id/RemoveAd"
-        android:title="@string/RemoveAd"
-        support:showAsAction="never" />
+        <item
+            android:id="@+id/RemoveAd"
+            android:title="@string/RemoveAd"
+            support:showAsAction="never" />
 
-    <item
-        android:id="@+id/AboutDoodles"
-        android:title="@string/AboutDoodles"
-        support:showAsAction="never" />
+        <item
+            android:id="@+id/AboutDoodles"
+            android:title="@string/AboutDoodles"
+            support:showAsAction="never" />
 
-    <item
-        android:id="@+id/pingfen"
-        android:title="@string/pingfen"
-        support:showAsAction="never" />
+        <item
+            android:id="@+id/pingfen"
+            android:title="@string/pingfen"
+            support:showAsAction="never" />
 
-    <item
-        android:id="@+id/Share"
-        android:title="@string/Share"
-        support:showAsAction="never" />
-
+        <item
+            android:id="@+id/Share"
+            android:title="@string/Share"
+            support:showAsAction="never" />
+    </group>
 </menu>

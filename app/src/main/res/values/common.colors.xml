@@ -40,8 +40,8 @@
     <color name="BLUE">#770000ff</color>
     <color name="GREEN">#7700ff00</color>
     <color name="YELLOW">#77ffff00</color>
-    <color name="GRAY_DARK">#666</color>
-    <color name="GRAY_LIGHT">#999</color>
+    <color name="GRAY_DARK">#FF666666</color>
+    <color name="GRAY_LIGHT">#FF999999</color>
     <color name="TRANSLUCENT">#28000000</color>
     <color name="TRANSPARENT">#00000000</color>
     <color name="pink">#80FF0000</color>

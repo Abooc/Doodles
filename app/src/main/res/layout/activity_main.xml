@@ -34,7 +34,7 @@
                     android:paddingRight="@dimen/horizontal_page_margin"
                     android:paddingTop="@dimen/vertical_page_margin"
                     android:paddingBottom="@dimen/vertical_page_margin"
-                    android:text="介绍" />
+                    android:text="开发者模式，日志显示区域..." />
             </ScrollView>
 
             <fragment
@@ -45,10 +45,14 @@
 
         </ViewAnimator>
 
-        <View
+        <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimaryDark"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <!-- As the main content view, the view below consumes the entire
              space available using match_parent in both dimensions. -->
@@ -68,7 +72,7 @@
          the container. -->
     <fragment
         android:id="@+id/navigation_drawer"
-        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="org.lee.android.doodles.fragment.NavigationDrawerFragment" />

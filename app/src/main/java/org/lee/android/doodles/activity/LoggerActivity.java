@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ViewAnimator;
 
+import org.lee.android.doodles.AppSettings;
 import org.lee.android.doodles.R;
 
 
@@ -50,8 +51,9 @@ public class LoggerActivity extends SampleActivityBase {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (menu.findItem(R.id.menu_toggle_log) != null) {
+            boolean openDev = AppSettings.getInstance().isOpenDev();
             MenuItem logToggle = menu.findItem(R.id.menu_toggle_log);
-            logToggle.setVisible(findViewById(R.id.sample_output) instanceof ViewAnimator);
+            logToggle.setVisible(openDev);
             logToggle.setTitle(findViewById(R.id.sample_output).getVisibility() ==
                     View.VISIBLE ? R.string.CloseDevMode : R.string.OpenDevMode);
         }

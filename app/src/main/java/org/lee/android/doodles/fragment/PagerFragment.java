@@ -52,6 +52,18 @@ public class PagerFragment extends Fragment {
             mYear = (Year) savedInstanceState.getSerializable("year");
             Log.anchor("mYear = " + mYear);
         }
+        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return R.color.GRAY_LIGHT;
+            }
+
+            @Override
+            public int getDividerColor(int position) {
+                return R.color.WHITE;
+            }
+        });
+
         attachData(mYear);
         Log.anchor(mYear);
         return container;

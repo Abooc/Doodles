@@ -5,12 +5,14 @@
         <PreferenceScreen
             android:key="@string/pre_key_clear_cache"
             android:summary="@string/versionCode"
-            android:title="清除缓存" />
+            android:title="清除缓存"
+            android:enabled="true"/>
 
         <CheckBoxPreference
-            android:key="@string/OpenDevMode"
+            android:key="@string/pre_key_open_devmode"
             android:title="开发者选项"
-            android:checked="true" />
+            android:summary="开启开发者模式进行调试程序"
+            android:checked="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="关于" >

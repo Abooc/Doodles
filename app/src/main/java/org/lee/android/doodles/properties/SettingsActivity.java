@@ -9,6 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
+import org.lee.android.doodles.AppSettings;
 import org.lee.android.doodles.R;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
@@ -67,6 +68,11 @@ public class SettingsActivity extends PreferenceActivity implements PreferencesK
             Log.anchor(key);
             if (key.equals(pref_key_clear_cache)) {
                 Toast.show("清除缓存");
+                return;
+            }
+            if (key.equals(pref_key_open_devmode)) {
+                boolean open = sharedPreferences.getBoolean(key, false);
+                AppSettings.getInstance().setOpenDev(open);
                 return;
             }
             if (key.equals(pref_key_about_us)) {

@@ -7,11 +7,12 @@
     android:padding="@dimen/activity_horizontal_margin"
     tools:context=".MainActivity">
 
-    <!--<com.android.volley.toolbox.NetworkImageView-->
-    <!--android:id="@+id/ImageView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@drawable/ic_launcher"/>-->
+    <ImageView
+        android:id="@+id/ImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_menu_find" />
 
     <TextView
         android:id="@+id/Title"
@@ -19,7 +20,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/app_name"
-        android:textColor="@color/color_clickable_black_gray_white"
-        android:drawableStart="@drawable/ic_menu_search"/>
+        android:textColor="@color/color_clickable_black_gray_white"  />
 
 </LinearLayout>

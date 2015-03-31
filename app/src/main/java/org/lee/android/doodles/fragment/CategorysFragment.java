@@ -67,7 +67,6 @@ public class CategorysFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onResume() {
         super.onResume();
-        mActionBar.setTitle(getTag());
 //        mFrunningListener.onResume(this);
     }
 

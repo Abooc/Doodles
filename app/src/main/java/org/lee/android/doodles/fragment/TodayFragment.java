@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -18,17 +20,21 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 
 import org.lee.android.doodles.AppContext;
+import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.FileUtils;
+import org.lee.android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * 最新Doodles页面
  */
-public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener,
+        View.OnTouchListener {
 
     public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
@@ -38,15 +44,18 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
 
-    private ViewPager mViewPager;
+    //    private ViewPager mViewPager;
     private ListView mListView;
     private ActionBar mActionBar;
+    /**
+     * Fragment运行状态监听
+     */
     private FragmentRunningListener mFrunningListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        MainActivity mainActivity = (MainActivity)activity;
+        MainActivity mainActivity = (MainActivity) activity;
         mFrunningListener = mainActivity;
         mActionBar = mainActivity.getSupportActionBar();
     }
@@ -58,6 +67,7 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
 
         mListView = (ListView) container.findViewById(R.id.ListView);
         mListView.setOnItemClickListener(this);
+        mListView.setOnTouchListener(this);
         useTest();
 
 //        View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_today_header, null);
@@ -68,6 +78,23 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         return container;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        // Retrieve the Toolbar from our content view, and set it as the action bar
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        final ActionBar actionBar = getSupportActionBar();
+//        View view = getLayoutInflater().inflate(R.layout.app_searcher, null);
+//        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
+//        actionBar.setCustomView(view, params);
+//        actionBar.setDisplayShowCustomEnabled(true);
+
+        Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.MATCH_PARENT);
+        View app_searcher = getLayoutInflater(savedInstanceState).inflate(R.layout.app_searcher, null);
+        toolbar.addView(app_searcher, params);
+
+    }
 
     private Doodle[] mDoodles;
 
@@ -98,7 +125,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     @Override
     public void onResume() {
         super.onResume();
-        mActionBar.setTitle(getTag());
         mFrunningListener.onResume(this);
     }
 
@@ -109,11 +135,17 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            v.requestFocus();
+            return AppFunction.hideInputMethod(getActivity(), v);
+        }
+        return false;
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Doodle doodle = (Doodle) parent.getAdapter().getItem(position);
-//        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, doodle.title);
-//        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_SEARCH + doodle.query, doodle.title);
-
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent,
