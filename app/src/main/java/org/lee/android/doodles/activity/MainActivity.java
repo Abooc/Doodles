@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import org.lee.android.doodles.AppFunction;
@@ -71,6 +72,7 @@ public class MainActivity extends LoggerActivity
         mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
         mToolbarContainerDrawable = mToolbarContainer.getBackground();
         initToolbar();
+        initSearchBar();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -96,6 +98,35 @@ public class MainActivity extends LoggerActivity
         mToolbarHeight = Utils.getToolbarHeight(this);
     }
 
+    private void initSearchBar(){
+        EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
+        iEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+
+                    mToolbarContainerDrawable.setAlpha(254);
+                    mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
+
+                }else{
+                    mToolbarContainerDrawable.setAlpha(0);
+                    mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setFinishOnTouchOutside(boolean finish) {
+        super.setFinishOnTouchOutside(finish);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
     public HidingScrollListener getHidingScrollListener(){
         return new HidingScrollListener(this) {
 
@@ -107,13 +138,15 @@ public class MainActivity extends LoggerActivity
 
             @Override
             public void onShow() {
+                Log.anchor();
                 mToolbarContainerDrawable.setAlpha(0);
                 mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
             }
 
             @Override
             public void onHide() {
-                mToolbarContainerDrawable.setAlpha(255);
+                Log.anchor();
+                mToolbarContainerDrawable.setAlpha(254);
                 mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
             }
 

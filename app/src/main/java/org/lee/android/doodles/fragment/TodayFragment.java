@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +11,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
 import org.lee.android.doodles.AppContext;
@@ -31,12 +26,10 @@ import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.FileUtils;
-import org.lee.android.doodles.volley.VolleyLoader;
-import org.lee.android.util.Log;
+import org.lee.android.util.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 最新Doodles页面
@@ -72,12 +65,14 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_today, container, false);
-        useTest();
         return container;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        mDoodles = loadData();
+        if (mDoodles == null || mDoodles.length == 0) return;
+
         initRecyclerView(view);
     }
 
@@ -89,6 +84,18 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mDoodles);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+        });
+        recyclerView.setOnTouchListener(this);
     }
 
     private Doodle[] mDoodles;
@@ -98,21 +105,24 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
      *
      * @param doodlesJson
      */
-    private void attachData(String doodlesJson) {
+    private Doodle[] toDoodles(String doodlesJson) {
         Gson gson = new Gson();
         Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
-        if (doodles == null || doodles.length == 0) return;
-        mDoodles = doodles;
+        return doodles;
     }
 
-    private void useTest() {
+    /**
+     * 测试数据
+     */
+    private Doodle[] loadData() {
         try {
             InputStream inputStream = AppContext.getContext().getAssets().open("data/doodles.json");
             String sources = FileUtils.readInStream(inputStream);
-            attachData(sources);
+            return toDoodles(sources);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -128,8 +138,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
 
-    private float yy;
-    private boolean hasHandle;
     private boolean blockTouch;
 
     @Override
@@ -142,21 +150,8 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
                 if (blockTouch) {
                     return blockTouch;
                 }
-
-                hasHandle = false;
-                yy = event.getY();
                 return blockTouch;
             case MotionEvent.ACTION_MOVE:
-                if (!hasHandle) {
-                    float y = event.getY();
-                    if ((y - yy) > 40) {
-                        hasHandle = true;
-                        mActionBar.show();
-                    } else if ((y - yy) < -40) {
-                        hasHandle = true;
-                        mActionBar.hide();
-                    }
-                }
                 return blockTouch;
         }
         return blockTouch;
@@ -182,7 +177,7 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
-    public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerItemViewHolder> implements RecyclerItemViewHolder.ViewHolderClicks{
 
         private Doodle[] mDoodles;
 
@@ -191,17 +186,16 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
             View view = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, parent, false);
-            return RecyclerItemViewHolder.newInstance(view);
+            return RecyclerItemViewHolder.newInstance(view, this);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
+        public void onBindViewHolder(RecyclerItemViewHolder viewHolder, int position) {
             Doodle doodle = mDoodles[position];
-            holder.attachData(doodle);
+            viewHolder.attachData(doodle);
         }
 
         @Override
@@ -209,6 +203,25 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
             return mDoodles == null ? 0 : mDoodles.length;
         }
 
+        @Override
+        public void onItemClick(View parent, int position) {
+            Toast.show("onItemClick");
+            Doodle doodle = mDoodles[position];
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.tabcontent,
+                            DoodleDetailsFragment.newInstance(doodle,
+                                    (int) parent.getX(), (int) parent.getY(),
+                                    parent.getWidth(), parent.getHeight())
+                    )
+                    .addToBackStack("detail").commit();
+        }
+
+        @Override
+        public void onSearch(TextView searchView) {
+            Toast.show("onSearch");
+
+        }
     }
 
 

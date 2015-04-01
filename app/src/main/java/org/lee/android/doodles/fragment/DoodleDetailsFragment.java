@@ -20,6 +20,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.VolleyLoader;
@@ -96,6 +97,9 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         Gson gson = new Gson();
         mDoodle = gson.fromJson(json, Doodle.class);
         mTitle = (String) mActionBar.getTitle();
+
+        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+        view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());
 
         FrameLayout root = (FrameLayout) view;
         Context context = view.getContext();
