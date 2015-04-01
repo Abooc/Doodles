@@ -1,13 +1,12 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.common.view.SlidingTabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,6 +26,7 @@ import java.util.Calendar;
 public class PagerFragment extends Fragment {
 
     private ViewPager mViewPager;
+    private SlidingTabLayout mSlidingTabLayout;
     private Year mYear = new Year("2015", "i_2002");
 
     public static PagerFragment newInstance() {
@@ -40,34 +40,30 @@ public class PagerFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
-//        ActionBar actionBar = activity.getActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//
-//        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(activity,
-//                R.array.menu, android.R.layout.simple_spinner_dropdown_item);
-//        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
     }
-
-    private ActionBar.OnNavigationListener mOnNavigationListener =
-            new ActionBar.OnNavigationListener() {
-                @Override
-                public boolean onNavigationItemSelected(int position, long itemId) {
-//                    mApiClient.requestDoodles(2014 - position, 2, callbacks);
-                    return true;
-                }
-            };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_pager, container, false);
-        PagerTabStrip PagerTab = (PagerTabStrip) container.findViewById(R.id.PagerStrip);
-        PagerTab.setTextSpacing(1);
         mViewPager = (ViewPager) container.findViewById(R.id.ViewPager);
+        mSlidingTabLayout = (SlidingTabLayout) container.findViewById(R.id.SlidingTabs);
         if (savedInstanceState != null) {
             mYear = (Year) savedInstanceState.getSerializable("year");
             Log.anchor("mYear = " + mYear);
         }
+        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return R.color.GRAY_LIGHT;
+            }
+
+            @Override
+            public int getDividerColor(int position) {
+                return R.color.WHITE;
+            }
+        });
+
         attachData(mYear);
         Log.anchor(mYear);
         return container;
@@ -118,6 +114,7 @@ public class PagerFragment extends Fragment {
         adapter.setYear(year.name);
         adapter.setCount(count);
         mViewPager.setAdapter(adapter);
+        mSlidingTabLayout.setViewPager(mViewPager);
     }
 
     public void setYear(Year year) {
@@ -166,7 +163,7 @@ public class PagerFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             int month = count - position;
-            return year + "-" + (month < 10 ? "0" + month : month);
+            return (month < 10 ? "0" + month : month) + "月份";
         }
     }
 

@@ -1,24 +1,39 @@
 package org.lee.android.doodles.activity;
 
-import android.app.ActionBar;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.common.activities.SampleActivityBase;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.LayoutParams;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
-import org.lee.android.doodles.DoubleClickBackExit;
+import org.lee.android.doodles.AppFunction;
+import org.lee.android.doodles.AppSettings;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.CategorysFragment;
+import org.lee.android.doodles.fragment.DoodleDetailsFragment;
+import org.lee.android.doodles.fragment.FragmentRunningListener;
+import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.PagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
-import org.lee.android.util.Toast;
+import org.lee.android.util.Log;
 
 
 /**
@@ -28,9 +43,10 @@ import org.lee.android.util.Toast;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class MainActivity extends SampleActivityBase
+public class MainActivity extends LoggerActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        CategorysFragment.OnYearChangedListener {
+        CategorysFragment.OnYearChangedListener
+        , FragmentRunningListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -44,31 +60,155 @@ public class MainActivity extends SampleActivityBase
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private LinearLayout mToolbarContainer;
+    private int mToolbarHeight;
+    private Drawable mToolbarContainerDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mFragmentManager = getSupportFragmentManager();
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        mTitle = getTitle();
         setContentView(R.layout.activity_main);
+        mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
+        mToolbarContainerDrawable = mToolbarContainer.getBackground();
+        initToolbar();
+        initSearchBar();
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        mTitle = getTitle();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mFragmentHandler = new FragmentHandlerAdapter(mFragmentManager, this,
                 mNavigationDrawerFragment.getTabInfos());
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawerFragment.setUpDrawerMenu(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                R.id.navigation_drawer, drawerLayout);
         mNavigationDrawerFragment.setMenuSelection(0);
+
+    }
+
+    private void initToolbar() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        setTitle(getString(R.string.app_name));
+        mToolbarHeight = Utils.getToolbarHeight(this);
+    }
+
+    private void initSearchBar(){
+        EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
+        iEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+
+                    mToolbarContainerDrawable.setAlpha(254);
+                    mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
+
+                }else{
+                    mToolbarContainerDrawable.setAlpha(0);
+                    mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setFinishOnTouchOutside(boolean finish) {
+        super.setFinishOnTouchOutside(finish);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
+    public HidingScrollListener getHidingScrollListener(){
+        return new HidingScrollListener(this) {
+
+            @Override
+            public void onMoved(int distance) {
+                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance*2));
+                mToolbarContainer.setTranslationY(-distance);
+            }
+
+            @Override
+            public void onShow() {
+                Log.anchor();
+                mToolbarContainerDrawable.setAlpha(0);
+                mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+            }
+
+            @Override
+            public void onHide() {
+                Log.anchor();
+                mToolbarContainerDrawable.setAlpha(254);
+                mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
+            }
+
+        };
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle() {
+        return mNavigationDrawerFragment.getDrawerToggle();
+    }
+
+
+    public NavigationDrawerFragment getNavigationDrawerFragment() {
+        return mNavigationDrawerFragment;
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setTitle(mTitle);
+        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setTitle(mTitle);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.activity_main, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * ActionBar菜单事件
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        super.onOptionsItemSelected(item);
+        Log.anchor();
+//        if() return true;
+        switch (item.getItemId()) {
+            case R.id.Settings:
+                return true;
+            case R.id.RemoveAd:
+                return true;
+            case R.id.AboutDoodles:
+                return true;
+            case R.id.Share:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private int section;
@@ -86,12 +226,45 @@ public class MainActivity extends SampleActivityBase
         mFragmentHandler.show(fragment, tabInfo.title);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onResume(Fragment fragment) {
+        Log.anchor(fragment.getClass().getSimpleName());
+        if (fragment instanceof TodayFragment) {
+            return;
+        }
+
+        if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.setHasOptionsMenu(false);
+            return;
+        }
+    }
+
+    @Override
+    public void onPause(Fragment fragment) {
+        Log.anchor(fragment.getClass().getSimpleName());
+        if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.setHasOptionsMenu(true);
+            return;
+        }
+    }
+
     /**
      * 当前正在显示的Fragment
      *
      * @param fragment
      */
     public void onShowFragment(Fragment fragment) {
+        if (true) return;
+        if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.setHasOptionsMenu(false);
+            return;
+        }
+        mNavigationDrawerFragment.setHasOptionsMenu(true);
         if (fragment instanceof TodayFragment) {
             TabInfo tabInfo = mFragmentHandler.getTabInfo(0);
             mTitle = tabInfo.title;
@@ -134,40 +307,6 @@ public class MainActivity extends SampleActivityBase
         invalidateOptionsMenu();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.activity_main, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     * ActionBar菜单事件
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.Settings:
-                return true;
-            case R.id.RemoveAd:
-                return true;
-            case R.id.AboutDoodles:
-                return true;
-            case R.id.Share:
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {
@@ -175,15 +314,24 @@ public class MainActivity extends SampleActivityBase
             mNavigationDrawerFragment.toggleDrawer();
             return;
         }
-        if (section == 0) {
-            if (DoubleClickBackExit.onBackPressed()) {
-                finish();
-            } else {
-                Toast.show("双击返回键退出");
-            }
-        } else {
-            super.onBackPressed();
+        View view = getWindow().getDecorView();
+        if(AppFunction.hideInputMethod(this, view)){
+            view.requestFocus();
+            Log.anchor();
+            return;
         }
+//        if (section == 0) {
+//            if (DoubleClickBackExit.onBackPressed()) {
+//                finish();
+//            } else {
+//                Toast.show("双击返回键退出");
+//            }
+//        } else {
+//            super.onBackPressed();
+//        }
+
+        super.onBackPressed();
+
     }
 
 }

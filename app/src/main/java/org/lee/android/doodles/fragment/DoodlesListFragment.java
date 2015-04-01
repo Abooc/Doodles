@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -145,8 +147,25 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DoodleAdapter doodleAdapter = (DoodleAdapter) parent.getAdapter();
         Doodle doodle = (Doodle) doodleAdapter.getItem(position);
-        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, null);
+//        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, null);
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.tabcontent,
+                        DoodleDetailsFragment.newInstance(doodle,
+                                (int) view.getX(), (int) view.getY(),
+                                view.getWidth(), view.getHeight())
+                )
+                .addToBackStack("detail")
+                .commit();
     }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return AnimationUtils.loadAnimation(getActivity(),
+                enter ? android.R.anim.fade_in : android.R.anim.fade_out);
+    }
+
 
     /**
      * 请求Doodles列表回调

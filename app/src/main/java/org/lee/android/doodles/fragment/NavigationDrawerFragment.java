@@ -1,6 +1,5 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +8,12 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.activity.AboutDoodlesActivity;
 import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.properties.SettingsActivity;
 import org.lee.android.util.Toast;
@@ -86,9 +87,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private String[] mNames = {
 //            "A",
 //            "B",
-                "最新",
-                "年份",
-                "涂鸦存档"
+            "最新",
+            "年份",
+            "涂鸦存档"
 //                , "搜索更多涂鸦"
     };
 
@@ -112,13 +113,25 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return tabInfos;
     }
 
+    private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
+        DrawerMenuItem[] menuItems = {
+                new DrawerMenuItem(names[0], iconIds[0]),
+                new DrawerMenuItem(names[1], iconIds[1]),
+                new DrawerMenuItem(names[2], iconIds[2])
+        };
+        return menuItems;
+    }
+
     public ArrayList<TabInfo> getTabInfos() {
         return mTabInfoList;
     }
 
-        @Override
+    private ActionBar mActionBar;
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mActionBar = ((ActionBarActivity) activity).getSupportActionBar();
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
@@ -139,21 +152,19 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             mFromSavedInstanceState = true;
         }
 
-        mDrawerMenuAdapter = new DrawerMenuAdapter<String>(
-                getActivity(), 0, mNames);
-
-//        onItemClick(null, null, mCurrentSelectedPosition, 0);
+        DrawerMenuItem[] menuItems = getMenus(mNames,
+                new int[]{R.drawable.ic_menu_sort_by_size,
+                        R.drawable.ic_menu_today,
+                        R.drawable.ic_menu_find});
+        mDrawerMenuAdapter = new DrawerMenuAdapter(
+                getActivity(), 0, menuItems);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
     }
 
     @Override
@@ -176,6 +187,22 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         view.findViewById(R.id.Settings).setOnClickListener(this);
         view.findViewById(R.id.Evaluate).setOnClickListener(this);
         view.findViewById(R.id.Share).setOnClickListener(this);
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle() {
+        return mDrawerToggle;
+    }
+
+    private boolean actionbarToggle;
+
+    public void toggle() {
+        if (actionbarToggle) {
+            mDrawerToggle.onDrawerClosed(mFragmentContainerView);
+            actionbarToggle = false;
+        } else {
+            mDrawerToggle.onDrawerOpened(mFragmentContainerView);
+            actionbarToggle = true;
+        }
     }
 
     public boolean isDrawerOpen() {
@@ -209,7 +236,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -241,6 +267,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
     }
 
 
@@ -325,13 +352,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
-            showGlobalContextActionBar();
+            menu.setGroupVisible(R.id.Menu, false);
         } else {
-//            if (mCurrentSelectedPosition == 1) {
-//                ActionBar actionBar = getActionBar();
-//                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//            }
+            menu.setGroupVisible(R.id.Menu, true);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -344,10 +367,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item);
     }
 
     /**
@@ -362,7 +383,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     private ActionBar getActionBar() {
-        return (getActivity()).getActionBar();
+        return mActionBar;
     }
 
     /**
@@ -418,10 +439,20 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
+    private static class DrawerMenuItem {
+        final String name;
+        final int iconId;
+
+        public DrawerMenuItem(String name, int iconId) {
+            this.name = name;
+            this.iconId = iconId;
+        }
+    }
+
     /**
      * 侧滑菜单ListView Adapter
      */
-    private DrawerMenuAdapter<String> mDrawerMenuAdapter;
+    private DrawerMenuAdapter<DrawerMenuItem> mDrawerMenuAdapter;
 
     private class DrawerMenuAdapter<T> extends ArrayAdapter {
 
@@ -433,8 +464,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.drawer_menu_item, null);
             TextView titleText = (TextView) convertView.findViewById(R.id.Title);
-            String title = (String) getItem(position);
-            titleText.setText(title);
+            ImageView iconView = (ImageView) convertView.findViewById(R.id.ImageView);
+            DrawerMenuItem menuItem = (DrawerMenuItem) getItem(position);
+            titleText.setText(menuItem.name);
+            iconView.setImageResource(menuItem.iconId);
             return convertView;
         }
     }

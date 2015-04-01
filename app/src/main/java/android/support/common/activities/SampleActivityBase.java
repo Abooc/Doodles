@@ -20,12 +20,13 @@ import android.os.Bundle;
 import android.support.common.logger.Log;
 import android.support.common.logger.LogWrapper;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
 
 /**
  * Base launcher activity, to handle most of the common plumbing for samples.
  */
-public class SampleActivityBase extends FragmentActivity {
+public class SampleActivityBase extends ActionBarActivity {
 
     public static final String TAG = "SampleActivityBase";
 

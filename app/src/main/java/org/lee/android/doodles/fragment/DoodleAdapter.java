@@ -1,6 +1,7 @@
 package org.lee.android.doodles.fragment;
 
 import android.content.Context;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class DoodleAdapter extends ArrayAdapter {
 
             imageView.setDefaultImageResId(R.drawable.ic_doodle_error);
             imageView.setErrorImageResId(R.drawable.ic_google_birthday);
+
         }
 
         private void attachData(Doodle doodle) {

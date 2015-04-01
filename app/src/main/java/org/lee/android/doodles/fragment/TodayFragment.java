@@ -1,35 +1,41 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.AppContext;
+import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
-import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.FileUtils;
-import org.lee.android.util.Log;
+import org.lee.android.util.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * 最新Doodles页面
  */
-public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener,
+        View.OnTouchListener {
 
     public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
@@ -39,107 +45,186 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
 
-    private ViewPager mViewPager;
-    private ListView mListView;
+    private ActionBar mActionBar;
+    /**
+     * Fragment运行状态监听
+     */
+    private FragmentRunningListener mFrunningListener;
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onShowFragment(this);
-        ActionBar actionBar = activity.getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        MainActivity mainActivity = (MainActivity) activity;
+        mOnScrollListener = mainActivity.getHidingScrollListener();
+        mFrunningListener = mainActivity;
+        mActionBar = mainActivity.getSupportActionBar();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_today, container, false);
-
-        mListView  = (ListView) container.findViewById(R.id.ListView);
-        mListView.setOnItemClickListener(this);
-        useTest();
-
-//        View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_today_header, null);
-//        mViewPager = (ViewPager) headerView.findViewById(R.id.ViewPager);
-//        mListView.addHeaderView(headerView);
-//        DoodlePagerAdapter adapter = new DoodlePagerAdapter(getChildFragmentManager(), mDoodles);
-//        mViewPager.setAdapter(adapter);
         return container;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mDoodles = loadData();
+        if (mDoodles == null || mDoodles.length == 0) return;
+
+        initRecyclerView(view);
+    }
+
+    private void initRecyclerView(View view) {
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mDoodles);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setOnScrollListener(mOnScrollListener);
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+        });
+        recyclerView.setOnTouchListener(this);
+    }
 
     private Doodle[] mDoodles;
 
     /**
-     * 将Doodles列表的Json数据解析并显示到ListView
+     * 将Doodles列表的Json数据解析
      *
      * @param doodlesJson
      */
-    private void attachData(String doodlesJson) {
+    private Doodle[] toDoodles(String doodlesJson) {
         Gson gson = new Gson();
         Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
-        if (doodles == null || doodles.length == 0) return;
-        DoodleAdapter adapter = new DoodleAdapter(getActivity(), doodles);
-        mListView.setAdapter(adapter);
-        mDoodles = doodles;
+        return doodles;
     }
 
-    private void useTest() {
+    /**
+     * 测试数据
+     */
+    private Doodle[] loadData() {
         try {
             InputStream inputStream = AppContext.getContext().getAssets().open("data/doodles.json");
             String sources = FileUtils.readInStream(inputStream);
-            attachData(sources);
+            return toDoodles(sources);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mFrunningListener.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mFrunningListener.onPause(this);
     }
 
 
+    private boolean blockTouch;
+
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            ((MainActivity) getActivity()).onShowFragment(this);
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                blockTouch = false;
+                v.requestFocus();
+                blockTouch = AppFunction.hideInputMethod(getActivity(), v);
+                if (blockTouch) {
+                    return blockTouch;
+                }
+                return blockTouch;
+            case MotionEvent.ACTION_MOVE:
+                return blockTouch;
         }
+        return blockTouch;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Doodle doodle = (Doodle) parent.getAdapter().getItem(position);
-//        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, doodle.title);
-        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_SEARCH + doodle.query, doodle.title);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.tabcontent,
+                        DoodleDetailsFragment.newInstance(doodle,
+                                (int) view.getX(), (int) view.getY(),
+                                view.getWidth(), view.getHeight())
+                )
+                .addToBackStack("detail")
+                .commit();
     }
 
-    private class DoodlePagerAdapter extends FragmentStatePagerAdapter {
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return AnimationUtils.loadAnimation(getActivity(),
+                enter ? android.R.anim.fade_in : android.R.anim.fade_out);
+    }
 
-        private int count = 5;
+    public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerItemViewHolder> implements RecyclerItemViewHolder.ViewHolderClicks{
+
         private Doodle[] mDoodles;
-        private Gson mGson = new Gson();
 
-        public DoodlePagerAdapter(FragmentManager fm, Doodle[] doodles) {
-            super(fm);
+        public RecyclerAdapter(Doodle[] doodles) {
             mDoodles = doodles;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = new DoodlePagerFragment();
-            Bundle args = new Bundle();
-            String json = mGson.toJson(mDoodles[position]);
-            args.putString("doodle", json);
-            fragment.setArguments(args);
-            return fragment;
+        public RecyclerItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            View view = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, parent, false);
+            return RecyclerItemViewHolder.newInstance(view, this);
         }
 
         @Override
-        public int getCount() {
-            return count;
+        public void onBindViewHolder(RecyclerItemViewHolder viewHolder, int position) {
+            Doodle doodle = mDoodles[position];
+            viewHolder.attachData(doodle);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return mDoodles[position].title;
+        public int getItemCount() {
+            return mDoodles == null ? 0 : mDoodles.length;
+        }
+
+        @Override
+        public void onItemClick(View parent, int position) {
+            Toast.show("onItemClick");
+            Doodle doodle = mDoodles[position];
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.tabcontent,
+                            DoodleDetailsFragment.newInstance(doodle,
+                                    (int) parent.getX(), (int) parent.getY(),
+                                    parent.getWidth(), parent.getHeight())
+                    )
+                    .addToBackStack("detail").commit();
+        }
+
+        @Override
+        public void onSearch(TextView searchView) {
+            Toast.show("onSearch");
+
         }
     }
+
+
 
 
 }

@@ -10,6 +10,8 @@ public interface PreferencesKeys {
 
 	Resources res = AppContext.getContext().getResources();
 
+    final String pref_key_open_devmode = res.getString(R.string.pre_key_open_devmode);
+
     final String pref_key_clear_cache = res.getString(R.string.pre_key_clear_cache);
     final String pref_key_about_us = res.getString(R.string.pre_key_about_us);
 

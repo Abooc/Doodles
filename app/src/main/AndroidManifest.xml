@@ -4,18 +4,16 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="19" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AppApplication"
         android:label="@string/app_name"
+        android:theme="@style/Theme.Custom.NoActionBar"
         android:icon="@drawable/ic_launcher">
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/App.Theme"
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
             <intent-filter>
@@ -28,21 +26,20 @@
             android:name=".activity.WebViewActivity"
             android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/TRANSPARENT"
-            android:theme="@style/App.Theme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".properties.SettingsActivity"
-            android:icon="@drawable/TRANSPARENT"
+            android:parentActivityName=".activity.MainActivity"
             android:label="设置"
-            android:theme="@style/App.Theme"
+            android:icon="@drawable/TRANSPARENT"
+            android:theme="@style/App.SettingsTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".properties.AboutUsActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="关于我们"
-            android:theme="@style/App.Theme"
             android:screenOrientation="portrait" />
 
         <activity
@@ -50,7 +47,6 @@
             android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="@string/title_section5"
-            android:theme="@style/App.Theme"
             android:screenOrientation="portrait" />
     </application>
 </manifest>
