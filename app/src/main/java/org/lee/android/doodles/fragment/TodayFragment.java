@@ -1,34 +1,42 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
 import org.lee.android.doodles.AppContext;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.FileUtils;
+import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * 最新Doodles页面
@@ -44,82 +52,49 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
 
-    //    private ViewPager mViewPager;
-    private ListView mListView;
     private ActionBar mActionBar;
     /**
      * Fragment运行状态监听
      */
     private FragmentRunningListener mFrunningListener;
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         MainActivity mainActivity = (MainActivity) activity;
+        mOnScrollListener = mainActivity.getHidingScrollListener();
         mFrunningListener = mainActivity;
         mActionBar = mainActivity.getSupportActionBar();
-        mActionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
-            @Override
-            public void onMenuVisibilityChanged(boolean b) {
-                Log.anchor(b);
-            }
-        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_today, container, false);
-        mListView = (ListView) container.findViewById(R.id.ListView);
-        mListView.setOnItemClickListener(this);
-        mListView.setOnTouchListener(this);
         useTest();
-
-//        View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_today_header, null);
-//        mViewPager = (ViewPager) headerView.findViewById(R.id.ViewPager);
-//        mListView.addHeaderView(headerView);
-//        DoodlePagerAdapter adapter = new DoodlePagerAdapter(getChildFragmentManager(), mDoodles);
-//        mViewPager.setAdapter(adapter);
         return container;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        initRecyclerView(view);
+    }
 
-        // Retrieve the Toolbar from our content view, and set it as the action bar
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        final ActionBar actionBar = getSupportActionBar();
-//        View view = getLayoutInflater().inflate(R.layout.app_searcher, null);
-//        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
-//        actionBar.setCustomView(view, params);
-//        actionBar.setDisplayShowCustomEnabled(true);
-
-        Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.MATCH_PARENT);
-        View app_searcher = getLayoutInflater(savedInstanceState).inflate(R.layout.app_searcher, null);
-        toolbar.addView(app_searcher, params);
-
-        final View menu = app_searcher.findViewById(R.id.Menu);
-        EditText iEditText = (EditText) app_searcher.findViewById(R.id.EditText);
-        iEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    menu.setVisibility(View.VISIBLE);
-                    mActionBar.hide();
-                } else {
-                    menu.setVisibility(View.GONE);
-                    mActionBar.show();
-                }
-            }
-        });
-
+    private void initRecyclerView(View view) {
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mDoodles);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setOnScrollListener(mOnScrollListener);
     }
 
     private Doodle[] mDoodles;
 
     /**
-     * 将Doodles列表的Json数据解析并显示到ListView
+     * 将Doodles列表的Json数据解析
      *
      * @param doodlesJson
      */
@@ -127,8 +102,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         Gson gson = new Gson();
         Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
         if (doodles == null || doodles.length == 0) return;
-        DoodleAdapter adapter = new DoodleAdapter(getActivity(), doodles);
-        mListView.setAdapter(adapter);
         mDoodles = doodles;
     }
 
@@ -209,37 +182,36 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
-    private class DoodlePagerAdapter extends FragmentStatePagerAdapter {
+    public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private int count = 5;
         private Doodle[] mDoodles;
-        private Gson mGson = new Gson();
 
-        public DoodlePagerAdapter(FragmentManager fm, Doodle[] doodles) {
-            super(fm);
+        public RecyclerAdapter(Doodle[] doodles) {
             mDoodles = doodles;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = new DoodlePagerFragment();
-            Bundle args = new Bundle();
-            String json = mGson.toJson(mDoodles[position]);
-            args.putString("doodle", json);
-            fragment.setArguments(args);
-            return fragment;
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            View view = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, parent, false);
+            return RecyclerItemViewHolder.newInstance(view);
         }
 
         @Override
-        public int getCount() {
-            return count;
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+            RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
+            Doodle doodle = mDoodles[position];
+            holder.attachData(doodle);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return mDoodles[position].title;
+        public int getItemCount() {
+            return mDoodles == null ? 0 : mDoodles.length;
         }
+
     }
+
+
 
 
 }

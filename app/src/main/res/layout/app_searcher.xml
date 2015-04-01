@@ -29,6 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
             android:paddingLeft="16dp"
             android:textStyle="italic"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"

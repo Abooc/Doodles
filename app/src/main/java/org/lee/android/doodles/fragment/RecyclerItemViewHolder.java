@@ -1,0 +1,53 @@
+package org.lee.android.doodles.fragment;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.NetworkImageView;
+
+import org.lee.android.doodles.R;
+import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.volley.VolleyLoader;
+
+public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
+
+    private final NetworkImageView imageView;
+    private final TextView titleText;
+    private final TextView dateText;
+    private final TextView hoverText;
+
+    public RecyclerItemViewHolder(final View parent,
+                                  NetworkImageView imageView,
+                                  TextView titleText,
+                                  TextView dateText,
+                                  TextView hoverText) {
+        super(parent);
+        this.imageView = imageView;
+        this.titleText = titleText;
+        this.dateText = dateText;
+        this.hoverText = hoverText;
+    }
+
+    public static RecyclerItemViewHolder newInstance(View convertView) {
+        NetworkImageView imageView = (NetworkImageView) convertView.findViewById(R.id.ImageView);
+        TextView titleText = (TextView) convertView.findViewById(R.id.Title);
+        TextView dateText = (TextView) convertView.findViewById(R.id.Date);
+        TextView hoverText = (TextView) convertView.findViewById(R.id.HoverText);
+
+        imageView.setDefaultImageResId(R.drawable.ic_doodle_error);
+        imageView.setErrorImageResId(R.drawable.ic_google_birthday);
+        return new RecyclerItemViewHolder(convertView, imageView, titleText, titleText, titleText);
+    }
+
+    public void setItemText(CharSequence text) {
+        titleText.setText(text);
+    }
+
+    public void attachData(Doodle doodle) {
+        imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
+        titleText.setText(doodle.title);
+        dateText.setText(doodle.getDate());
+//            hoverText.setText(doodle.getTranslations().getItem(0).hover_text);
+    }
+}

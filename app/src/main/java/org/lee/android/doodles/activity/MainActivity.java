@@ -1,5 +1,6 @@
 package org.lee.android.doodles.activity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,15 +14,20 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
 
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.AppSettings;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.CategorysFragment;
 import org.lee.android.doodles.fragment.DoodleDetailsFragment;
 import org.lee.android.doodles.fragment.FragmentRunningListener;
+import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.PagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
@@ -53,16 +59,18 @@ public class MainActivity extends LoggerActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private LinearLayout mToolbarContainer;
+    private int mToolbarHeight;
+    private Drawable mToolbarContainerDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mFragmentManager = getSupportFragmentManager();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Retrieve the Toolbar from our content view, and set it as the action bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
+        mToolbarContainerDrawable = mToolbarContainer.getBackground();
+        initToolbar();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -79,6 +87,37 @@ public class MainActivity extends LoggerActivity
                 R.id.navigation_drawer, drawerLayout);
         mNavigationDrawerFragment.setMenuSelection(0);
 
+    }
+
+    private void initToolbar() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        setTitle(getString(R.string.app_name));
+        mToolbarHeight = Utils.getToolbarHeight(this);
+    }
+
+    public HidingScrollListener getHidingScrollListener(){
+        return new HidingScrollListener(this) {
+
+            @Override
+            public void onMoved(int distance) {
+                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance*2));
+                mToolbarContainer.setTranslationY(-distance);
+            }
+
+            @Override
+            public void onShow() {
+                mToolbarContainerDrawable.setAlpha(0);
+                mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+            }
+
+            @Override
+            public void onHide() {
+                mToolbarContainerDrawable.setAlpha(255);
+                mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
+            }
+
+        };
     }
 
     public ActionBarDrawerToggle getDrawerToggle() {
