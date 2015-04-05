@@ -1,84 +1,220 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.apache.http.Header;
+import org.lee.android.doodles.ApiClient;
+import org.lee.android.doodles.AppContext;
+import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.bean.DoodlePackage;
+import org.lee.android.doodles.volley.FileUtils;
+import org.lee.android.doodles.volley.HttpHandler;
+import org.lee.android.test.DataGeter;
+import org.lee.android.test.Tester;
 import org.lee.android.util.Log;
+import org.lee.android.util.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * 搜索更多涂鸦
+ * 搜索Doodles页面
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements AdapterView.OnItemClickListener,
+        View.OnTouchListener, RecyclerItemViewHolder.ViewHolderClicks {
 
-    public static SearchFragment newInstance() {
+    public static SearchFragment newInstance(String q) {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
+        args.putString("q", q);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ActionBar actionBar = activity.getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_search, null, false);
     }
+
+    private String mQ;
+    private View progressContainer;
+    private View listContainer;
+    private TextView internalEmpty;
+    private RecyclerView recyclerView;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        mDoodles = loadData();
+        if (mDoodles == null || mDoodles.length == 0) return;
+
+        progressContainer = view.findViewById(R.id.progressContainer);
+        listContainer = view.findViewById(R.id.listContainer);
+        internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
+        recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+
+        mQ = getArguments().getString("q");
+
     }
 
+    private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
+//        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+//        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(
+                getActivity(), doodles, this);
+        recyclerView.setAdapter(recyclerAdapter);
+//        recyclerView.setOnScrollListener(mOnScrollListener);
+        recyclerView.setOnTouchListener(this);
+    }
 
+    private Doodle[] mDoodles;
+
+    /**
+     * 将Doodles列表的Json数据解析
+     *
+     * @param doodlesJson
+     */
+    private Doodle[] toDoodles(String doodlesJson) {
+        Gson gson = new Gson();
+        Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
+        return doodles;
+    }
+
+    /**
+     * 测试数据
+     */
+    private Doodle[] loadData() {
+        try {
+            InputStream inputStream = AppContext.getContext().getAssets().open("data/doodles.json");
+            String sources = FileUtils.readInStream(inputStream);
+            return toDoodles(sources);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private ApiClient apiClient;
     @Override
     public void onResume() {
         super.onResume();
-        Log.anchor();
+
+        if(apiClient == null){
+            apiClient = new ApiClient();
+
+            DoodlePackage doodlePkg = DataGeter.getSearchDoodles();
+            initRecyclerView(recyclerView, doodlePkg.doodles);
+
+            if(true)
+            return ;
+
+            apiClient.searchDoodles(mQ, 1, new HttpHandler<DoodlePackage>() {
+                @Override
+                public void onStart() {
+                    progressContainer.setVisibility(View.VISIBLE);
+                    listContainer.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFinish() {
+                    progressContainer.setVisibility(View.GONE);
+                    listContainer.setVisibility(View.VISIBLE);
+
+                }
+
+                @Override
+                public void onSuccess(int i, Header[] headers, String s, DoodlePackage doodlePkg) {
+                    if(doodlePkg != null){
+                        Log.anchor(doodlePkg.results_number);
+                        initRecyclerView(recyclerView, doodlePkg.doodles);
+                    }else{
+                        onFailure(0, "没有搜到匹配内容");
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, String error) {
+                    Log.anchor("statusCode:" + statusCode + ", " + error);
+                    internalEmpty.setText(error);
+
+                }
+            });
+
+        }
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.anchor();
     }
 
+
+    private boolean blockTouch;
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.anchor();
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                blockTouch = false;
+                v.requestFocus();
+                blockTouch = AppFunction.hideInputMethod(getActivity(), v);
+                if (blockTouch) {
+                    return blockTouch;
+                }
+                return blockTouch;
+            case MotionEvent.ACTION_MOVE:
+                return blockTouch;
+        }
+        return blockTouch;
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.anchor();
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Doodle doodle = (Doodle) parent.getAdapter().getItem(position);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.tabcontent,
+                        DoodleDetailsFragment.newInstance(doodle,
+                                (int) view.getX(), (int) view.getY(),
+                                view.getWidth(), view.getHeight())
+                )
+                .addToBackStack("detail")
+                .commit();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.anchor();
+    public void onItemClick(View parent, int position) {
+        Toast.show("onItemClick");
+        Doodle doodle = mDoodles[position];
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.tabcontent,
+                        DoodleDetailsFragment.newInstance(doodle,
+                                (int) parent.getX(), (int) parent.getY(),
+                                parent.getWidth(), parent.getHeight())
+                )
+                .addToBackStack("detail").commit();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.anchor();
-    }
+    public void onSearch(TextView searchView) {
+        Toast.show("onSearch");
 
+    }
 
 }

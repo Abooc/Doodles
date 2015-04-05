@@ -1,26 +1,28 @@
 package org.lee.android.doodles.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.lee.android.doodles.AppFunction;
-import org.lee.android.doodles.AppSettings;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
@@ -34,6 +36,7 @@ import org.lee.android.doodles.fragment.PagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
 import org.lee.android.util.Log;
+import org.lee.android.util.Toast;
 
 
 /**
@@ -98,55 +101,110 @@ public class MainActivity extends LoggerActivity
         mToolbarHeight = Utils.getToolbarHeight(this);
     }
 
-    private void initSearchBar(){
-        EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
+    private void initSearchBar() {
+        final EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
+        final View MenuView = mToolbarContainer.findViewById(R.id.Menu);
+        MenuView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.Menu:
+                        iEditText.setText(null);
+                        getWindow().getDecorView().requestFocus();
+                        getSupportFragmentManager().popBackStack();
+                        return;
+                }
+            }
+        });
         iEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-
-                    mToolbarContainerDrawable.setAlpha(254);
+                Log.anchor("hasFocus" + hasFocus);
+                if (hasFocus) {
+//                    mToolbarContainerDrawable.setAlpha(254);
                     mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
+                    MenuView.setVisibility(View.VISIBLE);
+                } else {
+                    MenuView.setVisibility(View.GONE);
 
-                }else{
-                    mToolbarContainerDrawable.setAlpha(0);
-                    mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-
+//                    mToolbarContainerDrawable.setAlpha(0);
+//                    mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+//
                 }
+            }
+        });
+        iEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String q = v.getText().toString();
+                    Toast.show("搜索..." + q);
+                    AppFunction.hideKeyboard(MainActivity.this);
+//
+                    FragmentTransaction transaction = getSupportFragmentManager()
+                            .beginTransaction();
+                    transaction
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    transaction.replace(android.R.id.tabcontent,
+                            SearchFragment.newInstance(q));
+                    transaction.addToBackStack("search").commit();
+                    return true;
+                }
+                return false;
             }
         });
     }
 
-    @Override
-    public void setFinishOnTouchOutside(boolean finish) {
-        super.setFinishOnTouchOutside(finish);
-    }
-
+    /**
+     * 点击非输入框区域收起软键盘
+     *
+     * @param ev
+     * @return
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean block = false;
+        View v = getCurrentFocus();
+        if (v != null &&
+                (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) &&
+                v instanceof EditText &&
+                !v.getClass().getName().startsWith("android.webkit.")) {
+            int scrcoords[] = new int[2];
+            v.getLocationOnScreen(scrcoords);
+            float x = ev.getRawX() + v.getLeft() - scrcoords[0];
+            float y = ev.getRawY() + v.getTop() - scrcoords[1];
+
+            if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom())
+                block = AppFunction.hideKeyboard(this);
+        }
+        if (block) {
+            getWindow().getDecorView().requestFocus();
+            return true;
+        }
         return super.dispatchTouchEvent(ev);
     }
 
-    public HidingScrollListener getHidingScrollListener(){
+    public HidingScrollListener getHidingScrollListener() {
         return new HidingScrollListener(this) {
 
+
             @Override
-            public void onMoved(int distance) {
-                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance*2));
+            public void onMoved(int distance, int dx, int dy) {
+//                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance * 2));
                 mToolbarContainer.setTranslationY(-distance);
             }
 
             @Override
             public void onShow() {
                 Log.anchor();
-                mToolbarContainerDrawable.setAlpha(0);
+//                mToolbarContainerDrawable.setAlpha(0);
                 mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
             }
 
             @Override
             public void onHide() {
                 Log.anchor();
-                mToolbarContainerDrawable.setAlpha(254);
+//                mToolbarContainerDrawable.setAlpha(254);
                 mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
             }
 
@@ -315,7 +373,7 @@ public class MainActivity extends LoggerActivity
             return;
         }
         View view = getWindow().getDecorView();
-        if(AppFunction.hideInputMethod(this, view)){
+        if (AppFunction.hideInputMethod(this, view)) {
             view.requestFocus();
             Log.anchor();
             return;

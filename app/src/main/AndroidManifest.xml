@@ -27,6 +27,12 @@
             android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/TRANSPARENT"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:icon="@drawable/TRANSPARENT"
+            android:theme="@style/App.SettingsTheme"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".properties.SettingsActivity"

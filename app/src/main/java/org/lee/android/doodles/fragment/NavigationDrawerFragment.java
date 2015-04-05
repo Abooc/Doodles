@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.lee.android.doodles.AppApplication;
+import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.WebViewActivity;
@@ -278,6 +279,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onDrawerOpened(View drawerView) {
+        AppFunction.hideInputMethod(getActivity(), mDrawerLayout);
+
         if (!isAdded()) {
             return;
         }
