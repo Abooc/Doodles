@@ -1,6 +1,5 @@
 package org.lee.android.doodles.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,12 +14,10 @@ import org.lee.android.util.Log;
 /**
  * 测试用
  */
-public class FragmentA extends Fragment {
+public class FragmentLog extends Fragment {
 
-    public static FragmentA newInstance() {
-        FragmentA fragment = new FragmentA();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+    public static FragmentLog newInstance() {
+        FragmentLog fragment = new FragmentLog();
         return fragment;
     }
 
@@ -30,8 +27,6 @@ public class FragmentA extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Log.anchor(mSimpleName);
-        ActionBar actionBar = activity.getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
 
     @Override

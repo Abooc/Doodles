@@ -49,12 +49,12 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements V
 
         imageView.setDefaultImageResId(R.drawable.ic_doodle_error);
         imageView.setErrorImageResId(R.drawable.ic_google_birthday);
-        return new RecyclerItemViewHolder(convertView, imageView, titleText, titleText, titleText, clicks);
+        return new RecyclerItemViewHolder(convertView, imageView, titleText, dateText, hoverText, clicks);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.Search:
                 mViewHolderClicks.onSearch((TextView) v);
                 return;
@@ -64,14 +64,10 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements V
         }
     }
 
-    public void setItemText(CharSequence text) {
-        titleText.setText(text);
-    }
-
     public void attachData(Doodle doodle) {
         imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
         titleText.setText(doodle.title);
         dateText.setText(doodle.getDate());
-//            hoverText.setText(doodle.getTranslations().getItem(0).hover_text);
+        hoverText.setText(doodle.getTranslations().getItem(0).hover_text);
     }
 }

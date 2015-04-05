@@ -14,6 +14,16 @@
         android:padding="6dp"
         tools:context=".MainActivity">
 
+        <TextView
+            android:id="@+id/Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2015-02-19"
+            android:padding="6dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/GRAY_DARK" />
+
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/ImageView"
             android:layout_width="match_parent"
@@ -26,25 +36,13 @@
             android:id="@+id/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ImageView"
             android:text="2015春节"
-            android:textColor="@color/BLACK" />
-
-        <TextView
-            android:id="@+id/Date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/Title"
-            android:text="2015-02-19"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:textColor="@color/BLACK" />
 
         <TextView
             android:id="@+id/HoverText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
             android:textStyle="italic"
             android:textColor="@color/GRAY_DARK"
@@ -54,8 +52,6 @@
             android:id="@+id/Search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
             android:clickable="true"
             android:text="搜索更多信息"
             android:textStyle="italic"

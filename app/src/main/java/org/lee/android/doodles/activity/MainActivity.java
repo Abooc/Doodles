@@ -1,12 +1,11 @@
 package org.lee.android.doodles.activity;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -109,7 +108,6 @@ public class MainActivity extends LoggerActivity
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.Menu:
-                        iEditText.setText(null);
                         getWindow().getDecorView().requestFocus();
                         getSupportFragmentManager().popBackStack();
                         return;
@@ -121,15 +119,10 @@ public class MainActivity extends LoggerActivity
             public void onFocusChange(View v, boolean hasFocus) {
                 Log.anchor("hasFocus" + hasFocus);
                 if (hasFocus) {
-//                    mToolbarContainerDrawable.setAlpha(254);
                     mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
                     MenuView.setVisibility(View.VISIBLE);
                 } else {
                     MenuView.setVisibility(View.GONE);
-
-//                    mToolbarContainerDrawable.setAlpha(0);
-//                    mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-//
                 }
             }
         });
@@ -145,9 +138,9 @@ public class MainActivity extends LoggerActivity
                             .beginTransaction();
                     transaction
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    transaction.replace(android.R.id.tabcontent,
+                    transaction.add(android.R.id.tabcontent,
                             SearchFragment.newInstance(q));
-                    transaction.addToBackStack("search").commit();
+                    transaction.addToBackStack("q").commit();
                     return true;
                 }
                 return false;

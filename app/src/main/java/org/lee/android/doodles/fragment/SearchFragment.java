@@ -33,7 +33,7 @@ import java.io.InputStream;
 /**
  * 搜索Doodles页面
  */
-public class SearchFragment extends Fragment implements
+public class SearchFragment extends FragmentLog implements
         View.OnTouchListener, RecyclerItemViewHolder.ViewHolderClicks {
 
     public static SearchFragment newInstance(String q) {
@@ -63,9 +63,27 @@ public class SearchFragment extends Fragment implements
         listContainer = view.findViewById(R.id.listContainer);
         internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
         recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-
         mQ = getArguments().getString("q");
 
+        if(savedInstanceState != null){
+            String json = savedInstanceState.getString("data");
+            mDoodlePkg = new Gson().fromJson(json, DoodlePackage.class);
+            initRecyclerView(recyclerView, mDoodlePkg.doodles);
+            Log.anchor(savedInstanceState.toString());
+        }
+
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if(savedInstanceState != null){
+            String json = savedInstanceState.getString("data");
+            mDoodlePkg = new Gson().fromJson(json, DoodlePackage.class);
+            initRecyclerView(recyclerView, mDoodlePkg.doodles);
+            Log.anchor(savedInstanceState.toString());
+        }
     }
 
     private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
@@ -79,14 +97,12 @@ public class SearchFragment extends Fragment implements
         recyclerView.setOnTouchListener(this);
     }
 
-    private ApiClient apiClient;
     @Override
     public void onResume() {
         super.onResume();
 
-        if(apiClient == null){
-            apiClient = new ApiClient();
-
+        if(mDoodlePkg == null){
+            ApiClient apiClient = new ApiClient();
             mDoodlePkg = DataGeter.getSearchDoodles();
             initRecyclerView(recyclerView, mDoodlePkg.doodles);
 
@@ -174,4 +190,11 @@ public class SearchFragment extends Fragment implements
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.anchor(outState.toString());
+
+        String json = new Gson().toJson(mDoodlePkg);
+        outState.putString("data", json);
+    }
 }
