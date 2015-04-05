@@ -71,17 +71,30 @@ public class MainActivity extends LoggerActivity
         mFragmentManager = getSupportFragmentManager();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
-        mToolbarContainerDrawable = mToolbarContainer.getBackground();
         initToolbar();
         initSearchBar();
+
+        mTitle = getTitle();
+        initDrawerFragment();
+
+    }
+
+    private void initToolbar() {
+        mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
+        mToolbarContainerDrawable = mToolbarContainer.getBackground();
+
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        setTitle(getString(R.string.app_name));
+        mToolbarHeight = Utils.getToolbarHeight(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        mTitle = getTitle();
+    }
 
+    private void initDrawerFragment(){
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mFragmentHandler = new FragmentHandlerAdapter(mFragmentManager, this,
@@ -90,14 +103,6 @@ public class MainActivity extends LoggerActivity
         mNavigationDrawerFragment.setUpDrawerMenu(
                 R.id.navigation_drawer, drawerLayout);
         mNavigationDrawerFragment.setMenuSelection(0);
-
-    }
-
-    private void initToolbar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        setTitle(getString(R.string.app_name));
-        mToolbarHeight = Utils.getToolbarHeight(this);
     }
 
     private void initSearchBar() {
@@ -109,7 +114,7 @@ public class MainActivity extends LoggerActivity
                 switch (v.getId()) {
                     case R.id.Menu:
                         getWindow().getDecorView().requestFocus();
-                        getSupportFragmentManager().popBackStack();
+                        mFragmentManager.popBackStack();
                         return;
                 }
             }
@@ -134,7 +139,7 @@ public class MainActivity extends LoggerActivity
                     Toast.show("搜索..." + q);
                     AppFunction.hideKeyboard(MainActivity.this);
 //
-                    FragmentTransaction transaction = getSupportFragmentManager()
+                    FragmentTransaction transaction = mFragmentManager
                             .beginTransaction();
                     transaction
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

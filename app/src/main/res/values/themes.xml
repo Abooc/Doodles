@@ -29,6 +29,7 @@
 
 
     <style name="Theme.Custom.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowContentOverlay">@drawable/ab_solid_shadow_holo</item>
         <item name="colorPrimary">#ff00bcd4</item>
         <item name="colorPrimaryDark">#FF00838F</item>
         <item name="colorAccent">#ffff00</item>

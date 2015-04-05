@@ -19,9 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2015-02-19"
-            android:padding="6dp"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textColor="@color/GRAY_DARK" />
 
         <com.android.volley.toolbox.NetworkImageView
@@ -37,7 +36,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2015春节"
-            android:textColor="@color/BLACK" />
+            android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
+            android:textColor="@color/GRAY_DARK"
+            android:singleLine="true"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/HoverText"
@@ -45,6 +47,7 @@
             android:layout_height="wrap_content"
             android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
             android:textStyle="italic"
+            android:textSize="12sp"
             android:textColor="@color/GRAY_DARK"
             android:padding="4dp" />
 
