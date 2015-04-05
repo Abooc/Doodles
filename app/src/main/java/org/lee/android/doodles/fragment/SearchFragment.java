@@ -33,7 +33,7 @@ import java.io.InputStream;
 /**
  * 搜索Doodles页面
  */
-public class SearchFragment extends Fragment implements AdapterView.OnItemClickListener,
+public class SearchFragment extends Fragment implements
         View.OnTouchListener, RecyclerItemViewHolder.ViewHolderClicks {
 
     public static SearchFragment newInstance(String q) {
@@ -55,12 +55,10 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
     private View listContainer;
     private TextView internalEmpty;
     private RecyclerView recyclerView;
+    private DoodlePackage mDoodlePkg;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mDoodles = loadData();
-        if (mDoodles == null || mDoodles.length == 0) return;
-
         progressContainer = view.findViewById(R.id.progressContainer);
         listContainer = view.findViewById(R.id.listContainer);
         internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
@@ -81,33 +79,6 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
         recyclerView.setOnTouchListener(this);
     }
 
-    private Doodle[] mDoodles;
-
-    /**
-     * 将Doodles列表的Json数据解析
-     *
-     * @param doodlesJson
-     */
-    private Doodle[] toDoodles(String doodlesJson) {
-        Gson gson = new Gson();
-        Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
-        return doodles;
-    }
-
-    /**
-     * 测试数据
-     */
-    private Doodle[] loadData() {
-        try {
-            InputStream inputStream = AppContext.getContext().getAssets().open("data/doodles.json");
-            String sources = FileUtils.readInStream(inputStream);
-            return toDoodles(sources);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private ApiClient apiClient;
     @Override
     public void onResume() {
@@ -116,8 +87,8 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
         if(apiClient == null){
             apiClient = new ApiClient();
 
-            DoodlePackage doodlePkg = DataGeter.getSearchDoodles();
-            initRecyclerView(recyclerView, doodlePkg.doodles);
+            mDoodlePkg = DataGeter.getSearchDoodles();
+            initRecyclerView(recyclerView, mDoodlePkg.doodles);
 
             if(true)
             return ;
@@ -184,23 +155,9 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Doodle doodle = (Doodle) parent.getAdapter().getItem(position);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(android.R.id.tabcontent,
-                        DoodleDetailsFragment.newInstance(doodle,
-                                (int) view.getX(), (int) view.getY(),
-                                view.getWidth(), view.getHeight())
-                )
-                .addToBackStack("detail")
-                .commit();
-    }
-
-    @Override
     public void onItemClick(View parent, int position) {
         Toast.show("onItemClick");
-        Doodle doodle = mDoodles[position];
+        Doodle doodle = mDoodlePkg.doodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent,
