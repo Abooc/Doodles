@@ -79,9 +79,11 @@ public class MainActivity extends LoggerActivity
 
     }
 
+    private View mAppSearcher;
     private void initToolbar() {
         mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
         mToolbarContainerDrawable = mToolbarContainer.getBackground();
+        mAppSearcher = mToolbarContainer.findViewById(R.id.AppSearcher);
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -276,10 +278,28 @@ public class MainActivity extends LoggerActivity
      */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+
         section = position;
+        updateSearcher(position);
+
         TabInfo tabInfo = mFragmentHandler.getTabInfo(position);
         Fragment fragment = mFragmentHandler.getItem(position);
         mFragmentHandler.show(fragment, tabInfo.title);
+
+    }
+
+    private void updateSearcher(int position){
+        switch (position){
+            case 0:
+                mAppSearcher.setVisibility(View.VISIBLE);
+                return;
+            case 1:
+                mAppSearcher.setVisibility(View.GONE);
+                return;
+            case 2:
+                mAppSearcher.setVisibility(View.GONE);
+                return;
+        }
     }
 
     @Override
@@ -291,6 +311,7 @@ public class MainActivity extends LoggerActivity
     public void onResume(Fragment fragment) {
         Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof TodayFragment) {
+            mAppSearcher.setVisibility(View.VISIBLE);
             return;
         }
 

@@ -3,5 +3,7 @@
     android:id="@+id/GridView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="?actionBarSize"
+    android:clipToPadding="false"
     android:listSelector="@drawable/TRANSPARENT"
     android:numColumns="auto_fit" />
