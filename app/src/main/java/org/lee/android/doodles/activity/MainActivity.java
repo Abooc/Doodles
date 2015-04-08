@@ -45,10 +45,8 @@ import org.lee.android.util.Toast;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class MainActivity extends LoggerActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        CategorysFragment.OnYearChangedListener
-        , FragmentRunningListener {
+public class MainActivity extends LoggerActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        CategorysFragment.OnYearChangedListener, FragmentRunningListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -65,6 +63,7 @@ public class MainActivity extends LoggerActivity
     private LinearLayout mToolbarContainer;
     private int mToolbarHeight;
     private Drawable mToolbarContainerDrawable;
+    private SearchBar mSearchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,8 @@ public class MainActivity extends LoggerActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initToolbar();
-        initSearchBar();
+        mSearchBar = new SearchBar();
+        mSearchBar.init();
 
         mTitle = getTitle();
         initDrawerFragment();
@@ -94,7 +94,7 @@ public class MainActivity extends LoggerActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initDrawerFragment(){
+    private void initDrawerFragment() {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mFragmentHandler = new FragmentHandlerAdapter(mFragmentManager, this,
@@ -105,52 +105,56 @@ public class MainActivity extends LoggerActivity
         mNavigationDrawerFragment.setMenuSelection(0);
     }
 
-    private void initSearchBar() {
-        final EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
-        final View MenuView = mToolbarContainer.findViewById(R.id.Menu);
-        MenuView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.Menu:
-                        getWindow().getDecorView().requestFocus();
-                        mFragmentManager.popBackStack();
-                        return;
-                }
-            }
-        });
-        iEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.anchor("hasFocus" + hasFocus);
-                if (hasFocus) {
-                    mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
-                    MenuView.setVisibility(View.VISIBLE);
-                } else {
-                    MenuView.setVisibility(View.GONE);
-                }
-            }
-        });
-        iEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    String q = v.getText().toString();
-                    Toast.show("搜索..." + q);
-                    AppFunction.hideKeyboard(MainActivity.this);
+    class SearchBar implements  View.OnClickListener, View.OnFocusChangeListener,
+            TextView.OnEditorActionListener{
+        View MenuView;
+
+        public void init(){
+            final EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
+            MenuView = mToolbarContainer.findViewById(R.id.Menu);
+            MenuView.setOnClickListener(this);
+            iEditText.setOnFocusChangeListener(this);
+            iEditText.setOnEditorActionListener(this);
+        }
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String q = v.getText().toString();
+                Toast.show("搜索..." + q);
+                AppFunction.hideKeyboard(MainActivity.this);
 //
-                    FragmentTransaction transaction = mFragmentManager
-                            .beginTransaction();
-                    transaction
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    transaction.add(android.R.id.tabcontent,
-                            SearchFragment.newInstance(q));
-                    transaction.addToBackStack("q").commit();
-                    return true;
-                }
-                return false;
+                FragmentTransaction transaction = mFragmentManager
+                        .beginTransaction();
+                transaction
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.add(android.R.id.tabcontent,
+                        SearchFragment.newInstance(q));
+                transaction.addToBackStack("q").commit();
+                return true;
             }
-        });
+            return false;
+        }
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            Log.anchor("hasFocus" + hasFocus);
+            if (hasFocus) {
+                mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
+                MenuView.setVisibility(View.VISIBLE);
+            } else {
+                MenuView.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.Menu:
+                    getWindow().getDecorView().requestFocus();
+                    mFragmentManager.popBackStack();
+                    return;
+            }
+        }
     }
 
     /**
