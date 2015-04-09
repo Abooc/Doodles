@@ -9,17 +9,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter;
@@ -34,6 +31,7 @@ import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.PagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
+import org.lee.android.doodles.widget.SearchBar;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
@@ -71,8 +69,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initToolbar();
-        mSearchBar = new SearchBar();
-        mSearchBar.init();
+        initSearchBar();
 
         mTitle = getTitle();
         initDrawerFragment();
@@ -94,6 +91,31 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    private void initSearchBar() {
+        mSearchBar = (SearchBar) findViewById(R.id.SearchBar);
+        mSearchBar.setOnSearchEventListener(new SearchBar.OnSearchEventListener() {
+            @Override
+            public void onSearch(String q) {
+                Toast.show("搜索..." + q);
+                AppFunction.hideKeyboard(MainActivity.this);
+                FragmentTransaction transaction = mFragmentManager
+                        .beginTransaction();
+                transaction
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.add(android.R.id.tabcontent,
+                        SearchFragment.newInstance(q));
+                transaction.addToBackStack("q").commit();
+            }
+        });
+        mSearchBar.setOnCancleClickListener(new SearchBar.OnCancleClickListener() {
+            @Override
+            public void onCancel() {
+                getWindow().getDecorView().requestFocus();
+                mFragmentManager.popBackStack();
+            }
+        });
+    }
+
     private void initDrawerFragment() {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -105,57 +127,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         mNavigationDrawerFragment.setMenuSelection(0);
     }
 
-    class SearchBar implements  View.OnClickListener, View.OnFocusChangeListener,
-            TextView.OnEditorActionListener{
-        View MenuView;
-
-        public void init(){
-            final EditText iEditText = (EditText) mToolbarContainer.findViewById(R.id.EditText);
-            MenuView = mToolbarContainer.findViewById(R.id.Menu);
-            MenuView.setOnClickListener(this);
-            iEditText.setOnFocusChangeListener(this);
-            iEditText.setOnEditorActionListener(this);
-        }
-
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                String q = v.getText().toString();
-                Toast.show("搜索..." + q);
-                AppFunction.hideKeyboard(MainActivity.this);
-//
-                FragmentTransaction transaction = mFragmentManager
-                        .beginTransaction();
-                transaction
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.add(android.R.id.tabcontent,
-                        SearchFragment.newInstance(q));
-                transaction.addToBackStack("q").commit();
-                return true;
-            }
-            return false;
-        }
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            Log.anchor("hasFocus" + hasFocus);
-            if (hasFocus) {
-                mToolbarContainer.animate().translationY(-mToolbarHeight).setInterpolator(new AccelerateInterpolator(2)).start();
-                MenuView.setVisibility(View.VISIBLE);
-            } else {
-                MenuView.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.Menu:
-                    getWindow().getDecorView().requestFocus();
-                    mFragmentManager.popBackStack();
-                    return;
-            }
-        }
-    }
 
     /**
      * 点击非输入框区域收起软键盘
