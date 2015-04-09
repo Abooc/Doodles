@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.SampleDashboard.SearchCard"
     android:layout_width="match_parent"
-    android:layout_height="?android:actionBarSize"
+    android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
     <LinearLayout

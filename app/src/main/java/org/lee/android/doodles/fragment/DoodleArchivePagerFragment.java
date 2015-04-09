@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
-import org.lee.android.doodles.fragment.CategorysFragment.Year;
+import org.lee.android.doodles.fragment.YearsFragment.Year;
 import org.lee.android.util.Log;
 
 import java.util.Calendar;
@@ -23,14 +23,14 @@ import java.util.Calendar;
 /**
  * 浏览涂鸦列表
  */
-public class PagerFragment extends Fragment {
+public class DoodleArchivePagerFragment extends Fragment {
 
     private ViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
     private Year mYear = new Year("2015", "i_2002");
 
-    public static PagerFragment newInstance() {
-        PagerFragment fragment = new PagerFragment();
+    public static DoodleArchivePagerFragment newInstance() {
+        DoodleArchivePagerFragment fragment = new DoodleArchivePagerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -147,7 +147,7 @@ public class PagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DoodlesListFragment();
+            Fragment fragment = new DoodlesArchiveListFragment();
             Bundle args = new Bundle();
             args.putInt("year", 2014);
             args.putInt("month", count - i);

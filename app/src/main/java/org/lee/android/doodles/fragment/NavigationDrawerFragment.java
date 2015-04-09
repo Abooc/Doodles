@@ -108,8 +108,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 //        tabInfos.add(new TabInfo(DoodlesListFragment.class, mNames[index++], args));
 //        tabInfos.add(new TabInfo(DoodlesListFragment.class, mNames[index++], args));
         tabInfos.add(new TabInfo(TodayFragment.class, mNames[index++], null));
-        tabInfos.add(new TabInfo(CategorysFragment.class, mNames[index++], null));
-        tabInfos.add(new TabInfo(PagerFragment.class, mNames[index++], null));
+        tabInfos.add(new TabInfo(YearsFragment.class, mNames[index++], null));
+        tabInfos.add(new TabInfo(DoodleArchivePagerFragment.class, mNames[index++], null));
 //        tabInfos.add(new TabInfo(SearchFragment.class, mNames[index++], null));
         return tabInfos;
     }
@@ -164,8 +164,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-
     }
 
     @Override

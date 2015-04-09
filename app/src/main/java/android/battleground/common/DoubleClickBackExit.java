@@ -1,4 +1,4 @@
-package org.lee.android.doodles;
+package android.battleground.common;
 
 /**
  *

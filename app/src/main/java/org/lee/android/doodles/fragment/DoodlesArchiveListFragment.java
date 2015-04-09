@@ -1,9 +1,11 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
+import android.battleground.widget.MessageView;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,23 +13,17 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.lee.android.doodles.ApiClient;
-import org.lee.android.doodles.AppContext;
-import org.lee.android.doodles.MessageView;
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.activity.WebViewActivity;
+import org.lee.android.doodles.Utils;
+import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
-import org.lee.android.doodles.volley.FileUtils;
+import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 浏览涂鸦列表
@@ -36,44 +32,46 @@ import java.io.InputStream;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class DoodlesListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class DoodlesArchiveListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static DoodlesListFragment newInstance(Bundle args) {
-        DoodlesListFragment fragment = new DoodlesListFragment();
+    public static DoodlesArchiveListFragment newInstance(Bundle args) {
+        DoodlesArchiveListFragment fragment = new DoodlesArchiveListFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private ListView mListView;
     private MessageView mMessageView;
 
     private ApiClient mApiClient = new ApiClient();
 
-    public DoodlesListFragment() {
+    public DoodlesArchiveListFragment() {
     }
 
     private Activity mActivity;
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;
+        MainActivity mainActivity = (MainActivity) activity;
+        mOnScrollListener = mainActivity.getHidingScrollListener();
 
     }
 
     private int year;
     private int month;
+    private Doodle[] mDoodles;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            doodlesJson = savedInstanceState.getString("data");
-        }
+        mDoodles = DataGeter.getDoodles();
+        if (mDoodles == null || mDoodles.length == 0) return;
         year = getArguments().getInt("year");
         month = getArguments().getInt("month");
         Log.anchor("year:" + year + ", month:" + month);
@@ -89,25 +87,25 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mMessageView = (MessageView) view.findViewById(R.id.MessageView);
-        mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setEmptyView(mMessageView);
-        mListView.setOnItemClickListener(this);
+        initRecyclerView(view);
 
         if (TextUtils.isEmpty(doodlesJson)) {
 //            mApiClient.requestDoodles(year, month, callbacks);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    useTest();
-                }
-            }, 1 * 1000);
         } else {
             Log.anchor("year:" + year + ", month:" + month + ", from savedInstanceState");
-            attachData(doodlesJson);
         }
     }
 
+    private void initRecyclerView(View view) {
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        int paddingTop = Utils.getToolbarHeight(mActivity);
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
+                recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mActivity, mDoodles, null);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setOnScrollListener(mOnScrollListener);
+    }
 
     @Override
     public void onResume() {
@@ -175,7 +173,6 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
         public void onStart() {
             Log.anchor();
             mMessageView.setVisibility(View.VISIBLE);
-            mListView.setAdapter(null);
             mMessageView.loading();
 
         }
@@ -195,33 +192,8 @@ public class DoodlesListFragment extends Fragment implements AdapterView.OnItemC
         @Override
         public void onSuccess(int i, Header[] headers, String sources) {
             mMessageView.setVisibility(View.GONE);
-            attachData(sources);
         }
     };
-
-    /**
-     * 将Doodles列表的Json数据解析并显示到ListView
-     *
-     * @param doodlesJson
-     */
-    private void attachData(String doodlesJson) {
-        Gson gson = new Gson();
-        Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
-        if (doodles == null || doodles.length == 0) return;
-        DoodleAdapter adapter = new DoodleAdapter(mActivity, doodles);
-        mListView.setAdapter(adapter);
-        this.doodlesJson = doodlesJson;
-    }
-
-    private void useTest() {
-        try {
-            InputStream inputStream = AppContext.getContext().getAssets().open("data/doodles.json");
-            String sources = FileUtils.readInStream(inputStream);
-            attachData(sources);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private String doodlesJson;
 

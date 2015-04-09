@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.lee.android.doodles;
+package android.battleground.widget;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.lee.android.doodles.R;
 
 
 /**

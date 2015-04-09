@@ -1,34 +1,27 @@
 package org.lee.android.doodles.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import org.apache.http.Header;
 import org.lee.android.doodles.ApiClient;
-import org.lee.android.doodles.AppContext;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.bean.DoodlePackage;
-import org.lee.android.doodles.volley.FileUtils;
 import org.lee.android.doodles.volley.HttpHandler;
-import org.lee.android.test.DataGeter;
-import org.lee.android.test.Tester;
+import org.lee.android.test.FragmentLog;
+import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 搜索Doodles页面

@@ -66,7 +66,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements V
 
     public void attachData(Doodle doodle) {
         dateText.setText(doodle.getDate());
-        imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
+//        imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
         titleText.setText(doodle.title);
         hoverText.setText("#" + doodle.query + "#");
 //        hoverText.setText(doodle.getTranslations().getItem(0).hover_text);

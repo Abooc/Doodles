@@ -1,4 +1,4 @@
-package org.lee.android.test;
+package org.lee.android.test.data;
 
 import com.google.gson.Gson;
 
