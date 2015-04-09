@@ -114,6 +114,16 @@ public class FragmentHandlerAdapter extends FragmentPagerAdapter {
         mCurrFragment = fragment;
     }
 
+    public void run(Fragment fragment, String tag) {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(android.R.id.tabcontent, fragment, tag);
+        transaction.addToBackStack(tag);
+        transaction.setBreadCrumbTitle(tag);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.commitAllowingStateLoss();
+        mCurrFragment = fragment;
+    }
+
     private void hideAll() {
         List<Fragment> list = mFragmentManager.getFragments();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();

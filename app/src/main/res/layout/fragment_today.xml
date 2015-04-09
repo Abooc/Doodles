@@ -4,23 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <!--<ListView-->
-        <!--android:id="@+id/ListView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:clipToPadding="false"-->
-        <!--android:paddingTop="?attr/actionBarSize"-->
-        <!--android:listSelector="@drawable/TRANSPARENT"-->
-        <!--android:dividerHeight="0dp"-->
-        <!--android:divider="@drawable/TRANSPARENT"/>-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:focusableInTouchMode="true"/>
-
-    <!--android:background="?attr/colorPrimaryDark"-->
 
 </FrameLayout>

@@ -21,11 +21,12 @@ import org.lee.android.util.Log;
 import java.io.Serializable;
 
 /**
+ * 年份页面
  */
-public class CategorysFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class YearsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    public static CategorysFragment newInstance() {
-        CategorysFragment fragment = new CategorysFragment();
+    public static YearsFragment newInstance() {
+        YearsFragment fragment = new YearsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

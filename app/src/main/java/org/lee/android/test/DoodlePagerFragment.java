@@ -1,4 +1,4 @@
-package org.lee.android.doodles.fragment;
+package org.lee.android.test;
 
 import android.app.ActionBar;
 import android.app.Activity;

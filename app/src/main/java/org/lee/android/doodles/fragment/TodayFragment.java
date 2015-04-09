@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -15,26 +14,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import org.lee.android.doodles.AppContext;
-import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
-import org.lee.android.doodles.volley.FileUtils;
-import org.lee.android.test.DataGeter;
+import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 最新Doodles页面
  */
 public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener,
-        View.OnTouchListener, RecyclerItemViewHolder.ViewHolderClicks {
+        RecyclerItemViewHolder.ViewHolderClicks {
 
     public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
@@ -49,6 +40,7 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
      */
     private FragmentRunningListener mFrunningListener;
     private RecyclerView.OnScrollListener mOnScrollListener;
+    private Doodle[] mDoodles;
 
     @Override
     public void onAttach(Activity activity) {
@@ -82,10 +74,7 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getActivity(), mDoodles, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
-        recyclerView.setOnTouchListener(this);
     }
-
-    private Doodle[] mDoodles;
 
     @Override
     public void onResume() {
@@ -97,26 +86,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     public void onPause() {
         super.onPause();
         mFrunningListener.onPause(this);
-    }
-
-
-    private boolean blockTouch;
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                blockTouch = false;
-                v.requestFocus();
-                blockTouch = AppFunction.hideInputMethod(getActivity(), v);
-                if (blockTouch) {
-                    return blockTouch;
-                }
-                return blockTouch;
-            case MotionEvent.ACTION_MOVE:
-                return blockTouch;
-        }
-        return blockTouch;
     }
 
     @Override
@@ -158,8 +127,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         return AnimationUtils.loadAnimation(getActivity(),
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
-
-
 
 
 }

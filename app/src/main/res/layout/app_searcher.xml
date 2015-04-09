@@ -3,7 +3,7 @@
     style="@style/Widget.SampleDashboard.SearchCard"
     android:id="@+id/AppSearcher"
     android:layout_width="match_parent"
-    android:layout_height="?android:actionBarSize"
+    android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:gravity="center_vertical" >
 
         <ImageView
-            android:id="@+id/Menu"
+            android:id="@+id/Cancel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
@@ -38,7 +38,7 @@
             android:background="@android:color/transparent" />
 
         <ImageView
-            android:id="@+id/Search"
+            android:id="@+id/VoiceSearch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
