@@ -30,7 +30,7 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
          *
          * @param q 要搜索的关键词
          */
-        public void onSearch(String q);
+        void onSearch(String q);
     }
 
     /**
@@ -40,7 +40,7 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
         /**
          * 当点击搜索栏中左侧取消按钮时，回调此方法
          */
-        public void onCancel();
+        void onCancel();
     }
 
     /**
