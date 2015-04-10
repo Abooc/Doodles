@@ -26,7 +26,7 @@ import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 
 /**
- * 浏览涂鸦列表
+ * 浏览存档涂鸦列表
  * <p/>
  * Created by author:李瑞宇
  * email:allnet@live.cn
@@ -98,9 +98,6 @@ public class DoodlesArchiveListFragment extends Fragment implements AdapterView.
 
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-        int paddingTop = Utils.getToolbarHeight(mActivity);
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
-                recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mActivity, mDoodles, null);
         recyclerView.setAdapter(recyclerAdapter);

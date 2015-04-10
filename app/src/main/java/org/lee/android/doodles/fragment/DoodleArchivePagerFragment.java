@@ -1,6 +1,7 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.common.view.SlidingTabLayout;
@@ -14,14 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
 import org.lee.android.util.Log;
 
 import java.util.Calendar;
 
 /**
- * 浏览涂鸦列表
+ * 浏览存档涂鸦
  */
 public class DoodleArchivePagerFragment extends Fragment {
 
@@ -36,50 +37,65 @@ public class DoodleArchivePagerFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Fragment运行状态监听
+     */
+    private FragmentRunningListener mFrunningListener;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
+        mFrunningListener = (FragmentRunningListener) activity;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_pager, container, false);
+        int paddingTop = Utils.getToolbarHeight(getActivity());
+        container.setPadding(container.getPaddingLeft(), paddingTop,
+                container.getPaddingRight(), container.getPaddingBottom());
+
         mViewPager = (ViewPager) container.findViewById(R.id.ViewPager);
         mSlidingTabLayout = (SlidingTabLayout) container.findViewById(R.id.SlidingTabs);
         if (savedInstanceState != null) {
             mYear = (Year) savedInstanceState.getSerializable("year");
             Log.anchor("mYear = " + mYear);
         }
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return R.color.GRAY_LIGHT;
-            }
-
-            @Override
-            public int getDividerColor(int position) {
-                return R.color.WHITE;
-            }
-        });
-
         attachData(mYear);
+
+//        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+//            @Override
+//            public int getIndicatorColor(int position) {
+//                return Color.WHITE;
+//            }
+//
+//            @Override
+//            public int getDividerColor(int position) {
+//                return Color.WHITE;
+//            }
+//        });
+
         Log.anchor(mYear);
         return container;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).onShowFragment(this);
 
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            ((MainActivity) getActivity()).onShowFragment(this);
-        }
+    public void onResume() {
+        super.onResume();
+        mFrunningListener.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mFrunningListener.onPause(this);
     }
 
     @Override

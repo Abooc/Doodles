@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:imeOptions="actionSearch"
-            android:paddingLeft="16dp"
+            android:paddingLeft="12dp"
             android:textStyle="italic"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:hint="搜索..."

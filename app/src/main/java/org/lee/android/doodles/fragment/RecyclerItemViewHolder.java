@@ -12,10 +12,10 @@ import org.lee.android.doodles.volley.VolleyLoader;
 
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public static interface ViewHolderClicks {
-        public void onItemClick(View parent, int position);
+    public interface ViewHolderClicks {
+        void onItemClick(View parent, int position);
 
-        public void onSearch(TextView searchView);
+        void onSearch(TextView searchView);
     }
 
     private final NetworkImageView imageView;

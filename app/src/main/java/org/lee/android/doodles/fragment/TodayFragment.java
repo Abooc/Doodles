@@ -19,6 +19,7 @@ import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.test.data.DataGeter;
+import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 /**
@@ -69,7 +70,8 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
         int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
+                recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getActivity(), mDoodles, this);
         recyclerView.setAdapter(recyclerAdapter);

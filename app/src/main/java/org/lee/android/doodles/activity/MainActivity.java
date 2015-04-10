@@ -3,6 +3,7 @@ package org.lee.android.doodles.activity;
 import android.battleground.common.DoubleClickBackExit;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.common.view.SlidingTabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,14 +24,14 @@ import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
-import org.lee.android.doodles.fragment.YearsFragment;
+import org.lee.android.doodles.fragment.DoodleArchivePagerFragment;
 import org.lee.android.doodles.fragment.DoodleDetailsFragment;
 import org.lee.android.doodles.fragment.FragmentRunningListener;
 import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
-import org.lee.android.doodles.fragment.DoodleArchivePagerFragment;
 import org.lee.android.doodles.fragment.SearchFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
+import org.lee.android.doodles.fragment.YearsFragment;
 import org.lee.android.doodles.widget.SearchBar;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
@@ -93,13 +93,15 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         mSearchBar.setOnSearchEventListener(new SearchBar.OnSearchEventListener() {
             @Override
             public void onSearch(String q) {
+                hideToolbar();
+
                 Toast.show("搜索..." + q);
                 AppFunction.hideKeyboard(MainActivity.this);
                 FragmentTransaction transaction = mFragmentManager
                         .beginTransaction();
                 transaction
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.add(android.R.id.tabcontent,
+                transaction.replace(android.R.id.tabcontent,
                         SearchFragment.newInstance(q));
                 transaction.addToBackStack("q").commit();
             }
@@ -133,7 +135,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         mToolbarContainer.animate().translationY(-mToolbarHeight)
                 .setInterpolator(new DecelerateInterpolator(2)).start();
     }
-
 
     /**
      * 点击非输入框区域收起软键盘
@@ -172,6 +173,9 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             public void onMoved(int distance, int dx, int dy) {
 //                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance * 2));
                 mToolbarContainer.setTranslationY(-distance);
+                if(mMoveView != null){
+                    mMoveView.setTranslationY(-distance);
+                }
             }
 
             @Override
@@ -200,19 +204,15 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         return mNavigationDrawerFragment;
     }
 
-    public void restoreActionBar() {
+    public void restoreActionBar(String title) {
         ActionBar actionBar = getSupportActionBar();
-//        actionBar.setTitle(mTitle);
+        actionBar.setTitle(title);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.activity_main, menu);
-            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -271,9 +271,22 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         super.onResume();
     }
 
+    private View mMoveView;
+
     @Override
     public void onResume(Fragment fragment) {
-        Log.anchor(fragment.getClass().getSimpleName());
+        String title = fragment.getTag();
+        Log.anchor(title + ", " + fragment.getClass().getSimpleName());
+        restoreActionBar(title);
+
+        if (fragment instanceof DoodleArchivePagerFragment) {
+            mMoveView = fragment.getView().findViewById(R.id.SlidingTabs);
+
+            mSearchBar.setVisibility(View.GONE);
+            return;
+        }
+        mMoveView = null;
+        mSearchBar.setVisibility(View.VISIBLE);
         if (fragment instanceof TodayFragment) {
             return;
         }
@@ -282,6 +295,8 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             mNavigationDrawerFragment.setHasOptionsMenu(false);
             return;
         }
+
+
     }
 
     @Override
@@ -289,46 +304,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
             mNavigationDrawerFragment.setHasOptionsMenu(true);
-            return;
-        }
-    }
-
-    /**
-     * 当前正在显示的Fragment
-     *
-     * @param fragment
-     */
-    public void onShowFragment(Fragment fragment) {
-        if (true) return;
-        if (fragment instanceof DoodleDetailsFragment) {
-            mNavigationDrawerFragment.setHasOptionsMenu(false);
-            return;
-        }
-        mNavigationDrawerFragment.setHasOptionsMenu(true);
-        if (fragment instanceof TodayFragment) {
-            TabInfo tabInfo = mFragmentHandler.getTabInfo(0);
-            mTitle = tabInfo.title;
-            return;
-        }
-        if (fragment instanceof YearsFragment) {
-            ((YearsFragment) fragment).setOnYearChangedListener(this);
-            TabInfo tabInfo = mFragmentHandler.getTabInfo(1);
-            mTitle = tabInfo.title;
-            return;
-        }
-        if (fragment instanceof DoodleArchivePagerFragment) {
-            TabInfo tabInfo = mFragmentHandler.getTabInfo(2);
-            mTitle = tabInfo.title;
-            if (mYear != null) {
-                ((DoodleArchivePagerFragment) fragment).setYear(mYear);
-                ((DoodleArchivePagerFragment) fragment).attachData(mYear);
-                mYear = null;
-            }
-            return;
-        }
-        if (fragment instanceof SearchFragment) {
-            TabInfo tabInfo = mFragmentHandler.getTabInfo(3);
-            mTitle = tabInfo.title;
             return;
         }
     }
@@ -346,7 +321,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         mTitle = tabInfo.title;
         invalidateOptionsMenu();
     }
-
 
     @Override
     public void onBackPressed() {
