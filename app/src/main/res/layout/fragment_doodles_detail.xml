@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="6dp"
-        tools:context=".MainActivity" >
+        tools:context=".MainActivity">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/ImageView"
@@ -69,20 +69,80 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|right"
+            android:gravity="center_vertical"
             android:clickable="true"
+            android:drawableStart="@drawable/abc_ic_search_api_mtrl_alpha"
             android:text="搜索更多信息"
             android:textStyle="italic"
             android:textColor="@color/color_clickable_white_gray"
             android:padding="4dp"
+            android:layout_marginBottom="12dp"
             android:background="#4c8aff" />
 
+        <include layout="@layout/line_h_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/YELLOW"
+                android:gravity="center"
+                android:drawableStart="@drawable/abc_ic_commit_search_api_mtrl_alpha"
+                android:clickable="true"
+                android:text="收藏这副涂鸦作品"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_black_gray"
+                android:padding="8dp" />
+        </LinearLayout>
+
+        <include layout="@layout/line_h_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp"
+            android:background="#4c8aff">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
+                android:text="Twitter"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_white_gray"
+                android:padding="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="Facebook"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_white_gray"
+                android:padding="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="Google+"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_white_gray"
+                android:padding="8dp" />
+        </LinearLayout>
     </LinearLayout>
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/card_selector_transparent_gray" />
 
 </android.support.v7.widget.CardView>

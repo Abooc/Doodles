@@ -147,12 +147,13 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         });
     }
 
+    private DrawerLayout drawerLayout;
     private void initDrawerFragment() {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mFragmentHandler = new FragmentHandlerAdapter(mFragmentManager, this,
                 mNavigationDrawerFragment.getTabInfos());
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawerFragment.setUpDrawerMenu(
                 R.id.navigation_drawer, drawerLayout);
         mNavigationDrawerFragment.setMenuSelection(0);
@@ -330,6 +331,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
 
         if (fragment instanceof DoodleDetailsFragment) {
             showToolbar();
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mNavigationDrawerFragment.setHasOptionsMenu(false);
             return;
         }
@@ -341,6 +343,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     public void onPause(Fragment fragment) {
         Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             mNavigationDrawerFragment.setHasOptionsMenu(true);
             return;
         }

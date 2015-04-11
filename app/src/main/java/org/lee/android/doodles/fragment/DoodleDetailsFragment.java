@@ -80,7 +80,6 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        View rootView = inflater.inflate(R.layout.fragment_doodles_list_item, container, false);
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
