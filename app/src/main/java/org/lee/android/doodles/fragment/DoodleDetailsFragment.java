@@ -98,7 +98,7 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         mDoodle = gson.fromJson(json, Doodle.class);
         mTitle = (String) mActionBar.getTitle();
 
-        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+        int paddingTop = Utils.getToolbarHeight(getActivity());
         view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());
 
         FrameLayout root = (FrameLayout) view;
@@ -115,7 +115,10 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         FrameLayout.LayoutParams params = null;
         if (args != null) {
             params = new FrameLayout.LayoutParams(
-                    args.getInt(ARG_WIDTH), args.getInt(ARG_HEIGHT));
+                    args.getInt(ARG_WIDTH),
+//                    args.getInt(ARG_HEIGHT)
+                    FrameLayout.LayoutParams.MATCH_PARENT
+            );
             params.topMargin = args.getInt(ARG_Y);
             params.leftMargin = args.getInt(ARG_X);
         }
@@ -171,7 +174,7 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         TextView mDescView = (TextView) parent.findViewById(R.id.Desc);
         mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
         mImageView.setImageResource(R.drawable.ic_google_birthday);
-        mImageView.setDefaultImageResId(R.drawable.ic_doodle_error);
+        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
         mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
         mDescView.setText(
                 doodle.title + "\n"

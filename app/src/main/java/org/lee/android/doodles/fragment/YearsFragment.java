@@ -66,8 +66,9 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
         Year[] years = getYears(mActivity);
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-        int paddingTop = Utils.getToolbarHeight(mActivity);
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop * 2,
+        int toolbarHeight = Utils.getToolbarHeight(getActivity());
+        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + slidingTabLayoutHeight,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
         YearAdapter recyclerAdapter = new YearAdapter(mActivity, years);
@@ -78,17 +79,17 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
     @Override
     public void onResume() {
         super.onResume();
-        mFrunningListener.onResume(this);
+//        mFrunningListener.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mFrunningListener.onPause(this);
+//        mFrunningListener.onPause(this);
     }
 
 
-    static class YearViewHolder extends RecyclerView.ViewHolder {
+    private static class YearViewHolder extends RecyclerView.ViewHolder {
 
         final TextView mNameText;
         final ImageView mDoodleView;
@@ -114,7 +115,7 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
 
-    public class YearAdapter extends RecyclerView.Adapter<YearViewHolder> {
+    private class YearAdapter extends RecyclerView.Adapter<YearViewHolder> {
 
         private Context mContext;
         private Year[] mYears;

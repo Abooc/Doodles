@@ -69,11 +69,13 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        int paddingTop = Utils.getToolbarHeight(getActivity());
         recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getActivity(), mDoodles, this);
+        recyclerAdapter.setHasHeader(true);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
     }

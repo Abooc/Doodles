@@ -88,8 +88,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private String[] mNames = {
 //            "A",
 //            "B",
-            "最新",
-            "年份",
+            "最新涂鸦",
+//            "年份",
             "涂鸦存档"
 //                , "搜索更多涂鸦"
     };
@@ -108,7 +108,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 //        tabInfos.add(new TabInfo(DoodlesListFragment.class, mNames[index++], args));
 //        tabInfos.add(new TabInfo(DoodlesListFragment.class, mNames[index++], args));
         tabInfos.add(new TabInfo(TodayFragment.class, mNames[index++], null));
-        tabInfos.add(new TabInfo(YearsFragment.class, mNames[index++], null));
+//        tabInfos.add(new TabInfo(YearsFragment.class, mNames[index++], null));
         tabInfos.add(new TabInfo(DoodleArchivePagerFragment.class, mNames[index++], null));
 //        tabInfos.add(new TabInfo(SearchFragment.class, mNames[index++], null));
         return tabInfos;
@@ -117,8 +117,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
         DrawerMenuItem[] menuItems = {
                 new DrawerMenuItem(names[0], iconIds[0]),
-                new DrawerMenuItem(names[1], iconIds[1]),
-                new DrawerMenuItem(names[2], iconIds[2])
+                new DrawerMenuItem(names[1], iconIds[1])
+//                ,
+//                new DrawerMenuItem(names[2], iconIds[2])
         };
         return menuItems;
     }
@@ -155,7 +156,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         DrawerMenuItem[] menuItems = getMenus(mNames,
                 new int[]{R.drawable.ic_menu_sort_by_size,
-                        R.drawable.ic_menu_today,
+//                        R.drawable.ic_menu_today,
                         R.drawable.ic_menu_find});
         mDrawerMenuAdapter = new DrawerMenuAdapter(
                 getActivity(), 0, menuItems);

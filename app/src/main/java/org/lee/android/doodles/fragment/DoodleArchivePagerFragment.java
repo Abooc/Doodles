@@ -27,7 +27,6 @@ import java.util.Calendar;
 public class DoodleArchivePagerFragment extends Fragment {
 
     private ViewPager mViewPager;
-    private SlidingTabLayout mSlidingTabLayout;
     private Year mYear = new Year("2015", "i_2002");
 
     public static DoodleArchivePagerFragment newInstance() {
@@ -53,29 +52,12 @@ public class DoodleArchivePagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_pager, container, false);
-        int paddingTop = Utils.getToolbarHeight(getActivity());
-        container.setPadding(container.getPaddingLeft(), paddingTop,
-                container.getPaddingRight(), container.getPaddingBottom());
-
         mViewPager = (ViewPager) container.findViewById(R.id.ViewPager);
-        mSlidingTabLayout = (SlidingTabLayout) container.findViewById(R.id.SlidingTabs);
         if (savedInstanceState != null) {
             mYear = (Year) savedInstanceState.getSerializable("year");
             Log.anchor("mYear = " + mYear);
         }
         attachData(mYear);
-
-//        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-//            @Override
-//            public int getIndicatorColor(int position) {
-//                return Color.WHITE;
-//            }
-//
-//            @Override
-//            public int getDividerColor(int position) {
-//                return Color.WHITE;
-//            }
-//        });
 
         Log.anchor(mYear);
         return container;
@@ -130,7 +112,7 @@ public class DoodleArchivePagerFragment extends Fragment {
         adapter.setYear(year.name);
         adapter.setCount(count);
         mViewPager.setAdapter(adapter);
-        mSlidingTabLayout.setViewPager(mViewPager);
+        mViewPager.setCurrentItem(1);
     }
 
     public void setYear(Year year) {
@@ -144,9 +126,13 @@ public class DoodleArchivePagerFragment extends Fragment {
         outState.putSerializable("year", mYear);
     }
 
+    public ViewPager getPager() {
+        return mViewPager;
+    }
+
     public static class IFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-        private int count = 12;
+        private int count = 13;
         private String year;
 
         public IFragmentPagerAdapter(FragmentManager fm) {
@@ -163,6 +149,10 @@ public class DoodleArchivePagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int i) {
+            if (i == 0) {
+
+                return new YearsFragment();
+            }
             Fragment fragment = new DoodlesArchiveListFragment();
             Bundle args = new Bundle();
             args.putInt("year", 2014);
@@ -178,6 +168,7 @@ public class DoodleArchivePagerFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
+            if (position == 0) return "年份";
             int month = count - position;
             return (month < 10 ? "0" + month : month) + "月份";
         }

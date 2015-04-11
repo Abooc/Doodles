@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:minHeight="140dp"
             android:src="@drawable/ic_google_birthday"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:background="#222"/>
 
         <TextView
             android:id="@+id/Title"

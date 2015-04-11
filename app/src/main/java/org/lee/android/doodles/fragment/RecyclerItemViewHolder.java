@@ -10,7 +10,8 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.VolleyLoader;
 
-public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
+        RecyclerAdapter.Attachable, View.OnClickListener {
 
     public interface ViewHolderClicks {
         void onItemClick(View parent, int position);
@@ -47,24 +48,27 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements V
         TextView hoverText = (TextView) convertView.findViewById(R.id.HoverText);
 
 
-        imageView.setDefaultImageResId(R.drawable.ic_doodle_error);
+        imageView.setDefaultImageResId(R.drawable.GRAY_DARK);
         imageView.setErrorImageResId(R.drawable.ic_google_birthday);
         return new RecyclerItemViewHolder(convertView, imageView, titleText, dateText, hoverText, clicks);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.Search:
-                mViewHolderClicks.onSearch((TextView) v);
-                return;
-            default:
-                mViewHolderClicks.onItemClick(v, getAdapterPosition());
-                return;
-        }
+        if (mViewHolderClicks != null)
+            switch (v.getId()) {
+                case R.id.Search:
+                    mViewHolderClicks.onSearch((TextView) v);
+                    return;
+                default:
+                    mViewHolderClicks.onItemClick(v, getAdapterPosition());
+                    return;
+            }
     }
 
-    public void attachData(Doodle doodle) {
+    @Override
+    public void attachData(Object o) {
+        Doodle doodle = (Doodle) o;
         dateText.setText(doodle.getDate());
 //        imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
         titleText.setText(doodle.title);

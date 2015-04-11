@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,7 +12,6 @@ import com.google.gson.Gson;
 
 import org.apache.http.Header;
 import org.lee.android.doodles.ApiClient;
-import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.bean.DoodlePackage;
@@ -27,7 +25,7 @@ import org.lee.android.util.Toast;
  * 搜索Doodles页面
  */
 public class SearchFragment extends FragmentLog implements
-        View.OnTouchListener, RecyclerItemViewHolder.ViewHolderClicks {
+        RecyclerItemViewHolder.ViewHolderClicks {
 
     public static SearchFragment newInstance(String q) {
         SearchFragment fragment = new SearchFragment();
@@ -87,7 +85,6 @@ public class SearchFragment extends FragmentLog implements
                 getActivity(), doodles, this);
         recyclerView.setAdapter(recyclerAdapter);
 //        recyclerView.setOnScrollListener(mOnScrollListener);
-        recyclerView.setOnTouchListener(this);
     }
 
     @Override
@@ -141,26 +138,6 @@ public class SearchFragment extends FragmentLog implements
     @Override
     public void onPause() {
         super.onPause();
-    }
-
-
-    private boolean blockTouch;
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                blockTouch = false;
-                v.requestFocus();
-                blockTouch = AppFunction.hideInputMethod(getActivity(), v);
-                if (blockTouch) {
-                    return blockTouch;
-                }
-                return blockTouch;
-            case MotionEvent.ACTION_MOVE:
-                return blockTouch;
-        }
-        return blockTouch;
     }
 
     @Override
