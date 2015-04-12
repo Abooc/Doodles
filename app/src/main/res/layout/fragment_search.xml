@@ -16,9 +16,7 @@
     -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="?android:actionBarSize"
-    android:background="#FaFaFa">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/progressContainer"
@@ -33,14 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="加载中..."
-            android:paddingTop="4dip"
-            android:singleLine="true" />
-
     </LinearLayout>
 
     <FrameLayout
@@ -48,26 +38,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/RecyclerViewSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="搜索结果..." />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/RecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:focusableInTouchMode="true" />
-
-        </LinearLayout>
+            android:clipToPadding="false"
+            android:focusableInTouchMode="true" />
 
         <TextView
             android:id="@+id/internalEmpty"

@@ -11,8 +11,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +32,7 @@ import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.properties.SettingsActivity;
+import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 import java.util.ArrayList;
@@ -130,12 +129,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return mTabInfoList;
     }
 
-    private ActionBar mActionBar;
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActionBar = ((ActionBarActivity) activity).getSupportActionBar();
+        setHasOptionsMenu(true);
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
@@ -162,12 +159,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                         R.drawable.ic_menu_find});
         mDrawerMenuAdapter = new DrawerMenuAdapter(
                 getActivity(), 0, menuItems);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -372,23 +363,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
+        Log.anchor();
         return mDrawerToggle.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Per the navigation drawer design guidelines, updates the action bar to show the global app
-     * 'context', rather than just what's in the current screen.
-     */
-    private void showGlobalContextActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
-    }
-
-    private ActionBar getActionBar() {
-        return mActionBar;
     }
 
     /**

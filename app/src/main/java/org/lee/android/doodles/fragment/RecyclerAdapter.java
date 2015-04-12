@@ -12,14 +12,14 @@ import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChi
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context mContext;
     private Doodle[] mDoodles;
     private OnRecyclerItemChildClickListener mOnItemClickListener;
+    private LayoutInflater mInflater;
 
     public RecyclerAdapter(Context context, Doodle[] doodles, OnRecyclerItemChildClickListener viewClicks) {
-        mContext = context;
         mDoodles = doodles;
         mOnItemClickListener = viewClicks;
+        mInflater = LayoutInflater.from(context);
     }
 
     final int TYPE_HEADER = 0;
@@ -41,23 +41,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         if (viewType == TYPE_HEADER) {
-            View view = LayoutInflater.from(context).inflate(R.layout.doodle_list_item_header, parent, false);
+            View view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
             return HeaderViewHolder.newInstance(view, mOnItemClickListener);
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
         return RecyclerItemViewHolder.newInstance(view, mOnItemClickListener);
     }
 
-    static class HeaderViewHolder<String> extends RecyclerView.ViewHolder implements Attachable {
+    static class HeaderViewHolder extends RecyclerView.ViewHolder implements Attachable {
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
         }
 
-        public static RecyclerView.ViewHolder newInstance(View view, OnRecyclerItemChildClickListener mViewClicks) {
+        public static RecyclerView.ViewHolder newInstance(View view, OnRecyclerItemChildClickListener listener) {
             return new HeaderViewHolder(view);
         }
 

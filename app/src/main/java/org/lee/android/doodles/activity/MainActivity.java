@@ -69,7 +69,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initToolbar();
-//        initSearchBar();
 
         mTitle = getTitle();
         initDrawerFragment();
@@ -241,10 +240,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            getMenuInflater().inflate(R.menu.activity_main, menu);
-            return true;
-        }
+        getMenuInflater().inflate(R.menu.activity_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -262,10 +258,17 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        super.onOptionsItemSelected(item);
         Log.anchor();
-//        if() return true;
+        if(super.onOptionsItemSelected(item)){
+            return true;
+        }
         switch (item.getItemId()) {
+//            case android.R.id.home:
+//                mNavigationDrawerFragment.toggleDrawer();
+//                return true;
+            case R.id.Search:
+                SearchActivity.launch(this, "世界杯");
+                return true;
             case R.id.Settings:
                 return true;
             case R.id.RemoveAd:
@@ -349,7 +352,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             return;
         } else if (fragment instanceof YearsFragment) {
             ((YearsFragment) fragment).setOnYearChangedListener(null);
-        }else if (fragment instanceof DoodleArchivePagerFragment) {
+        } else if (fragment instanceof DoodleArchivePagerFragment) {
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             if (!pagerFragment.mHasYearPage) {
                 mNavigationDrawerFragment.toggle();

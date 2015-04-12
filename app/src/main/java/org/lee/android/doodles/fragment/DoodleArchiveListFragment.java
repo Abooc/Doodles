@@ -99,11 +99,12 @@ public class DoodleArchiveListFragment extends Fragment
 
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+
         int toolbarHeight = Utils.getToolbarHeight(getActivity());
 //        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
         recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + toolbarHeight,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mActivity, mDoodles, this);
         recyclerAdapter.setHasHeader(false);
         recyclerView.setAdapter(recyclerAdapter);

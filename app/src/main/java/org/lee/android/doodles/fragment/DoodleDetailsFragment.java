@@ -64,17 +64,16 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         return fragment;
     }
 
-    private ActionBar mActionBar;
+//    private ActionBar mActionBar;
     private FragmentRunningListener mFrunningListener;
-    private MainActivity mMainActivity;
 
     @Override
     public void onAttach(Activity activity) {
-        setHasOptionsMenu(true);
         super.onAttach(activity);
-        mMainActivity = (MainActivity) activity;
-        mActionBar = mMainActivity.getSupportActionBar();
-        mFrunningListener = mMainActivity;
+        setHasOptionsMenu(true);
+//        mMainActivity = (MainActivity) activity;
+//        mActionBar = mMainActivity.getSupportActionBar();
+        mFrunningListener = (FragmentRunningListener) activity;
     }
 
     @Override
@@ -95,7 +94,7 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         }
         Gson gson = new Gson();
         mDoodle = gson.fromJson(json, Doodle.class);
-        mTitle = (String) mActionBar.getTitle();
+//        mTitle = (String) mActionBar.getTitle();
 
         int paddingTop = Utils.getToolbarHeight(getActivity());
         view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());
@@ -199,7 +198,7 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
                 getFragmentManager().popBackStackImmediate();
                 return true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -229,8 +228,8 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         // This method is called at the end of the animation for the fragment transaction.
         // There is nothing we need to do in this sample.
 
-        mActionBar.setTitle(mDoodle.getDate());
-        mMainActivity.getNavigationDrawerFragment().toggle();
+//        mActionBar.setTitle(mDoodle.getDate());
+//        mMainActivity.getNavigationDrawerFragment().toggle();
 
     }
 
@@ -259,8 +258,8 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mActionBar.setTitle(mTitle);
-        mMainActivity.getNavigationDrawerFragment().toggle();
+//        mActionBar.setTitle(mTitle);
+//        mMainActivity.getNavigationDrawerFragment().toggle();
 
     }
 }
