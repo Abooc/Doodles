@@ -1,21 +1,20 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.common.view.SlidingTabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
 import org.lee.android.util.Log;
 
@@ -27,11 +26,14 @@ import java.util.Calendar;
 public class DoodleArchivePagerFragment extends Fragment {
 
     private ViewPager mViewPager;
-    private Year mYear = new Year("2015", "i_2002");
+    public static Year mYear = new Year("2015", "i_2002");
+    public boolean mHasYearPage = true;
 
-    public static DoodleArchivePagerFragment newInstance() {
+    public static DoodleArchivePagerFragment newInstance(Year year, boolean hasYearPage) {
         DoodleArchivePagerFragment fragment = new DoodleArchivePagerFragment();
         Bundle args = new Bundle();
+        args.putBoolean("hasYearPage", hasYearPage);
+        args.putString("year", new Gson().toJson(year));
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,7 +46,6 @@ public class DoodleArchivePagerFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setHasOptionsMenu(true);
         mFrunningListener = (FragmentRunningListener) activity;
     }
 
@@ -53,11 +54,19 @@ public class DoodleArchivePagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_pager, container, false);
         mViewPager = (ViewPager) container.findViewById(R.id.ViewPager);
+
         if (savedInstanceState != null) {
             mYear = (Year) savedInstanceState.getSerializable("year");
             Log.anchor("mYear = " + mYear);
+            mHasYearPage = savedInstanceState.getBoolean("hasYearPage");
+        } else {
+            String json = getArguments().getString("year");
+            if (!TextUtils.isEmpty(json))
+                mYear = new Gson().fromJson(json, Year.class);
+            mHasYearPage = getArguments().getBoolean("hasYearPage");
         }
-        attachData(mYear);
+
+        setUpPager(mYear, mHasYearPage);
 
         Log.anchor(mYear);
         return container;
@@ -80,49 +89,23 @@ public class DoodleArchivePagerFragment extends Fragment {
         mFrunningListener.onPause(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.RemoveAd:
-                attachData(new Year("2015", "i_2000"));
-                return true;
-            case R.id.AboutDoodles:
-                attachData(new Year("2014", "i_2000"));
-
-                return true;
-            case R.id.Share:
-                attachData(new Year("2013", "i_2000"));
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void attachData(Year year) {
-        int count;
-        int currYear = Calendar.getInstance().get(Calendar.YEAR);
-        if (currYear > Integer.valueOf(year.name)) {
-            count = 12;
-        } else {
-            count = Calendar.getInstance().get(Calendar.MONTH);
-        }
-
+    private void setUpPager(Year year, boolean hasYearPage) {
         IFragmentPagerAdapter adapter = new IFragmentPagerAdapter(
-                getChildFragmentManager());
-        adapter.setYear(year.name);
-        adapter.setCount(count);
+                getChildFragmentManager(), year, hasYearPage);
         mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(1);
+        if(hasYearPage)
+            mViewPager.setCurrentItem(1);
     }
 
-    public void setYear(Year year) {
-        mYear = year;
+    public Year getYear() {
+        return mYear;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.anchor();
+        outState.putBoolean("hasYearPage", mHasYearPage);
         outState.putSerializable("year", mYear);
     }
 
@@ -132,30 +115,35 @@ public class DoodleArchivePagerFragment extends Fragment {
 
     public static class IFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-        private int count = 13;
-        private String year;
+        private int count = 1;
+        private Year year;
+        private Boolean hasYearPage;
 
-        public IFragmentPagerAdapter(FragmentManager fm) {
+        public IFragmentPagerAdapter(FragmentManager fm, Year year, boolean hasYearPage) {
             super(fm);
-        }
-
-        public void setYear(String year) {
             this.year = year;
+            this.hasYearPage = hasYearPage;
+
+            caculateMonth(Integer.valueOf(year.name));
         }
 
-        public void setCount(int count) {
-            this.count = count;
+        private void caculateMonth(int year){
+            int currYear = Calendar.getInstance().get(Calendar.YEAR);
+            if (currYear > year) {
+                count = 12;
+            } else {
+                count = Calendar.getInstance().get(Calendar.MONTH);
+            }
         }
 
         @Override
         public Fragment getItem(int i) {
-            if (i == 0) {
-
+            if (hasYearPage && i == 0) {
                 return new YearsFragment();
             }
-            Fragment fragment = new DoodlesArchiveListFragment();
+            Fragment fragment = new DoodleArchiveListFragment();
             Bundle args = new Bundle();
-            args.putInt("year", 2014);
+            args.putInt("year", Integer.valueOf(year.name));
             args.putInt("month", count - i);
             fragment.setArguments(args);
             return fragment;
@@ -168,7 +156,7 @@ public class DoodleArchivePagerFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0) return "年份";
+            if (hasYearPage && position == 0) return "选择年份";
             int month = count - position;
             return (month < 10 ? "0" + month : month) + "月份";
         }

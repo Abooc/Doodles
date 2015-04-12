@@ -1,6 +1,5 @@
 package org.lee.android.doodles.activity;
 
-import android.battleground.common.DoubleClickBackExit;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -148,6 +147,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     }
 
     private DrawerLayout drawerLayout;
+
     private void initDrawerFragment() {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -202,14 +202,10 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     public HidingScrollListener getHidingScrollListener() {
         return new HidingScrollListener(this) {
 
-
             @Override
             public void onMoved(int distance, int dx, int dy) {
 //                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance * 2));
                 mToolbarContainer.setTranslationY(-distance);
-                if (mMoveView != null) {
-                    mMoveView.setTranslationY(-distance);
-                }
             }
 
             @Override
@@ -293,7 +289,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         showToolbar();
-        if(position == 1){
+        if (position == 1) {
             mSlidingTabLayout.setVisibility(View.VISIBLE);
         }
 
@@ -308,34 +304,36 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         super.onResume();
     }
 
-    private View mMoveView;
-
     @Override
     public void onResume(Fragment fragment) {
         String title = fragment.getTag();
         Log.anchor(title + ", " + fragment.getClass().getSimpleName());
-        restoreActionBar(title);
 
         if (fragment instanceof DoodleArchivePagerFragment) {
+            restoreActionBar(title);
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             mSlidingTabLayout.setViewPager(pagerFragment.getPager());
-            return;
-        }
-        mMoveView = null;
-        if (fragment instanceof TodayFragment) {
+
+            if (pagerFragment.mHasYearPage) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            } else {
+                mNavigationDrawerFragment.toggle();
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+        } else if (fragment instanceof TodayFragment) {
+            restoreActionBar(title);
+
             mSlidingTabLayout.setViewPager(null);
             mSlidingTabLayout.setVisibility(View.GONE);
+        } else if (fragment instanceof DoodleDetailsFragment) {
+            restoreActionBar(title);
 
-            return;
-        }
-
-        if (fragment instanceof DoodleDetailsFragment) {
             showToolbar();
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mNavigationDrawerFragment.setHasOptionsMenu(false);
-            return;
+        } else if (fragment instanceof YearsFragment) {
+            ((YearsFragment) fragment).setOnYearChangedListener(this);
         }
-
 
     }
 
@@ -346,21 +344,31 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             mNavigationDrawerFragment.setHasOptionsMenu(true);
             return;
+        } else if (fragment instanceof YearsFragment) {
+            ((YearsFragment) fragment).setOnYearChangedListener(null);
+        }else if (fragment instanceof DoodleArchivePagerFragment) {
+            DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
+            if (!pagerFragment.mHasYearPage) {
+                mNavigationDrawerFragment.toggle();
+            }
         }
     }
-
-    private YearsFragment.Year mYear;
 
     /**
      * 年份切换事件
      */
     @Override
     public void onYearChanged(YearsFragment.Year newYear) {
-        mYear = newYear;
-        mNavigationDrawerFragment.setMenuSelection(2);
-        TabInfo tabInfo = mFragmentHandler.getTabInfo(2);
-        mTitle = tabInfo.title;
-        invalidateOptionsMenu();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(android.R.id.tabcontent,
+                        DoodleArchivePagerFragment.newInstance(newYear, false),
+                        newYear.name + "年"
+                )
+                .addToBackStack("newYear")
+                .setBreadCrumbTitle(newYear.name + "年")
+                .commit();
     }
 
     @Override
@@ -375,18 +383,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             Log.anchor();
             return;
         }
-        if (section == 0) {
-            if (DoubleClickBackExit.onBackPressed()) {
-                finish();
-            } else {
-                Toast.show("双击返回键退出");
-            }
-        } else {
-            super.onBackPressed();
-        }
-
         super.onBackPressed();
-
     }
 
 }

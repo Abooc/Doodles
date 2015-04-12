@@ -8,17 +8,18 @@ import android.view.ViewGroup;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private Doodle[] mDoodles;
-    private RecyclerItemViewHolder.ViewHolderClicks mViewClicks;
+    private OnRecyclerItemChildClickListener mOnItemClickListener;
 
-    public RecyclerAdapter(Context context, Doodle[] doodles, RecyclerItemViewHolder.ViewHolderClicks viewClicks) {
+    public RecyclerAdapter(Context context, Doodle[] doodles, OnRecyclerItemChildClickListener viewClicks) {
         mContext = context;
         mDoodles = doodles;
-        mViewClicks = viewClicks;
+        mOnItemClickListener = viewClicks;
     }
 
     final int TYPE_HEADER = 0;
@@ -43,11 +44,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Context context = parent.getContext();
         if (viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(context).inflate(R.layout.doodle_list_item_header, parent, false);
-            return HeaderViewHolder.newInstance(view, mViewClicks);
+            return HeaderViewHolder.newInstance(view, mOnItemClickListener);
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, parent, false);
-        return RecyclerItemViewHolder.newInstance(view, mViewClicks);
+        return RecyclerItemViewHolder.newInstance(view, mOnItemClickListener);
     }
 
     static class HeaderViewHolder<String> extends RecyclerView.ViewHolder implements Attachable {
@@ -56,7 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
         }
 
-        public static RecyclerView.ViewHolder newInstance(View view, RecyclerItemViewHolder.ViewHolderClicks mViewClicks) {
+        public static RecyclerView.ViewHolder newInstance(View view, OnRecyclerItemChildClickListener mViewClicks) {
             return new HeaderViewHolder(view);
         }
 

@@ -8,40 +8,41 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
-import org.lee.android.doodles.volley.VolleyLoader;
 
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
         RecyclerAdapter.Attachable, View.OnClickListener {
 
-    public interface ViewHolderClicks {
-        void onItemClick(View parent, int position);
+    public interface OnRecyclerItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
 
-        void onSearch(TextView searchView);
+    public interface OnRecyclerItemChildClickListener extends OnRecyclerItemClickListener {
+        void onItemChildClick(View itemChildView, int position);
     }
 
     private final NetworkImageView imageView;
     private final TextView titleText;
     private final TextView dateText;
     private final TextView hoverText;
-    private final ViewHolderClicks mViewHolderClicks;
+    private final OnRecyclerItemChildClickListener mOnRecylerItemClickListener;
 
     public RecyclerItemViewHolder(final View parent,
                                   NetworkImageView imageView,
                                   TextView titleText,
                                   TextView dateText,
-                                  TextView hoverText, ViewHolderClicks clicks) {
+                                  TextView hoverText, OnRecyclerItemChildClickListener clicks) {
         super(parent);
         this.imageView = imageView;
         this.titleText = titleText;
         this.dateText = dateText;
         this.hoverText = hoverText;
-        this.mViewHolderClicks = clicks;
+        this.mOnRecylerItemClickListener = clicks;
 
         parent.setOnClickListener(this);
         parent.findViewById(R.id.Search).setOnClickListener(this);
     }
 
-    public static RecyclerItemViewHolder newInstance(View convertView, ViewHolderClicks clicks) {
+    public static RecyclerItemViewHolder newInstance(View convertView, OnRecyclerItemChildClickListener clicks) {
         NetworkImageView imageView = (NetworkImageView) convertView.findViewById(R.id.ImageView);
         TextView titleText = (TextView) convertView.findViewById(R.id.Title);
         TextView dateText = (TextView) convertView.findViewById(R.id.Date);
@@ -55,13 +56,13 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
 
     @Override
     public void onClick(View v) {
-        if (mViewHolderClicks != null)
+        if (mOnRecylerItemClickListener != null)
             switch (v.getId()) {
                 case R.id.Search:
-                    mViewHolderClicks.onSearch((TextView) v);
+                    mOnRecylerItemClickListener.onItemChildClick(v, getAdapterPosition());
                     return;
                 default:
-                    mViewHolderClicks.onItemClick(v, getAdapterPosition());
+                    mOnRecylerItemClickListener.onItemClick(v, getAdapterPosition());
                     return;
             }
     }

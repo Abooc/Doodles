@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
@@ -103,13 +105,13 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         ArrayList<TabInfo> tabInfos = new ArrayList<TabInfo>();
 
         Bundle args = new Bundle();
-        args.putInt("year", 2014);
-        args.putInt("month", 12 - index);
+        args.putBoolean("hasYearPage", true);
+        args.putString("year", new Gson().toJson(DoodleArchivePagerFragment.mYear));
 //        tabInfos.add(new TabInfo(DoodlesListFragment.class, mNames[index++], args));
 //        tabInfos.add(new TabInfo(DoodlesListFragment.class, mNames[index++], args));
         tabInfos.add(new TabInfo(TodayFragment.class, mNames[index++], null));
 //        tabInfos.add(new TabInfo(YearsFragment.class, mNames[index++], null));
-        tabInfos.add(new TabInfo(DoodleArchivePagerFragment.class, mNames[index++], null));
+        tabInfos.add(new TabInfo(DoodleArchivePagerFragment.class, mNames[index++], args));
 //        tabInfos.add(new TabInfo(SearchFragment.class, mNames[index++], null));
         return tabInfos;
     }

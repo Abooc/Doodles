@@ -25,7 +25,7 @@ import org.lee.android.util.Toast;
  * 搜索Doodles页面
  */
 public class SearchFragment extends FragmentLog implements
-        RecyclerItemViewHolder.ViewHolderClicks {
+        RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     public static SearchFragment newInstance(String q) {
         SearchFragment fragment = new SearchFragment();
@@ -155,10 +155,10 @@ public class SearchFragment extends FragmentLog implements
     }
 
     @Override
-    public void onSearch(TextView searchView) {
-        Toast.show("onSearch");
+    public void onItemChildClick(View itemChildView, int position) {
 
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

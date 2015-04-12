@@ -21,7 +21,7 @@ import org.lee.android.util.Toast;
  * 搜索Doodles历史关键词页面
  */
 public class SearchKeywordsFragment extends FragmentLog implements
-        RecyclerItemViewHolder.ViewHolderClicks {
+        RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     public static SearchKeywordsFragment newInstance(String q) {
         SearchKeywordsFragment fragment = new SearchKeywordsFragment();
@@ -87,8 +87,9 @@ public class SearchKeywordsFragment extends FragmentLog implements
     }
 
     @Override
-    public void onSearch(TextView searchView) {
-        Toast.show("onSearch");
+    public void onItemChildClick(View itemChildView, int position) {
+        Toast.show("onItemChildClick");
 
     }
+
 }

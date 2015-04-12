@@ -11,22 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.TextView;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.test.data.DataGeter;
-import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 /**
  * 最新Doodles页面
  */
-public class TodayFragment extends Fragment implements AdapterView.OnItemClickListener,
-        RecyclerItemViewHolder.ViewHolderClicks {
+public class TodayFragment extends Fragment implements
+        RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
@@ -35,7 +32,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         return fragment;
     }
 
-    private ActionBar mActionBar;
     /**
      * Fragment运行状态监听
      */
@@ -49,7 +45,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
         MainActivity mainActivity = (MainActivity) activity;
         mOnScrollListener = mainActivity.getHidingScrollListener();
         mFrunningListener = mainActivity;
-        mActionBar = mainActivity.getSupportActionBar();
     }
 
     @Override
@@ -93,20 +88,6 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Doodle doodle = (Doodle) parent.getAdapter().getItem(position);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(android.R.id.tabcontent,
-                        DoodleDetailsFragment.newInstance(doodle,
-                                (int) view.getX(), (int) view.getY(),
-                                view.getWidth(), view.getHeight())
-                )
-                .addToBackStack("detail")
-                .commit();
-    }
-
-    @Override
     public void onItemClick(View parent, int position) {
         Toast.show("onItemClick");
         Doodle doodle = mDoodles[position];
@@ -121,8 +102,8 @@ public class TodayFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
-    public void onSearch(TextView searchView) {
-        Toast.show("onSearch");
+    public void onItemChildClick(View itemChildView, int position) {
+        Toast.show("onItemChildClick");
 
     }
 
