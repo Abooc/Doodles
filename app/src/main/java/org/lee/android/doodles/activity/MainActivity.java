@@ -311,6 +311,8 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
 
         if (fragment instanceof DoodleArchivePagerFragment) {
             restoreActionBar(title);
+            mSlidingTabLayout.setVisibility(View.VISIBLE);
+
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             mSlidingTabLayout.setViewPager(pagerFragment.getPager());
 
@@ -328,6 +330,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         } else if (fragment instanceof DoodleDetailsFragment) {
             restoreActionBar(title);
 
+            mSlidingTabLayout.setVisibility(View.GONE);
             showToolbar();
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mNavigationDrawerFragment.setHasOptionsMenu(false);
