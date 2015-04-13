@@ -29,13 +29,9 @@ public class SearchActivity extends FragmentActivity implements FragmentRunningL
         super.onCreate(savedInstanceState);
         getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_commit_search_api_mtrl_alpha);
 
-//        setContentView(R.layout.activity_search);
-
         Intent intent = getIntent();
         if(intent != null){
             String q = intent.getStringExtra("q");
-            setTitle("搜索\"" + q + "\"");
-
             getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, SearchFragment.newInstance(q))
                     .commit();

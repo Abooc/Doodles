@@ -3,7 +3,7 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +65,7 @@ public class SearchFragment extends Fragment implements
         listContainer = view.findViewById(R.id.listContainer);
         internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
         recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerViewSearch);
-        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
         Bundle args = getArguments();
         if (args != null) {
@@ -80,13 +80,14 @@ public class SearchFragment extends Fragment implements
     private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(
                 mActivity, doodles, this);
-        recyclerAdapter.setHasHeader(true);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mActivity.setTitle("搜索\"" + mQ + "\"");
+
 
         if (mDoodlePkg == null) {
             ApiClient apiClient = new ApiClient();

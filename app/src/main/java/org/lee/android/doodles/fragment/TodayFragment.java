@@ -3,7 +3,6 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,6 +77,7 @@ public class TodayFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+//        getActivity().getActionBar().setTitle(getTag());
         mFrunningListener.onResume(this);
     }
 
@@ -87,20 +87,31 @@ public class TodayFragment extends Fragment implements
         mFrunningListener.onPause(this);
     }
 
+    /**
+     * RecyclerView每一项View的点击事件
+     * @param itemView 列表项
+     * @param position 点击的position
+     */
     @Override
-    public void onItemClick(View parent, int position) {
+    public void onItemClick(View itemView, int position) {
         Toast.show("onItemClick");
         Doodle doodle = mDoodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent,
                         DoodleDetailsFragment.newInstance(doodle,
-                                (int) parent.getX(), (int) parent.getY(),
-                                parent.getWidth(), parent.getHeight())
+                                (int) itemView.getX(), (int) itemView.getY(),
+                                itemView.getWidth(), itemView.getHeight()),
+                        doodle.title
                 )
                 .addToBackStack("detail").commit();
     }
 
+    /**
+     * RecyclerView中Item项子View点击事件
+     * @param itemChildView
+     * @param position
+     */
     @Override
     public void onItemChildClick(View itemChildView, int position) {
         Toast.show("onItemChildClick");

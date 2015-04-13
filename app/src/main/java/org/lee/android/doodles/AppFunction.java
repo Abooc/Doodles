@@ -43,7 +43,14 @@ public class AppFunction {
         addShortcut(activity, R.string.app_name, R.drawable.ic_launcher, 1);
     }
 
-    public static boolean hideInputMethod(Activity activity, View view) {
+    /**
+     * 隐藏软键盘
+     *
+     * @param activity
+     * @param view
+     * @return
+     */
+    public static boolean hideKeyboard(Activity activity, View view) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             return imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -52,6 +59,12 @@ public class AppFunction {
         return false;
     }
 
+    /**
+     * 隐藏软键盘
+     *
+     * @param activity
+     * @return
+     */
     public static boolean hideKeyboard(Activity activity) {
         if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -60,13 +73,18 @@ public class AppFunction {
         return false;
     }
 
-
-    public static boolean showInputMethod(Context context, View view) {
+    /**
+     * 弹出软件盘
+     *
+     * @param context
+     * @param view
+     * @return
+     */
+    public static boolean showKeyboard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             return imm.showSoftInput(view, 0);
         }
-
         return false;
     }
 

@@ -1,7 +1,6 @@
 package org.lee.android.doodles.activity;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.common.view.SlidingTabLayout;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,13 +27,9 @@ import org.lee.android.doodles.fragment.DoodleDetailsFragment;
 import org.lee.android.doodles.fragment.FragmentRunningListener;
 import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
-import org.lee.android.doodles.fragment.SearchFragment;
-import org.lee.android.doodles.fragment.SearchKeywordsFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
 import org.lee.android.doodles.fragment.YearsFragment;
-import org.lee.android.doodles.widget.SearchBar;
 import org.lee.android.util.Log;
-import org.lee.android.util.Toast;
 
 
 /**
@@ -55,12 +49,10 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
 
     private FragmentHandlerAdapter mFragmentHandler;
     private FragmentManager mFragmentManager;
-    private CharSequence mTitle;
     private LinearLayout mToolbarContainer;
     private int mToolbarHeight;
-    private Drawable mToolbarContainerDrawable;
-    private SearchBar mSearchBar;
     private SlidingTabLayout mSlidingTabLayout;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -70,16 +62,13 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         setContentView(R.layout.activity_main);
         initToolbar();
 
-        mTitle = getTitle();
         initDrawerFragment();
 
     }
 
     private void initToolbar() {
         mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
-        mToolbarContainerDrawable = mToolbarContainer.getBackground();
         mSlidingTabLayout = (SlidingTabLayout) mToolbarContainer.findViewById(R.id.SlidingTabs);
-//        mSlidingTabLayout.setCustomTabView(R.layout.slid_strip_item, R.id.Text);
         mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
@@ -91,7 +80,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
                 return Color.TRANSPARENT;
             }
         });
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setTitle(getString(R.string.app_name));
         mToolbarHeight = Utils.getToolbarHeight(this);
@@ -102,47 +91,14 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initSearchBar() {
-//        mSearchBar = (SearchBar) findViewById(R.id.SearchBar);
-        mSearchBar.setFragmentManager(mFragmentManager);
-        mSearchBar.setOnSearchEventListener(new SearchBar.OnSearchEventListener() {
-            @Override
-            public void onSearch(String q) {
-                hideToolbar();
-
-                Toast.show("搜索..." + q);
-                AppFunction.hideKeyboard(MainActivity.this);
-                FragmentTransaction transaction = mFragmentManager
-                        .beginTransaction();
-                transaction
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.replace(android.R.id.tabcontent,
-                        SearchFragment.newInstance(q));
-                transaction.addToBackStack("q").commit();
-            }
-        });
-        mSearchBar.setOnCancleClickListener(new SearchBar.OnCancleClickListener() {
-            @Override
-            public void onCancel() {
-                getWindow().getDecorView().requestFocus();
-                mFragmentManager.popBackStack();
-            }
-        });
-
-        mSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    FragmentTransaction transaction = mFragmentManager
-                            .beginTransaction();
-//            transaction
-//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    transaction.add(android.R.id.content,
-                            SearchKeywordsFragment.newInstance("汽车"));
-                    transaction.addToBackStack("keywords").commit();
-                }
-            }
-        });
+    /**
+     * 覆写Activity.setTitle()方法，使Toolbar的标题生效
+     * @param title
+     */
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+        mToolbar.setTitle(title);
     }
 
     private DrawerLayout drawerLayout;
@@ -224,16 +180,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         };
     }
 
-    public ActionBarDrawerToggle getDrawerToggle() {
-        return mNavigationDrawerFragment.getDrawerToggle();
-    }
-
-
-    public NavigationDrawerFragment getNavigationDrawerFragment() {
-        return mNavigationDrawerFragment;
-    }
-
-    public void restoreActionBar(String title) {
+    private void restoreActionBar(String title) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(title);
     }
@@ -259,7 +206,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.anchor();
-        if(super.onOptionsItemSelected(item)){
+        if (super.onOptionsItemSelected(item)) {
             return true;
         }
         switch (item.getItemId()) {
@@ -332,6 +279,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             mSlidingTabLayout.setVisibility(View.GONE);
         } else if (fragment instanceof DoodleDetailsFragment) {
             restoreActionBar(title);
+            mNavigationDrawerFragment.toggle();
 
             mSlidingTabLayout.setVisibility(View.GONE);
             showToolbar();
@@ -347,11 +295,14 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     public void onPause(Fragment fragment) {
         Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.toggle();
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             mNavigationDrawerFragment.setHasOptionsMenu(true);
             return;
         } else if (fragment instanceof YearsFragment) {
             ((YearsFragment) fragment).setOnYearChangedListener(null);
+        } else if (fragment instanceof DoodleDetailsFragment) {
+            mNavigationDrawerFragment.toggle();
         } else if (fragment instanceof DoodleArchivePagerFragment) {
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             if (!pagerFragment.mHasYearPage) {
@@ -370,10 +321,10 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(android.R.id.tabcontent,
                         DoodleArchivePagerFragment.newInstance(newYear, false),
-                        newYear.name + "年"
+                        newYear.year + "年"
                 )
                 .addToBackStack("newYear")
-                .setBreadCrumbTitle(newYear.name + "年")
+                .setBreadCrumbTitle(newYear.year + "年")
                 .commit();
     }
 
@@ -383,9 +334,8 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             mNavigationDrawerFragment.toggleDrawer();
             return;
         }
-        View view = getWindow().getDecorView();
-        if (AppFunction.hideInputMethod(this, view)) {
-            view.requestFocus();
+        if (AppFunction.hideKeyboard(this)) {
+            getWindow().getDecorView().requestFocus();
             Log.anchor();
             return;
         }
@@ -393,3 +343,53 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     }
 
 }
+
+
+//    private Drawable mToolbarContainerDrawable;
+//    private SearchBar mSearchBar;
+
+
+//    mToolbarContainerDrawable = mToolbarContainer.getBackground();
+
+//    private void initSearchBar() {
+////        mSearchBar = (SearchBar) findViewById(R.id.SearchBar);
+//        mSearchBar.setFragmentManager(mFragmentManager);
+//        mSearchBar.setOnSearchEventListener(new SearchBar.OnSearchEventListener() {
+//            @Override
+//            public void onSearch(String q) {
+//                hideToolbar();
+//
+//                Toast.show("搜索..." + q);
+//                AppFunction.hideKeyboard(MainActivity.this);
+//                FragmentTransaction transaction = mFragmentManager
+//                        .beginTransaction();
+//                transaction
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                transaction.replace(android.R.id.tabcontent,
+//                        SearchFragment.newInstance(q));
+//                transaction.addToBackStack("q").commit();
+//            }
+//        });
+//        mSearchBar.setOnCancleClickListener(new SearchBar.OnCancleClickListener() {
+//            @Override
+//            public void onCancel() {
+//                getWindow().getDecorView().requestFocus();
+//                mFragmentManager.popBackStack();
+//            }
+//        });
+//
+//        mSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    FragmentTransaction transaction = mFragmentManager
+//                            .beginTransaction();
+////            transaction
+////                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                    transaction.add(android.R.id.content,
+//                            SearchKeywordsFragment.newInstance("汽车"));
+//                    transaction.addToBackStack("keywords").commit();
+//                }
+//            }
+//        });
+//    }

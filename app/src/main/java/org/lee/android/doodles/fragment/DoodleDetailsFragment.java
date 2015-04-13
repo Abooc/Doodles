@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.transition.Scene;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import com.google.gson.Gson;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
-import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Log;
@@ -64,15 +62,14 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         return fragment;
     }
 
-//    private ActionBar mActionBar;
+    private android.support.v7.app.ActionBar mActionBar;
     private FragmentRunningListener mFrunningListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
-//        mMainActivity = (MainActivity) activity;
-//        mActionBar = mMainActivity.getSupportActionBar();
+//        mActionBar = ((FragmentActivity) activity).getActionBar();
         mFrunningListener = (FragmentRunningListener) activity;
     }
 
@@ -94,7 +91,8 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         }
         Gson gson = new Gson();
         mDoodle = gson.fromJson(json, Doodle.class);
-//        mTitle = (String) mActionBar.getTitle();
+//        mActionBar.setTitle(mDoodle.title);
+        getActivity().setTitle(mDoodle.title);
 
         int paddingTop = Utils.getToolbarHeight(getActivity());
         view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());

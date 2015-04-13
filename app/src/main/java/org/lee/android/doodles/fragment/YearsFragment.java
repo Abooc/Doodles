@@ -16,7 +16,6 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemClickListener;
-import org.lee.android.util.Log;
 
 import java.io.Serializable;
 
@@ -106,7 +105,7 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
 
 
         public void attachData(Year year) {
-            mNameText.setText(year.name + "年");
+            mNameText.setText(year.year + "年");
 //            int drawable = resources.getIdentifier(year.url, "drawable", packageName);
 //            imageView.setImageResource(drawable);
         }
@@ -177,20 +176,20 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
         /**
          * 年份，如2015
          */
-        public String name;
+        public String year;
         /**
          * 这一年Doodle代表作
          */
         public String url;
 
-        public Year(String name, String drawable) {
-            this.name = name;
+        public Year(String year, String drawable) {
+            this.year = year;
             this.url = drawable;
         }
 
         @Override
         public String toString() {
-            return "name:" + name + ", url:" + url;
+            return "year:" + year + ", url:" + url;
         }
     }
 
