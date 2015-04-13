@@ -3,7 +3,6 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * 年份页面
  */
-public class YearsFragment extends Fragment implements OnRecyclerItemClickListener {
+public class YearsFragment extends LifecycleFragment implements OnRecyclerItemClickListener {
 
     public static YearsFragment newInstance() {
         YearsFragment fragment = new YearsFragment();
@@ -36,17 +36,11 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
     private Year[] mYears;
 
 
-    /**
-     * Fragment运行状态监听
-     */
-    private FragmentRunningListener mFrunningListener;
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;
         MainActivity mainActivity = (MainActivity) activity;
-        mFrunningListener = mainActivity;
         mOnScrollListener = mainActivity.getHidingScrollListener();
     }
 
@@ -74,18 +68,6 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
         YearAdapter recyclerAdapter = new YearAdapter(mYears, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mFrunningListener.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFrunningListener.onPause(this);
     }
 
     private static class YearViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

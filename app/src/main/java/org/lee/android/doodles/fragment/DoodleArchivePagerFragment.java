@@ -3,7 +3,6 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import com.google.gson.Gson;
 
 import org.lee.android.doodles.CustomFragmentPagerAdapter;
 import org.lee.android.doodles.CustomFragmentPagerAdapter.TabInfo;
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
 import org.lee.android.util.Log;
@@ -27,7 +27,7 @@ import java.util.Calendar;
  * </p>
  * 承载"切换年份"页面和其他多个单月份页面
  */
-public class DoodleArchivePagerFragment extends Fragment {
+public class DoodleArchivePagerFragment extends LifecycleFragment {
 
     private ViewPager mViewPager;
     private Year mYear;
@@ -42,16 +42,10 @@ public class DoodleArchivePagerFragment extends Fragment {
         return fragment;
     }
 
-    /**
-     * Fragment运行状态监听
-     */
-    private FragmentRunningListener mFrunningListener;
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
-        mFrunningListener = (FragmentRunningListener) activity;
     }
 
     @Override
@@ -124,6 +118,10 @@ public class DoodleArchivePagerFragment extends Fragment {
         }
     }
 
+    public ViewPager getPager() {
+        return mViewPager;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.anchor();
@@ -136,27 +134,11 @@ public class DoodleArchivePagerFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mFrunningListener.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFrunningListener.onPause(this);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.anchor();
         outState.putBoolean("hasYearPage", mHasYearPage);
         outState.putSerializable("year", mYear);
-    }
-
-    public ViewPager getPager() {
-        return mViewPager;
     }
 
 

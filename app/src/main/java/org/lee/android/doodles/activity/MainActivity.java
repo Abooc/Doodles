@@ -24,7 +24,7 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.DoodleArchivePagerFragment;
 import org.lee.android.doodles.fragment.DoodleDetailsFragment;
-import org.lee.android.doodles.fragment.FragmentRunningListener;
+import org.lee.android.doodles.FragmentLifecycle;
 import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
@@ -40,7 +40,7 @@ import org.lee.android.util.Log;
  * on 15-2-22.
  */
 public class MainActivity extends LoggerActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        YearsFragment.OnYearChangedListener, FragmentRunningListener {
+        YearsFragment.OnYearChangedListener, FragmentLifecycle {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -255,7 +255,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     }
 
     @Override
-    public void onResume(Fragment fragment) {
+    public void onFragmentStart(Fragment fragment) {
         String title = fragment.getTag();
         Log.anchor(title + ", " + fragment.getClass().getSimpleName());
 
@@ -274,9 +274,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             }
         } else if (fragment instanceof TodayFragment) {
             restoreActionBar(title);
-
-            mSlidingTabLayout.setViewPager(null);
-            mSlidingTabLayout.setVisibility(View.GONE);
         } else if (fragment instanceof DoodleDetailsFragment) {
             restoreActionBar(title);
             mNavigationDrawerFragment.toggle();
@@ -292,7 +289,7 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     }
 
     @Override
-    public void onPause(Fragment fragment) {
+    public void onFragmentDestroy(Fragment fragment) {
         Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
             mNavigationDrawerFragment.toggle();
@@ -304,6 +301,9 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         } else if (fragment instanceof DoodleDetailsFragment) {
             mNavigationDrawerFragment.toggle();
         } else if (fragment instanceof DoodleArchivePagerFragment) {
+            mSlidingTabLayout.setViewPager(null);
+            mSlidingTabLayout.setVisibility(View.GONE);
+
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             if (!pagerFragment.mHasYearPage) {
                 mNavigationDrawerFragment.toggle();

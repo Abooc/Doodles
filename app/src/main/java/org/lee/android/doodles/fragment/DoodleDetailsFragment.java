@@ -3,7 +3,6 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.transition.Scene;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.bean.Doodle;
@@ -27,7 +27,7 @@ import org.lee.android.util.Log;
 /**
  * Doodle详情页面
  */
-public class DoodleDetailsFragment extends Fragment implements Animation.AnimationListener {
+public class DoodleDetailsFragment extends LifecycleFragment implements Animation.AnimationListener {
 
     private static final String ARG_DOODLE = "doodle";
     private static final String ARG_X = "x";
@@ -63,14 +63,12 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
     }
 
     private android.support.v7.app.ActionBar mActionBar;
-    private FragmentRunningListener mFrunningListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
 //        mActionBar = ((FragmentActivity) activity).getActionBar();
-        mFrunningListener = (FragmentRunningListener) activity;
     }
 
     @Override
@@ -197,18 +195,6 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
                 return true;
         }
         return true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mFrunningListener.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFrunningListener.onPause(this);
     }
 
     @Override

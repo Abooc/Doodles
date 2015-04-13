@@ -112,33 +112,6 @@ public class DoodleArchiveListFragment extends Fragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.anchor("year:" + year + ", month:" + month);
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.anchor("year:" + year + ", month:" + month);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.anchor("year:" + year + ", month:" + month);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.anchor("year:" + year + ", month:" + month);
-    }
-
-
-
-    @Override
     public void onItemClick(View parent, int position) {
         Toast.show("onItemClick");
         Doodle doodle = mDoodles[position];

@@ -2,7 +2,6 @@ package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
@@ -21,7 +21,7 @@ import org.lee.android.util.Toast;
 /**
  * 最新Doodles页面
  */
-public class TodayFragment extends Fragment implements
+public class TodayFragment extends LifecycleFragment implements
         RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     public static TodayFragment newInstance() {
@@ -31,10 +31,6 @@ public class TodayFragment extends Fragment implements
         return fragment;
     }
 
-    /**
-     * Fragment运行状态监听
-     */
-    private FragmentRunningListener mFrunningListener;
     private RecyclerView.OnScrollListener mOnScrollListener;
     private Doodle[] mDoodles;
 
@@ -43,7 +39,6 @@ public class TodayFragment extends Fragment implements
         super.onAttach(activity);
         MainActivity mainActivity = (MainActivity) activity;
         mOnScrollListener = mainActivity.getHidingScrollListener();
-        mFrunningListener = mainActivity;
     }
 
     @Override
@@ -74,21 +69,9 @@ public class TodayFragment extends Fragment implements
         recyclerView.setOnScrollListener(mOnScrollListener);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        getActivity().getActionBar().setTitle(getTag());
-        mFrunningListener.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFrunningListener.onPause(this);
-    }
-
     /**
      * RecyclerView每一项View的点击事件
+     *
      * @param itemView 列表项
      * @param position 点击的position
      */
@@ -109,6 +92,7 @@ public class TodayFragment extends Fragment implements
 
     /**
      * RecyclerView中Item项子View点击事件
+     *
      * @param itemChildView
      * @param position
      */

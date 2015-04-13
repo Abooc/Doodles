@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.fragment.FragmentRunningListener;
+import org.lee.android.doodles.FragmentLifecycle;
 import org.lee.android.doodles.fragment.SearchFragment;
 import org.lee.android.util.Log;
 
@@ -16,7 +16,7 @@ import org.lee.android.util.Log;
  * email:allnet@live.cn
  * on 15-4-5.
  */
-public class SearchActivity extends FragmentActivity implements FragmentRunningListener {
+public class SearchActivity extends FragmentActivity implements FragmentLifecycle {
 
     public static void launch(Context context, String q) {
         Intent intent = new Intent(context, SearchActivity.class);
@@ -42,14 +42,14 @@ public class SearchActivity extends FragmentActivity implements FragmentRunningL
     private boolean DetailsResume;
 
     @Override
-    public void onResume(Fragment fragment) {
+    public void onFragmentStart(Fragment fragment) {
         DetailsResume = true;
         Log.anchor();
 
     }
 
     @Override
-    public void onPause(Fragment fragment) {
+    public void onFragmentDestroy(Fragment fragment) {
         DetailsResume = false;
         Log.anchor();
 
