@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/HeaderView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical" >
+
+    <android.support.v7.widget.CardView
+        style="@style/Widget.SampleDashboard.Card"
+        android:id="@+id/Archive"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:clickable="true"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="6dp"
+            android:drawablePadding="6dp"
+            android:text="涂鸦存档"
+            android:textColor="@color/GRAY_DARK"
+            android:drawableLeft="@drawable/ic_menu_find" />
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        style="@style/Widget.SampleDashboard.Card"
+        android:id="@+id/Ad"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:layout_margin="4dp"
+        android:background="@color/YELLOW">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="6dp"
+            android:drawablePadding="6dp"
+            android:text="推荐广告"
+            android:textColor="@color/GRAY_DARK"
+            android:drawableLeft="@drawable/ic_menu_sort_by_size" />
+    </android.support.v7.widget.CardView>
+</LinearLayout>

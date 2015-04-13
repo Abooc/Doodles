@@ -3,8 +3,6 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.transition.Scene;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -19,9 +17,9 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
-import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Log;
@@ -29,7 +27,7 @@ import org.lee.android.util.Log;
 /**
  * Doodle详情页面
  */
-public class DoodleDetailsFragment extends Fragment implements Animation.AnimationListener {
+public class DoodleDetailsFragment extends LifecycleFragment implements Animation.AnimationListener {
 
     private static final String ARG_DOODLE = "doodle";
     private static final String ARG_X = "x";
@@ -64,23 +62,18 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         return fragment;
     }
 
-    private ActionBar mActionBar;
-    private FragmentRunningListener mFrunningListener;
-    private MainActivity mMainActivity;
+    private android.support.v7.app.ActionBar mActionBar;
 
     @Override
     public void onAttach(Activity activity) {
-        setHasOptionsMenu(true);
         super.onAttach(activity);
-        mMainActivity = (MainActivity) activity;
-        mActionBar = mMainActivity.getSupportActionBar();
-        mFrunningListener = mMainActivity;
+        setHasOptionsMenu(true);
+//        mActionBar = ((FragmentActivity) activity).getActionBar();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        View rootView = inflater.inflate(R.layout.fragment_doodles_list_item, container, false);
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
@@ -96,9 +89,10 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         }
         Gson gson = new Gson();
         mDoodle = gson.fromJson(json, Doodle.class);
-        mTitle = (String) mActionBar.getTitle();
+//        mActionBar.setTitle(mDoodle.title);
+        getActivity().setTitle(mDoodle.title);
 
-        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
+        int paddingTop = Utils.getToolbarHeight(getActivity());
         view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());
 
         FrameLayout root = (FrameLayout) view;
@@ -115,7 +109,10 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         FrameLayout.LayoutParams params = null;
         if (args != null) {
             params = new FrameLayout.LayoutParams(
-                    args.getInt(ARG_WIDTH), args.getInt(ARG_HEIGHT));
+                    args.getInt(ARG_WIDTH),
+//                    args.getInt(ARG_HEIGHT)
+                    FrameLayout.LayoutParams.MATCH_PARENT
+            );
             params.topMargin = args.getInt(ARG_Y);
             params.leftMargin = args.getInt(ARG_X);
         }
@@ -171,7 +168,7 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         TextView mDescView = (TextView) parent.findViewById(R.id.Desc);
         mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
         mImageView.setImageResource(R.drawable.ic_google_birthday);
-        mImageView.setDefaultImageResId(R.drawable.ic_doodle_error);
+        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
         mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
         mDescView.setText(
                 doodle.title + "\n"
@@ -197,19 +194,7 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
                 getFragmentManager().popBackStackImmediate();
                 return true;
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mFrunningListener.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFrunningListener.onPause(this);
+        return true;
     }
 
     @Override
@@ -227,8 +212,8 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
         // This method is called at the end of the animation for the fragment transaction.
         // There is nothing we need to do in this sample.
 
-        mActionBar.setTitle(mDoodle.getDate());
-        mMainActivity.getNavigationDrawerFragment().toggle();
+//        mActionBar.setTitle(mDoodle.getDate());
+//        mMainActivity.getNavigationDrawerFragment().toggle();
 
     }
 
@@ -257,8 +242,8 @@ public class DoodleDetailsFragment extends Fragment implements Animation.Animati
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mActionBar.setTitle(mTitle);
-        mMainActivity.getNavigationDrawerFragment().toggle();
+//        mActionBar.setTitle(mTitle);
+//        mMainActivity.getNavigationDrawerFragment().toggle();
 
     }
 }

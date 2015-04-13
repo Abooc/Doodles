@@ -14,36 +14,35 @@
     ** limitations under the License.
     */
     -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.SampleDashboard.SearchCard"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/progressContainer"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:gravity="center">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
+    android:layout_height="match_parent"
+    android:paddingTop="?android:actionBarSize"
+    android:background="#FaFaFa">
 
     <FrameLayout
         android:id="@+id/listContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/RecyclerViewSearch"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:focusableInTouchMode="true" />
+            android:orientation="vertical">
+
+            <org.lee.android.doodles.widget.SearchBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:focusableInTouchMode="true" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/internalEmpty"
@@ -53,5 +52,5 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </FrameLayout>
 
-</FrameLayout>
+</android.support.v7.widget.CardView>
 

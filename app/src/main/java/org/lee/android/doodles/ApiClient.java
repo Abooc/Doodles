@@ -5,8 +5,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.lee.android.util.Log;
 
-import java.util.Locale;
-
 public class ApiClient {
 
     //    String url = "http://www.woolom.com";

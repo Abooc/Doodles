@@ -1,24 +1,25 @@
 package org.lee.android.doodles.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import org.apache.http.Header;
 import org.lee.android.doodles.ApiClient;
-import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.bean.DoodlePackage;
 import org.lee.android.doodles.volley.HttpHandler;
-import org.lee.android.test.FragmentLog;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
@@ -26,8 +27,8 @@ import org.lee.android.util.Toast;
 /**
  * 搜索Doodles页面
  */
-public class SearchFragment extends FragmentLog implements
-        View.OnTouchListener, RecyclerItemViewHolder.ViewHolderClicks {
+public class SearchFragment extends Fragment implements
+        RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     public static SearchFragment newInstance(String q) {
         SearchFragment fragment = new SearchFragment();
@@ -35,6 +36,14 @@ public class SearchFragment extends FragmentLog implements
         args.putString("q", q);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private Activity mActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = activity;
     }
 
     @Override
@@ -55,52 +64,38 @@ public class SearchFragment extends FragmentLog implements
         progressContainer = view.findViewById(R.id.progressContainer);
         listContainer = view.findViewById(R.id.listContainer);
         internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
-        recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-        mQ = getArguments().getString("q");
+        recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerViewSearch);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
-        if(savedInstanceState != null){
-            String json = savedInstanceState.getString("data");
-            mDoodlePkg = new Gson().fromJson(json, DoodlePackage.class);
+        Bundle args = getArguments();
+        if (args != null) {
+            mQ = args.getString("q");
+        }
+        if (mDoodlePkg != null) {
             initRecyclerView(recyclerView, mDoodlePkg.doodles);
-            Log.anchor(savedInstanceState.toString());
         }
 
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        if(savedInstanceState != null){
-            String json = savedInstanceState.getString("data");
-            mDoodlePkg = new Gson().fromJson(json, DoodlePackage.class);
-            initRecyclerView(recyclerView, mDoodlePkg.doodles);
-            Log.anchor(savedInstanceState.toString());
-        }
     }
 
     private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
-//        int paddingTop = Utils.getToolbarHeight(getActivity()) + Utils.getTabsHeight(getActivity());
-//        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(
-                getActivity(), doodles, this);
+                mActivity, doodles, this);
         recyclerView.setAdapter(recyclerAdapter);
-//        recyclerView.setOnScrollListener(mOnScrollListener);
-        recyclerView.setOnTouchListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mActivity.setTitle("搜索\"" + mQ + "\"");
 
-        if(mDoodlePkg == null){
+
+        if (mDoodlePkg == null) {
             ApiClient apiClient = new ApiClient();
             mDoodlePkg = DataGeter.getSearchDoodles();
             initRecyclerView(recyclerView, mDoodlePkg.doodles);
 
-            if(true)
-            return ;
+            if (true)
+                return;
 
             apiClient.searchDoodles(mQ, 1, new HttpHandler<DoodlePackage>() {
                 @Override
@@ -118,10 +113,10 @@ public class SearchFragment extends FragmentLog implements
 
                 @Override
                 public void onSuccess(int i, Header[] headers, String s, DoodlePackage doodlePkg) {
-                    if(doodlePkg != null){
+                    if (doodlePkg != null) {
                         Log.anchor(doodlePkg.results_number);
                         initRecyclerView(recyclerView, doodlePkg.doodles);
-                    }else{
+                    } else {
                         onFailure(0, "没有搜到匹配内容");
                     }
                 }
@@ -143,50 +138,35 @@ public class SearchFragment extends FragmentLog implements
         super.onPause();
     }
 
-
-    private boolean blockTouch;
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                blockTouch = false;
-                v.requestFocus();
-                blockTouch = AppFunction.hideInputMethod(getActivity(), v);
-                if (blockTouch) {
-                    return blockTouch;
-                }
-                return blockTouch;
-            case MotionEvent.ACTION_MOVE:
-                return blockTouch;
-        }
-        return blockTouch;
-    }
-
     @Override
     public void onItemClick(View parent, int position) {
         Toast.show("onItemClick");
         Doodle doodle = mDoodlePkg.doodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(android.R.id.tabcontent,
+                .replace(android.R.id.content,
                         DoodleDetailsFragment.newInstance(doodle,
                                 (int) parent.getX(), (int) parent.getY(),
                                 parent.getWidth(), parent.getHeight())
                 )
-                .addToBackStack("detail").commit();
+                .addToBackStack("detail")
+                .commit();
     }
 
     @Override
-    public void onSearch(TextView searchView) {
-        Toast.show("onSearch");
+    public void onItemChildClick(View itemChildView, int position) {
 
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return AnimationUtils.loadAnimation(getActivity(),
+                enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.anchor(outState.toString());
-
         String json = new Gson().toJson(mDoodlePkg);
         outState.putString("data", json);
     }

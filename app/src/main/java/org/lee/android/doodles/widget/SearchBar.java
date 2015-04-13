@@ -1,6 +1,7 @@
 package org.lee.android.doodles.widget;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
     private OnSearchEventListener mOnSearchEventListener;
 
     private OnCancleClickListener mOnCancleClickListener;
+    private OnFocusChangeListener mOnFocusChangeListener;
+
 
     public SearchBar(Context context) {
         this(context, null, 0);
@@ -79,6 +82,7 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
 
     /**
      * 设置搜索事件
+     *
      * @param listener
      */
     public void setOnSearchEventListener(OnSearchEventListener listener) {
@@ -87,10 +91,16 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
 
     /**
      * 设置取消搜索事件
+     *
      * @param listener
      */
     public void setOnCancleClickListener(OnCancleClickListener listener) {
         mOnCancleClickListener = listener;
+    }
+
+
+    public void setOnFocusChangeListener(OnFocusChangeListener listener) {
+        mOnFocusChangeListener = listener;
     }
 
     @Override
@@ -105,6 +115,11 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
         return false;
     }
 
+    private FragmentManager mFragmentManager;
+    public void setFragmentManager(FragmentManager fragmentManager){
+        mFragmentManager = fragmentManager;
+    }
+
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         Log.anchor("hasFocus" + hasFocus);
@@ -113,6 +128,9 @@ public class SearchBar extends FrameLayout implements View.OnClickListener, View
             mCancelView.setVisibility(View.VISIBLE);
         } else {
             mCancelView.setVisibility(View.GONE);
+        }
+        if (mOnFocusChangeListener != null) {
+            mOnFocusChangeListener.onFocusChange(v, hasFocus);
         }
     }
 

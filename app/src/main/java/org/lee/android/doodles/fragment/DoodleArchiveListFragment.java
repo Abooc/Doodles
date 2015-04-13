@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -24,22 +23,24 @@ import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
+import org.lee.android.util.Toast;
 
 /**
- * 浏览涂鸦列表
+ * 浏览存档涂鸦列表
  * <p/>
  * Created by author:李瑞宇
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class DoodlesArchiveListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class DoodleArchiveListFragment extends Fragment
+        implements RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static DoodlesArchiveListFragment newInstance(Bundle args) {
-        DoodlesArchiveListFragment fragment = new DoodlesArchiveListFragment();
+    public static DoodleArchiveListFragment newInstance(Bundle args) {
+        DoodleArchiveListFragment fragment = new DoodleArchiveListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,7 +49,7 @@ public class DoodlesArchiveListFragment extends Fragment implements AdapterView.
 
     private ApiClient mApiClient = new ApiClient();
 
-    public DoodlesArchiveListFragment() {
+    public DoodleArchiveListFragment() {
     }
 
     private Activity mActivity;
@@ -98,64 +99,36 @@ public class DoodlesArchiveListFragment extends Fragment implements AdapterView.
 
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-        int paddingTop = Utils.getToolbarHeight(mActivity);
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
-                recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mActivity, mDoodles, null);
+
+        int toolbarHeight = Utils.getToolbarHeight(getActivity());
+//        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + toolbarHeight,
+                recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mActivity, mDoodles, this);
+        recyclerAdapter.setHasHeader(false);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.anchor("year:" + year + ", month:" + month);
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.anchor("year:" + year + ", month:" + month);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.anchor("year:" + year + ", month:" + month);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.anchor("year:" + year + ", month:" + month);
-    }
-
-
-    /**
-     * Doodles列表每一项点击事件
-     *
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        DoodleAdapter doodleAdapter = (DoodleAdapter) parent.getAdapter();
-        Doodle doodle = (Doodle) doodleAdapter.getItem(position);
-//        WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_DOODLES_ROOT + doodle.name, null);
-
+    public void onItemClick(View parent, int position) {
+        Toast.show("onItemClick");
+        Doodle doodle = mDoodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent,
                         DoodleDetailsFragment.newInstance(doodle,
-                                (int) view.getX(), (int) view.getY(),
-                                view.getWidth(), view.getHeight())
+                                (int) parent.getX(), (int) parent.getY(),
+                                parent.getWidth(), parent.getHeight())
                 )
-                .addToBackStack("detail")
-                .commit();
+                .addToBackStack("detail").commit();
+    }
+
+    @Override
+    public void onItemChildClick(View itemChildView, int position) {
+        Toast.show("onItemChildClick");
+
     }
 
     @Override
@@ -163,7 +136,6 @@ public class DoodlesArchiveListFragment extends Fragment implements AdapterView.
         return AnimationUtils.loadAnimation(getActivity(),
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
-
 
     /**
      * 请求Doodles列表回调

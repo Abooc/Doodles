@@ -50,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <!-- As the main content view, the view below consumes the entire
                  space available using match_parent in both dimensions. -->
             <FrameLayout
@@ -74,12 +75,18 @@
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-                <org.lee.android.doodles.widget.SearchBar
-                    android:id="@+id/SearchBar"
+                <!--<org.lee.android.doodles.widget.SearchBar-->
+                    <!--android:id="@+id/SearchBar"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="28dp"-->
+                    <!--android:layout_marginLeft="28dp" />-->
+
+                <android.support.common.view.SlidingTabLayout
+                    android:id="@+id/SlidingTabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="28dp"
-                    android:layout_marginLeft="28dp" />
+                    android:background="@color/actionBar_background"/>
             </LinearLayout>
 
         </FrameLayout>

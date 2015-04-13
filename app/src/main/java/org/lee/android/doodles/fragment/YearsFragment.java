@@ -3,30 +3,26 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
-import org.lee.android.util.Log;
+import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemClickListener;
 
 import java.io.Serializable;
 
 /**
  * 年份页面
  */
-public class YearsFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class YearsFragment extends LifecycleFragment implements OnRecyclerItemClickListener {
 
     public static YearsFragment newInstance() {
         YearsFragment fragment = new YearsFragment();
@@ -36,17 +32,15 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     private Activity mActivity;
-    private ActionBar mActionBar;
-    private FragmentRunningListener mFrunningListener;
     private RecyclerView.OnScrollListener mOnScrollListener;
+    private Year[] mYears;
+
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;
         MainActivity mainActivity = (MainActivity) activity;
-        mFrunningListener = mainActivity;
-        mActionBar = mainActivity.getSupportActionBar();
         mOnScrollListener = mainActivity.getHidingScrollListener();
     }
 
@@ -63,72 +57,71 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     private void initRecyclerView(View view) {
-        Year[] years = getYears(mActivity);
+        mYears = loadYears(mActivity);
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
-        int paddingTop = Utils.getToolbarHeight(mActivity);
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop * 2,
+        int toolbarHeight = Utils.getToolbarHeight(getActivity());
+//        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + toolbarHeight,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
-        YearAdapter recyclerAdapter = new YearAdapter(mActivity, years);
+        YearAdapter recyclerAdapter = new YearAdapter(mYears, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mFrunningListener.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFrunningListener.onPause(this);
-    }
-
-
-    static class YearViewHolder extends RecyclerView.ViewHolder {
+    private static class YearViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final TextView mNameText;
         final ImageView mDoodleView;
+        private OnRecyclerItemClickListener listener;
 
-        public YearViewHolder(View itemView, TextView nameText, ImageView doodleView) {
+        public YearViewHolder(View itemView, TextView nameText, ImageView doodleView, OnRecyclerItemClickListener listener) {
             super(itemView);
             mNameText = nameText;
             mDoodleView = doodleView;
+
+            itemView.setOnClickListener(this);
+            this.listener = listener;
         }
 
 
         public void attachData(Year year) {
-            mNameText.setText(year.name);
+            mNameText.setText(year.year + "年");
 //            int drawable = resources.getIdentifier(year.url, "drawable", packageName);
 //            imageView.setImageResource(drawable);
         }
 
-        public static YearViewHolder newInstance(View view) {
+        public static YearViewHolder newInstance(View view, OnRecyclerItemClickListener listener) {
             TextView nameText = (TextView) view.findViewById(R.id.Name);
             ImageView doodleView = (ImageView) view.findViewById(R.id.ImageView);
-            return new YearViewHolder(view, nameText, doodleView);
+            return new YearViewHolder(view, nameText, doodleView, listener);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (listener != null) {
+                listener.onItemClick(itemView, getAdapterPosition());
+            }
         }
     }
 
 
-    public class YearAdapter extends RecyclerView.Adapter<YearViewHolder> {
+    private class YearAdapter extends RecyclerView.Adapter<YearViewHolder> {
 
-        private Context mContext;
         private Year[] mYears;
+        private OnRecyclerItemClickListener mListener;
 
-        public YearAdapter(Context context, Year[] years) {
-            mContext = context;
+        public YearAdapter(Year[] years, OnRecyclerItemClickListener listener) {
             mYears = years;
+            mListener = listener;
         }
 
         @Override
         public YearViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
             View view = LayoutInflater.from(context).inflate(R.layout.year_item, parent, false);
-            return YearViewHolder.newInstance(view);
+            return YearViewHolder.newInstance(view, mListener);
         }
 
         @Override
@@ -145,10 +138,9 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(View parent, int position) {
         if (mOnYearChangedListener != null) {
-            ArrayAdapter<Year> arrayAdapter = (ArrayAdapter<Year>) parent.getAdapter();
-            mOnYearChangedListener.onYearChanged(arrayAdapter.getItem(position));
+            mOnYearChangedListener.onYearChanged(mYears[position]);
         }
     }
 
@@ -162,34 +154,34 @@ public class YearsFragment extends Fragment implements AdapterView.OnItemClickLi
         mOnYearChangedListener = listener;
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.anchor();
-    }
-
     public static class Year implements Serializable {
-        public String name;
+        /**
+         * 年份，如2015
+         */
+        public String year;
+        /**
+         * 这一年Doodle代表作
+         */
         public String url;
 
-        public Year(String name, String drawable) {
-            this.name = name;
+        public Year(String year, String drawable) {
+            this.year = year;
             this.url = drawable;
         }
 
         @Override
         public String toString() {
-            return "name:" + name + ", url:" + url;
+            return "year:" + year + ", url:" + url;
         }
     }
 
-    private static Year[] getYears(Context context) {
+    private static Year[] loadYears(Context context) {
         final String[] yearNames = context.getResources().getStringArray(R.array.yearNames);
         final String[] imageIds = context.getResources().getStringArray(R.array.yearDrawables);
 
         Year[] years = new Year[yearNames.length];
         for (int i = 0; i < yearNames.length; i++) {
-            Year year = new Year(yearNames[i] + "年", imageIds[i]);
+            Year year = new Year(yearNames[i], imageIds[i]);
             years[i] = year;
         }
         return years;

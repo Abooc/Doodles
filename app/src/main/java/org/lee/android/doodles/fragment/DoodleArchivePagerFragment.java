@@ -3,35 +3,41 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.common.view.SlidingTabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
+import org.lee.android.doodles.CustomFragmentPagerAdapter;
+import org.lee.android.doodles.CustomFragmentPagerAdapter.TabInfo;
+import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
 import org.lee.android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * 浏览涂鸦列表
+ * 浏览存档涂鸦-父Pager
+ * </p>
+ * 承载"切换年份"页面和其他多个单月份页面
  */
-public class DoodleArchivePagerFragment extends Fragment {
+public class DoodleArchivePagerFragment extends LifecycleFragment {
 
     private ViewPager mViewPager;
-    private SlidingTabLayout mSlidingTabLayout;
-    private Year mYear = new Year("2015", "i_2002");
+    private Year mYear;
+    public boolean mHasYearPage = true;
 
-    public static DoodleArchivePagerFragment newInstance() {
+    public static DoodleArchivePagerFragment newInstance(Year year, boolean hasYearPage) {
         DoodleArchivePagerFragment fragment = new DoodleArchivePagerFragment();
         Bundle args = new Bundle();
+        args.putBoolean("hasYearPage", hasYearPage);
+        args.putString("year", new Gson().toJson(year));
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,124 +53,93 @@ public class DoodleArchivePagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_pager, container, false);
         mViewPager = (ViewPager) container.findViewById(R.id.ViewPager);
-        mSlidingTabLayout = (SlidingTabLayout) container.findViewById(R.id.SlidingTabs);
+
         if (savedInstanceState != null) {
             mYear = (Year) savedInstanceState.getSerializable("year");
-            Log.anchor("mYear = " + mYear);
+            mHasYearPage = savedInstanceState.getBoolean("hasYearPage");
+        } else {
+            String json = getArguments().getString("year");
+            if (!TextUtils.isEmpty(json))
+                mYear = new Gson().fromJson(json, Year.class);
+            mHasYearPage = getArguments().getBoolean("hasYearPage");
         }
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return R.color.GRAY_LIGHT;
-            }
-
-            @Override
-            public int getDividerColor(int position) {
-                return R.color.WHITE;
-            }
-        });
-
-        attachData(mYear);
-        Log.anchor(mYear);
         return container;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ((MainActivity) getActivity()).onShowFragment(this);
+        //优先计算当前年有几个月份，为了添加显示每个月份的Fragment
+        int monthCount = calculateYear(mYear);
+        ArrayList<TabInfo> tabInfos = getFragments(mYear, monthCount);
 
+        if (mHasYearPage) {
+            //添加需要带有"切换年份"的Fragment
+            TabInfo tabInfo = new TabInfo("切换年份", YearsFragment.class);
+            tabInfos.add(0, tabInfo);
+        }
+
+        CustomFragmentPagerAdapter adapter = new CustomFragmentPagerAdapter(
+                getChildFragmentManager(), getActivity(), tabInfos);
+        mViewPager.setAdapter(adapter);
+        mViewPager.setCurrentItem(mHasYearPage ? 1 : 0);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            ((MainActivity) getActivity()).onShowFragment(this);
+    private ArrayList<TabInfo> getFragments(Year year, int count) {
+        ArrayList<TabInfo> tabInfos = new ArrayList<>();
+        int month = count;
+        TabInfo tabInfo;
+        for (; month > 0; month--) {
+            Bundle args = new Bundle();
+            args.putInt("year", Integer.valueOf(year.year));
+            args.putInt("month", month);
+
+            tabInfo = new TabInfo((month < 10 ? "0" + month : month) + "月份",
+                    DoodleArchiveListFragment.class, args);
+            tabInfos.add(tabInfo);
         }
+        return tabInfos;
+    }
+
+    /**
+     * 根据Year年份计算该年1月份到当前时间，共有几个月份。
+     * 主要用在计算当前时间是几月份，则表示有几个月的Doodles产生了
+     *
+     * @param year
+     * @return
+     */
+    private int calculateYear(Year year) {
+        int yearNum = Integer.valueOf(year.year);
+        int currYear = Calendar.getInstance().get(Calendar.YEAR);
+        if (currYear > yearNum) {
+            return 12;
+        } else {
+            //由于get(Calendar.MONTH)返回的值从0开始，所以+1
+            return Calendar.getInstance().get(Calendar.MONTH) + 1;
+        }
+    }
+
+    public ViewPager getPager() {
+        return mViewPager;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.anchor();
         switch (item.getItemId()) {
-            case R.id.RemoveAd:
-                attachData(new Year("2015", "i_2000"));
-                return true;
-            case R.id.AboutDoodles:
-                attachData(new Year("2014", "i_2000"));
-
-                return true;
-            case R.id.Share:
-                attachData(new Year("2013", "i_2000"));
-
+            case android.R.id.home:
+                getFragmentManager().popBackStackImmediate();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void attachData(Year year) {
-        int count;
-        int currYear = Calendar.getInstance().get(Calendar.YEAR);
-        if (currYear > Integer.valueOf(year.name)) {
-            count = 12;
-        } else {
-            count = Calendar.getInstance().get(Calendar.MONTH);
-        }
-
-        IFragmentPagerAdapter adapter = new IFragmentPagerAdapter(
-                getChildFragmentManager());
-        adapter.setYear(year.name);
-        adapter.setCount(count);
-        mViewPager.setAdapter(adapter);
-        mSlidingTabLayout.setViewPager(mViewPager);
-    }
-
-    public void setYear(Year year) {
-        mYear = year;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.anchor();
+        outState.putBoolean("hasYearPage", mHasYearPage);
         outState.putSerializable("year", mYear);
     }
 
-    public static class IFragmentPagerAdapter extends FragmentStatePagerAdapter {
-
-        private int count = 12;
-        private String year;
-
-        public IFragmentPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public void setYear(String year) {
-            this.year = year;
-        }
-
-        public void setCount(int count) {
-            this.count = count;
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            Fragment fragment = new DoodlesArchiveListFragment();
-            Bundle args = new Bundle();
-            args.putInt("year", 2014);
-            args.putInt("month", count - i);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return count;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            int month = count - position;
-            return (month < 10 ? "0" + month : month) + "月份";
-        }
-    }
 
 }

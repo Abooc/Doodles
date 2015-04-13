@@ -59,9 +59,9 @@
     <style name="Widget.SampleDashboard.Card" parent="Widget">
         <item name="android:gravity">center</item>
         <item name="cardCornerRadius">2dp</item>
-        <item name="cardElevation">4dp</item>
+        <item name="cardElevation">2dp</item>
         <item name="contentPadding">@dimen/card_padding</item>
-        <item name="cardBackgroundColor">#FDFDFD</item>
+        <item name="cardBackgroundColor">#FFFFFF</item>
     </style>
 
     <style name="Widget.SampleDashboard.YearsCard" parent="Widget">

@@ -7,7 +7,13 @@
             android:id="@+id/menu_toggle_log"
             android:title="@string/OpenDevMode"
             support:showAsAction="always"
-            android:visible="false"/>
+            android:visible="false" />
+
+        <item
+            android:id="@+id/Search"
+            android:title="搜索"
+            android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
+            support:showAsAction="always" />
 
         <!--<item-->
         <!--android:id="@+id/Settings"-->
