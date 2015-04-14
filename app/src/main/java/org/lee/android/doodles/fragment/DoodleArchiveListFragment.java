@@ -113,7 +113,6 @@ public class DoodleArchiveListFragment extends Fragment
 
     @Override
     public void onItemClick(View parent, int position) {
-        Toast.show("onItemClick");
         Doodle doodle = mDoodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -121,6 +120,7 @@ public class DoodleArchiveListFragment extends Fragment
                         DoodleDetailsFragment.newInstance(doodle,
                                 (int) parent.getX(), (int) parent.getY(),
                                 parent.getWidth(), parent.getHeight())
+                        , doodle.title
                 )
                 .addToBackStack("detail").commit();
     }
@@ -129,12 +129,6 @@ public class DoodleArchiveListFragment extends Fragment
     public void onItemChildClick(View itemChildView, int position) {
         Toast.show("onItemChildClick");
 
-    }
-
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        return AnimationUtils.loadAnimation(getActivity(),
-                enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
     /**
@@ -166,6 +160,12 @@ public class DoodleArchiveListFragment extends Fragment
             mMessageView.setVisibility(View.GONE);
         }
     };
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return AnimationUtils.loadAnimation(getActivity(),
+                enter ? android.R.anim.fade_in : android.R.anim.fade_out);
+    }
 
     private String doodlesJson;
 

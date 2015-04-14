@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
 
-import org.lee.android.doodles.R;
 import org.lee.android.doodles.FragmentLifecycle;
+import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.SearchFragment;
-import org.lee.android.util.Log;
 
 /**
  * Created by author:李瑞宇
@@ -27,10 +27,11 @@ public class SearchActivity extends FragmentActivity implements FragmentLifecycl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_commit_search_api_mtrl_alpha);
 
         Intent intent = getIntent();
-        if(intent != null){
+        if (intent != null) {
             String q = intent.getStringExtra("q");
             getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, SearchFragment.newInstance(q))
@@ -39,29 +40,25 @@ public class SearchActivity extends FragmentActivity implements FragmentLifecycl
 
     }
 
-    private boolean DetailsResume;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        }
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
 
     @Override
     public void onFragmentStart(Fragment fragment) {
-        DetailsResume = true;
-        Log.anchor();
 
     }
 
     @Override
     public void onFragmentDestroy(Fragment fragment) {
-        DetailsResume = false;
-        Log.anchor();
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if(DetailsResume){
-            Log.anchor();
-            getSupportFragmentManager().popBackStackImmediate();
-            return;
-        }
-        super.onBackPressed();
-    }
 }

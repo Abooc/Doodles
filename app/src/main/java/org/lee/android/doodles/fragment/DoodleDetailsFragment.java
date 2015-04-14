@@ -74,10 +74,12 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail, container, false);
+        FrameLayout rootView = new FrameLayout(getActivity());
+        int paddingTop = Utils.getToolbarHeight(getActivity());
+        rootView.setPadding(0, paddingTop, 0, 0);
+        return rootView;
+//        return inflater.inflate(R.layout.fragment_detail, container, false);
     }
-
-    private String mTitle;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -89,20 +91,19 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         }
         Gson gson = new Gson();
         mDoodle = gson.fromJson(json, Doodle.class);
-//        mActionBar.setTitle(mDoodle.title);
         getActivity().setTitle(mDoodle.title);
 
-        int paddingTop = Utils.getToolbarHeight(getActivity());
-        view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());
+        addOriginView(view);
+    }
 
+    private void addOriginView(View view){
         FrameLayout root = (FrameLayout) view;
         Context context = view.getContext();
         assert context != null;
         // This is how the fragment looks at first. Since the transition is one-way, we don't need to make
         // this a Scene.
-        View item = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, root, false);
-        assert item != null;
-        bind(item, mDoodle);
+        View doodleItemView = LayoutInflater.from(context).inflate(R.layout.fragment_doodles_list_item, root, false);
+        bind(doodleItemView, mDoodle);
         // We adjust the position of the initial image with LayoutParams using the values supplied
         // as the fragment arguments.
         Bundle args = getArguments();
@@ -110,32 +111,13 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         if (args != null) {
             params = new FrameLayout.LayoutParams(
                     args.getInt(ARG_WIDTH),
-//                    args.getInt(ARG_HEIGHT)
                     FrameLayout.LayoutParams.MATCH_PARENT
             );
             params.topMargin = args.getInt(ARG_Y);
             params.leftMargin = args.getInt(ARG_X);
         }
-        root.addView(item, params);
+        root.addView(doodleItemView, params);
     }
-//
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-
-//        mImageView.setImageUrl(mDoodle.hires_url, VolleyLoader.getInstance().getImageLoader());
-
-    // We adjust the position of the initial image with LayoutParams using the values supplied
-    // as the fragment arguments.
-//        Bundle args = getArguments();
-//        FrameLayout.LayoutParams params = null;
-//        if (args != null) {
-//            params = new FrameLayout.LayoutParams(
-//                    args.getInt(ARG_WIDTH), args.getInt(ARG_HEIGHT));
-//            params.topMargin = args.getInt(ARG_Y);
-//            params.leftMargin = args.getInt(ARG_X);
-//        }
-//        root.addView(item, params);
-//    }
 
     /**
      * Bind the views inside of parent with the fragment arguments.
@@ -143,33 +125,24 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
      * @param parent The parent of views to bind.
      */
     private void bind(View parent, Doodle doodle) {
-        Bundle args = getArguments();
-        if (args == null) {
-            return;
-        }
-
         mTitleView = (TextView) parent.findViewById(R.id.Title);
         mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
-        mImageView.setImageResource(R.drawable.ic_google_birthday);
-        mImageView.setDefaultImageResId(R.drawable.ic_doodle_error);
+        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
+        mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
+
+        mTitleView.setText(doodle.title);
+        mImageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
+    }
+
+    private void bindDetail(View parent, Doodle doodle) {
+        mTitleView = (TextView) parent.findViewById(R.id.Title);
+        mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
+        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
         mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
 
         attachData(doodle);
 
-    }
-
-    private void bindDetail(View parent, Doodle doodle) {
-        Bundle args = getArguments();
-        if (args == null) {
-            return;
-        }
-
-        mTitleView = (TextView) parent.findViewById(R.id.Title);
         TextView mDescView = (TextView) parent.findViewById(R.id.Desc);
-        mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
-        mImageView.setImageResource(R.drawable.ic_google_birthday);
-        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
-        mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
         mDescView.setText(
                 doodle.title + "\n"
                         + doodle.name + "\n"
@@ -177,7 +150,6 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
                         + doodle.getTranslations().getItem(0).hover_text + "\n"
                         + doodle.query);
 
-        attachData(doodle);
 
     }
 
@@ -211,10 +183,6 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
     public void onAnimationStart(Animation animation) {
         // This method is called at the end of the animation for the fragment transaction.
         // There is nothing we need to do in this sample.
-
-//        mActionBar.setTitle(mDoodle.getDate());
-//        mMainActivity.getNavigationDrawerFragment().toggle();
-
     }
 
     @Override
@@ -226,7 +194,7 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
                 R.layout.fragment_doodles_detail, getActivity());
         TransitionManager.go(scene);
         // Note that we need to bind views with data after we call TransitionManager.go().
-        bindDetail(scene.getSceneRoot(), mDoodle);
+        bindDetail(scene.getSceneRoot().findViewById(R.id.CardView), mDoodle);
     }
 
     @Override

@@ -3,7 +3,7 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +22,6 @@ import org.lee.android.doodles.bean.DoodlePackage;
 import org.lee.android.doodles.volley.HttpHandler;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
-import org.lee.android.util.Toast;
 
 /**
  * 搜索Doodles页面
@@ -43,6 +42,7 @@ public class SearchFragment extends Fragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        setHasOptionsMenu(true);
         mActivity = activity;
     }
 
@@ -65,7 +65,8 @@ public class SearchFragment extends Fragment implements
         listContainer = view.findViewById(R.id.listContainer);
         internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
         recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerViewSearch);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
 
         Bundle args = getArguments();
         if (args != null) {
@@ -90,57 +91,55 @@ public class SearchFragment extends Fragment implements
 
 
         if (mDoodlePkg == null) {
-            ApiClient apiClient = new ApiClient();
-            mDoodlePkg = DataGeter.getSearchDoodles();
-            initRecyclerView(recyclerView, mDoodlePkg.doodles);
-
-            if (true)
-                return;
-
-            apiClient.searchDoodles(mQ, 1, new HttpHandler<DoodlePackage>() {
-                @Override
-                public void onStart() {
-                    progressContainer.setVisibility(View.VISIBLE);
-                    listContainer.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onFinish() {
-                    progressContainer.setVisibility(View.GONE);
-                    listContainer.setVisibility(View.VISIBLE);
-
-                }
-
-                @Override
-                public void onSuccess(int i, Header[] headers, String s, DoodlePackage doodlePkg) {
-                    if (doodlePkg != null) {
-                        Log.anchor(doodlePkg.results_number);
-                        initRecyclerView(recyclerView, doodlePkg.doodles);
-                    } else {
-                        onFailure(0, "没有搜到匹配内容");
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, String error) {
-                    Log.anchor("statusCode:" + statusCode + ", " + error);
-                    internalEmpty.setText(error);
-
-                }
-            });
-
+            doSearch(mQ);
         }
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    private void doSearch(String q){
+        ApiClient apiClient = new ApiClient();
+        mDoodlePkg = DataGeter.getSearchDoodles();
+        initRecyclerView(recyclerView, mDoodlePkg.doodles);
+
+        if (true)
+            return;
+
+        apiClient.searchDoodles(mQ, 1, new HttpHandler<DoodlePackage>() {
+            @Override
+            public void onStart() {
+                progressContainer.setVisibility(View.VISIBLE);
+                listContainer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFinish() {
+                progressContainer.setVisibility(View.GONE);
+                listContainer.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onSuccess(int i, Header[] headers, String s, DoodlePackage doodlePkg) {
+                if (doodlePkg != null) {
+                    Log.anchor(doodlePkg.results_number);
+                    initRecyclerView(recyclerView, doodlePkg.doodles);
+                } else {
+                    onFailure(0, "没有搜到匹配内容");
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, String error) {
+                Log.anchor("statusCode:" + statusCode + ", " + error);
+                internalEmpty.setText(error);
+
+            }
+        });
+
     }
 
     @Override
     public void onItemClick(View parent, int position) {
-        Toast.show("onItemClick");
         Doodle doodle = mDoodlePkg.doodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -160,13 +159,14 @@ public class SearchFragment extends Fragment implements
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if(!enter)
         return AnimationUtils.loadAnimation(getActivity(),
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
+        return null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.anchor(outState.toString());
         String json = new Gson().toJson(mDoodlePkg);
         outState.putString("data", json);
     }

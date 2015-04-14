@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.google.gson.Gson;
 
@@ -17,7 +19,6 @@ import org.lee.android.doodles.CustomFragmentPagerAdapter.TabInfo;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
-import org.lee.android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -129,7 +130,6 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.anchor();
         switch (item.getItemId()) {
             case android.R.id.home:
                 getFragmentManager().popBackStackImmediate();
@@ -139,9 +139,16 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
     }
 
     @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (!enter)
+            return AnimationUtils.loadAnimation(getActivity(),
+                    enter ? android.R.anim.fade_in : android.R.anim.fade_out);
+        return null;
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.anchor();
         outState.putBoolean("hasYearPage", mHasYearPage);
         outState.putSerializable("year", mYear);
     }

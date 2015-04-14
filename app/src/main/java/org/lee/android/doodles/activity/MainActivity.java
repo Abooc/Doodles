@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.common.view.SlidingTabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -20,15 +19,14 @@ import android.widget.LinearLayout;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
+import org.lee.android.doodles.FragmentLifecycle;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.DoodleArchivePagerFragment;
 import org.lee.android.doodles.fragment.DoodleDetailsFragment;
-import org.lee.android.doodles.FragmentLifecycle;
 import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
-import org.lee.android.doodles.fragment.YearsFragment;
 import org.lee.android.util.Log;
 
 
@@ -39,8 +37,8 @@ import org.lee.android.util.Log;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class MainActivity extends LoggerActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        YearsFragment.OnYearChangedListener, FragmentLifecycle {
+public class MainActivity extends LoggerActivity implements
+        NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentLifecycle {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -101,16 +99,16 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         mToolbar.setTitle(title);
     }
 
-    private DrawerLayout drawerLayout;
+    private DrawerLayout mDrawerLayout;
 
     private void initDrawerFragment() {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mFragmentHandler = new FragmentHandlerAdapter(mFragmentManager, this,
                 mNavigationDrawerFragment.getTabInfos());
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawerFragment.setUpDrawerMenu(
-                R.id.navigation_drawer, drawerLayout);
+                R.id.navigation_drawer, mDrawerLayout);
         mNavigationDrawerFragment.setMenuSelection(0);
     }
 
@@ -229,8 +227,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
         return super.onOptionsItemSelected(item);
     }
 
-    private int section;
-
     /**
      * 侧滑菜单ListView
      *
@@ -243,7 +239,6 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
             mSlidingTabLayout.setVisibility(View.VISIBLE);
         }
 
-        section = position;
         TabInfo tabInfo = mFragmentHandler.getTabInfo(position);
         Fragment fragment = mFragmentHandler.getItem(position);
         mFragmentHandler.run(fragment, tabInfo.title);
@@ -265,25 +260,26 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
 
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             mSlidingTabLayout.setViewPager(pagerFragment.getPager());
-
             if (pagerFragment.mHasYearPage) {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                mNavigationDrawerFragment.drawerOnMenu();
+                mNavigationDrawerFragment.setHasOptionsMenu(true);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             } else {
-                mNavigationDrawerFragment.toggle();
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mNavigationDrawerFragment.drawerOnBack();
+                mNavigationDrawerFragment.setHasOptionsMenu(false);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
         } else if (fragment instanceof TodayFragment) {
             restoreActionBar(title);
+            mNavigationDrawerFragment.drawerOnMenu();
         } else if (fragment instanceof DoodleDetailsFragment) {
             restoreActionBar(title);
-            mNavigationDrawerFragment.toggle();
+            mNavigationDrawerFragment.drawerOnBack();
 
             mSlidingTabLayout.setVisibility(View.GONE);
             showToolbar();
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mNavigationDrawerFragment.setHasOptionsMenu(false);
-        } else if (fragment instanceof YearsFragment) {
-            ((YearsFragment) fragment).setOnYearChangedListener(this);
         }
 
     }
@@ -292,40 +288,18 @@ public class MainActivity extends LoggerActivity implements NavigationDrawerFrag
     public void onFragmentDestroy(Fragment fragment) {
         Log.anchor(fragment.getClass().getSimpleName());
         if (fragment instanceof DoodleDetailsFragment) {
-            mNavigationDrawerFragment.toggle();
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             mNavigationDrawerFragment.setHasOptionsMenu(true);
             return;
-        } else if (fragment instanceof YearsFragment) {
-            ((YearsFragment) fragment).setOnYearChangedListener(null);
-        } else if (fragment instanceof DoodleDetailsFragment) {
-            mNavigationDrawerFragment.toggle();
         } else if (fragment instanceof DoodleArchivePagerFragment) {
             mSlidingTabLayout.setViewPager(null);
             mSlidingTabLayout.setVisibility(View.GONE);
 
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
             if (!pagerFragment.mHasYearPage) {
-                mNavigationDrawerFragment.toggle();
+                mNavigationDrawerFragment.drawerOnMenu();
             }
         }
-    }
-
-    /**
-     * 年份切换事件
-     */
-    @Override
-    public void onYearChanged(YearsFragment.Year newYear) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(android.R.id.tabcontent,
-                        DoodleArchivePagerFragment.newInstance(newYear, false),
-                        newYear.year + "年"
-                )
-                .addToBackStack("newYear")
-                .setBreadCrumbTitle(newYear.year + "年")
-                .commit();
     }
 
     @Override

@@ -3,6 +3,8 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
@@ -22,7 +23,12 @@ import java.io.Serializable;
 /**
  * 年份页面
  */
-public class YearsFragment extends LifecycleFragment implements OnRecyclerItemClickListener {
+public class YearsFragment extends Fragment implements OnRecyclerItemClickListener {
+
+
+    public interface OnYearChangedListener {
+        void onYearChanged(Year newYear);
+    }
 
     public static YearsFragment newInstance() {
         YearsFragment fragment = new YearsFragment();
@@ -33,8 +39,8 @@ public class YearsFragment extends LifecycleFragment implements OnRecyclerItemCl
 
     private Activity mActivity;
     private RecyclerView.OnScrollListener mOnScrollListener;
+    private OnYearChangedListener mOnYearChangedListener;
     private Year[] mYears;
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -69,6 +75,37 @@ public class YearsFragment extends LifecycleFragment implements OnRecyclerItemCl
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
     }
+
+    /**
+     * 注册年份切换监听
+     * @param listener
+     */
+    public void setOnYearChangedListener(OnYearChangedListener listener) {
+        mOnYearChangedListener = listener;
+    }
+
+    /**
+     * 年份切换事件
+     */
+    @Override
+    public void onItemClick(View parent, int position) {
+        Year year = mYears[position];
+        if (mOnYearChangedListener != null) {
+            mOnYearChangedListener.onYearChanged(year);
+        }
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(android.R.id.tabcontent,
+                        DoodleArchivePagerFragment.newInstance(year, false),
+                        year.year + "年"
+                )
+                .addToBackStack("newYear")
+                .setBreadCrumbTitle(year.year + "年")
+                .commit();
+    }
+
 
     private static class YearViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -137,22 +174,6 @@ public class YearsFragment extends LifecycleFragment implements OnRecyclerItemCl
 
     }
 
-    @Override
-    public void onItemClick(View parent, int position) {
-        if (mOnYearChangedListener != null) {
-            mOnYearChangedListener.onYearChanged(mYears[position]);
-        }
-    }
-
-    public interface OnYearChangedListener {
-        void onYearChanged(Year newYear);
-    }
-
-    private OnYearChangedListener mOnYearChangedListener;
-
-    public void setOnYearChangedListener(OnYearChangedListener listener) {
-        mOnYearChangedListener = listener;
-    }
 
     public static class Year implements Serializable {
         /**

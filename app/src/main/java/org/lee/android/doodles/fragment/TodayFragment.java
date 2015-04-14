@@ -54,6 +54,7 @@ public class TodayFragment extends LifecycleFragment implements
         if (mDoodles == null || mDoodles.length == 0) return;
 
         initRecyclerView(view);
+
     }
 
     private void initRecyclerView(View view) {
@@ -77,7 +78,6 @@ public class TodayFragment extends LifecycleFragment implements
      */
     @Override
     public void onItemClick(View itemView, int position) {
-        Toast.show("onItemClick");
         Doodle doodle = mDoodles[position];
         getActivity().getSupportFragmentManager()
                 .beginTransaction()

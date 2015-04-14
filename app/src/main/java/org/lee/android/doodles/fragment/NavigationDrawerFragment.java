@@ -99,25 +99,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private ArrayList<TabInfo> createTabInfos() {
         int index = 0;
         ArrayList<TabInfo> tabInfos = new ArrayList<TabInfo>();
-
         Bundle args = new Bundle();
         args.putBoolean("hasYearPage", true);
         args.putString("year", new Gson().toJson(DefaultBuild.defaultYear()));
         tabInfos.add(new TabInfo(TodayFragment.class, mNames[index++], null));
         tabInfos.add(new TabInfo(DoodleArchivePagerFragment.class, mNames[index++], args));
         return tabInfos;
-    }
-
-    private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
-        DrawerMenuItem[] menuItems = {
-                new DrawerMenuItem(names[0], iconIds[0]),
-                new DrawerMenuItem(names[1], iconIds[1])
-        };
-        return menuItems;
-    }
-
-    public ArrayList<TabInfo> getTabInfos() {
-        return mTabInfoList;
     }
 
     @Override
@@ -174,20 +161,24 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         view.findViewById(R.id.Share).setOnClickListener(this);
     }
 
-    public ActionBarDrawerToggle getDrawerToggle() {
-        return mDrawerToggle;
+    private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
+        DrawerMenuItem[] menuItems = {
+                new DrawerMenuItem(names[0], iconIds[0]),
+                new DrawerMenuItem(names[1], iconIds[1])
+        };
+        return menuItems;
     }
 
-    private boolean actionbarToggle;
+    public ArrayList<TabInfo> getTabInfos() {
+        return mTabInfoList;
+    }
 
-    public void toggle() {
-        if (actionbarToggle) {
-            mDrawerToggle.onDrawerClosed(mFragmentContainerView);
-            actionbarToggle = false;
-        } else {
-            mDrawerToggle.onDrawerOpened(mFragmentContainerView);
-            actionbarToggle = true;
-        }
+    public void drawerOnMenu(){
+        mDrawerToggle.onDrawerClosed(mFragmentContainerView);
+    }
+
+    public void drawerOnBack(){
+        mDrawerToggle.onDrawerOpened(mFragmentContainerView);
     }
 
     public boolean isDrawerOpen() {
