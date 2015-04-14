@@ -120,7 +120,7 @@ public class YearsFragment extends LifecycleFragment implements OnRecyclerItemCl
         @Override
         public YearViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
-            View view = LayoutInflater.from(context).inflate(R.layout.year_item, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.fragment_year_item, parent, false);
             return YearViewHolder.newInstance(view, mListener);
         }
 
@@ -156,11 +156,11 @@ public class YearsFragment extends LifecycleFragment implements OnRecyclerItemCl
 
     public static class Year implements Serializable {
         /**
-         * 年份，如2015
+         * 年份值，如2015
          */
         public String year;
         /**
-         * 这一年Doodle代表作
+         * 这一年Doodle代表作品
          */
         public String url;
 

@@ -1,0 +1,216 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:paddingTop="?android:actionBarSize">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="?android:actionBarSize">
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/Widget.SampleDashboard.Card"
+            android:id="@+id/CardView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/ImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="140dp"
+                        android:scaleType="centerCrop"
+                        android:background="@color/GRAY_LIGHT" />
+
+                    <TextView
+                        android:id="@+id/Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="2015年"
+                        android:textColor="@color/WHITE"
+                        android:textStyle="bold"
+                        android:textSize="28sp"
+                        android:shadowColor="#000000"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="10" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/HoverText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+
+                <include layout="@layout/line_h_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:text="共372件作品"
+                        android:textStyle="italic"
+                        android:textColor="@color/BLUE"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/Desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已浏览：106件作品"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:minHeight="100dp"
+                    android:text="尚未浏览：281件作品"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015年04月：16件作品"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015年03月：32件作品"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015年02月：22件作品"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015年01月：18件作品"
+                    android:textStyle="italic"
+                    android:textColor="@color/GRAY_DARK"
+                    android:padding="4dp" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp"
+            android:background="#4c8aff">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="Twitter"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_white_gray"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="Facebook"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_white_gray"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="Google+"
+                android:textStyle="italic"
+                android:textColor="@color/color_clickable_white_gray"
+                android:padding="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="      涂鸦是在Google徽标的基础上，为庆祝节日、纪念日和缅怀著名艺术家、先驱者和科学家而设计创作的作品，涂鸦作品大都幽默风趣，能给用户带来一份惊喜，有些时候纯粹是即兴之作。
+
+涂鸦创意是如何产生的？
+
+早在1998年，当时公司甚至还没成立，Google 创始人拉里 (Larry) 和谢尔盖 (Sergey) 出于玩儿的心理将公司徽标稍作修改，向人们传递他们要去参加在内华达沙漠举办的火人节的信息，Google 徽标涂鸦的概念也由此诞生。当时，他们将一个火柴人放在单词“Google”的第二个“o”背后，通过这个诙谐的设计向 Google 用户们传达了一则讯息：两位创始人“外出”了。虽然第一个涂鸦非常简单，但通过在公司徽标上“做文章”来庆祝重大事件的想法就此诞生。
+
+两年以后，也就是2000年，拉里 (Larry) 和谢尔盖 (Sergey) 要求当时的网站站长黄正穆（Dennis Hwang，当时还是实习生）为法国国庆日 (Bastille Day) 设计涂鸦。该涂鸦一经刊出，立即获得了广大用户的好评，黄正穆也因此被任命为 Google 的首席涂鸦设计师。自此，涂鸦就开始越来越频繁地出现在 Google 首页上。最初，涂鸦主要是为庆祝人们熟悉的节日，现在，涂鸦为各式各样的活动和纪念日平添了一抹亮色，其中包括约翰•詹姆斯•奥杜邦 (John James Audubon) 诞辰以及圣代冰淇凌发明纪念日。
+
+在美国以及世界各地，对 Google 徽标涂鸦的需求正日益增加。目前，我们的徽标涂鸦由富有才华的插画家（我们称之为 Google 徽标涂鸦者）和工程师组成的小组负责。对于他们来说，每一幅 Google 徽标涂鸦都凝聚着整个团队的心血和智慧，它们让 Google 首页变得更加生动有趣，也为全世界的 Google 用户带来了欢乐与笑容。"
+                android:textStyle="italic"
+                android:textColor="@color/GRAY_DARK"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:clickable="true"
+                android:text="wikipedia.org"
+                android:textStyle="italic"
+                android:textColor="@color/GRAY_LIGHT"
+                android:padding="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

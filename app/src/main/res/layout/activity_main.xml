@@ -75,13 +75,6 @@
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-                <!--<org.lee.android.doodles.widget.SearchBar-->
-                    <!--android:id="@+id/SearchBar"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginRight="28dp"-->
-                    <!--android:layout_marginLeft="28dp" />-->
-
                 <android.support.common.view.SlidingTabLayout
                     android:id="@+id/SlidingTabs"
                     android:layout_width="match_parent"
@@ -92,13 +85,6 @@
         </FrameLayout>
     </LinearLayout>
 
-    <!-- android:layout_gravity="start" tells DrawerLayout to treat
-         this as a sliding drawer on the left side for left-to-right
-         languages and on the right side for right-to-left languages.
-         If you're not building against API 17 or higher, use
-         android:layout_gravity="left" instead. -->
-    <!-- The drawer is given a fixed width in dp and extends the full height of
-         the container. -->
     <fragment
         android:id="@+id/navigation_drawer"
         android:layout_width="wrap_content"

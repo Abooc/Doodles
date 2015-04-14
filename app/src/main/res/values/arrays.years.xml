@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="yearNames">
-        <item>2015</item>
+        <!--<item>2015</item>-->
         <item>2014</item>
         <item>2013</item>
         <item>2012</item>
@@ -24,7 +24,7 @@
 
 
     <string-array name="yearDrawables">
-        <item>i_2000</item>
+        <!--<item>i_2000</item>-->
         <item>i_2000</item>
         <item>i_2013</item>
         <item>i_2012</item>

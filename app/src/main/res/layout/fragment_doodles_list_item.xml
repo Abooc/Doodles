@@ -6,22 +6,24 @@
     android:layout_margin="4dp" >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="6dp"
-        tools:context=".MainActivity">
+        android:padding="6dp" >
 
         <TextView
             android:id="@+id/Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2015-02-19"
+            android:text="2015-00-00"
             android:textStyle="bold"
             android:textSize="24sp"
-            android:textColor="@color/GRAY_DARK" />
+            android:textColor="@color/GRAY_DARK"
+            android:shadowColor="#D0D0D0"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="6" />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/ImageView"

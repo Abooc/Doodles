@@ -72,6 +72,11 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
         int monthCount = calculateYear(mYear);
         ArrayList<TabInfo> tabInfos = getFragments(mYear, monthCount);
 
+        Bundle args = new Bundle();
+        args.putInt("year", Integer.valueOf(mYear.year));
+        TabInfo yearTabInfo = new TabInfo("关于" + mYear.year + "年", YearAboutFragment.class, args);
+        tabInfos.add(0, yearTabInfo);
+
         if (mHasYearPage) {
             //添加需要带有"切换年份"的Fragment
             TabInfo tabInfo = new TabInfo("切换年份", YearsFragment.class);
