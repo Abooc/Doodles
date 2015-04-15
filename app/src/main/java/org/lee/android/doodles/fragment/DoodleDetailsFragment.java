@@ -62,13 +62,10 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         return fragment;
     }
 
-    private android.support.v7.app.ActionBar mActionBar;
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setHasOptionsMenu(true);
-//        mActionBar = ((FragmentActivity) activity).getActionBar();
     }
 
     @Override
@@ -78,7 +75,6 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         int paddingTop = Utils.getToolbarHeight(getActivity());
         rootView.setPadding(0, paddingTop, 0, 0);
         return rootView;
-//        return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
     @Override
@@ -96,7 +92,7 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         addOriginView(view);
     }
 
-    private void addOriginView(View view){
+    private void addOriginView(View view) {
         FrameLayout root = (FrameLayout) view;
         Context context = view.getContext();
         assert context != null;
@@ -127,7 +123,6 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
     private void bind(View parent, Doodle doodle) {
         mTitleView = (TextView) parent.findViewById(R.id.Title);
         mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
-        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
         mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
 
         mTitleView.setText(doodle.title);
@@ -137,7 +132,7 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
     private void bindDetail(View parent, Doodle doodle) {
         mTitleView = (TextView) parent.findViewById(R.id.Title);
         mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
-        mImageView.setDefaultImageResId(R.drawable.GRAY_DARK);
+        mImageView.setDefaultImageResId(R.drawable.GRAY_LIGHT);
         mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
 
         attachData(doodle);
@@ -195,6 +190,7 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         TransitionManager.go(scene);
         // Note that we need to bind views with data after we call TransitionManager.go().
         bindDetail(scene.getSceneRoot().findViewById(R.id.CardView), mDoodle);
+//        bind(scene.getSceneRoot().findViewById(R.id.CardView), mDoodle);
     }
 
     @Override
@@ -210,8 +206,5 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        mActionBar.setTitle(mTitle);
-//        mMainActivity.getNavigationDrawerFragment().toggle();
-
     }
 }

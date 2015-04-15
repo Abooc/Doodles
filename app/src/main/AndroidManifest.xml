@@ -26,6 +26,7 @@
             android:name=".activity.WebViewActivity"
             android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/TRANSPARENT"
+            android:theme="@style/App.SettingsTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchActivity"
@@ -45,11 +46,13 @@
             android:name=".properties.AboutUsActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="关于我们"
+            android:theme="@style/App.SettingsTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.AboutDoodlesActivity"
             android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/App.SettingsTheme"
             android:icon="@drawable/TRANSPARENT"
             android:label="@string/title_section5"
             android:screenOrientation="portrait" />

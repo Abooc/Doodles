@@ -24,11 +24,16 @@ import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 
 /**
- * 搜索Doodles页面
+ * 搜索Doodles结果页面
  */
 public class SearchFragment extends Fragment implements
         RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
+    /**
+     *
+     * @param q 要搜索的关键词
+     * @return
+     */
     public static SearchFragment newInstance(String q) {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();

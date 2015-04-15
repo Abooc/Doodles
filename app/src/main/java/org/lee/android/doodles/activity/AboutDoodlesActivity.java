@@ -13,7 +13,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.lee.android.doodles.R;
+
 /**
+ * 关于Google Doodle页面
  * Created by dayu on 14-11-17.
  */
 public class AboutDoodlesActivity extends Activity implements View.OnClickListener {
@@ -30,12 +33,14 @@ public class AboutDoodlesActivity extends Activity implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_PROGRESS);
-
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_commit_search_api_mtrl_alpha);
+
         String url = AboutGoogleDoodlesUrl;
-        if (getIntent().getData() != null){
-            url = getIntent().getData().toString();
-        }
+//        if (getIntent().getData() != null){
+//            url = getIntent().getData().toString();
+//        }
 
         iWebView = new WebView(this);
         setContentView(iWebView);

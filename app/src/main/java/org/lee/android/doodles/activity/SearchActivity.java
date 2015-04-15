@@ -12,12 +12,18 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.SearchFragment;
 
 /**
+ * 承载搜索结果Activity
  * Created by author:李瑞宇
  * email:allnet@live.cn
  * on 15-4-5.
  */
 public class SearchActivity extends FragmentActivity implements FragmentLifecycle {
 
+    /**
+     *
+     * @param context
+     * @param q 要搜索的关键词
+     */
     public static void launch(Context context, String q) {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra("q", q);

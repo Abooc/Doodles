@@ -16,6 +16,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
@@ -27,6 +28,7 @@ import org.lee.android.doodles.fragment.DoodleDetailsFragment;
 import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
+import org.lee.android.doodles.properties.SettingsActivity;
 import org.lee.android.util.Log;
 
 
@@ -208,20 +210,22 @@ public class MainActivity extends LoggerActivity implements
             return true;
         }
         switch (item.getItemId()) {
-//            case android.R.id.home:
-//                mNavigationDrawerFragment.toggleDrawer();
-//                return true;
             case R.id.Search:
                 SearchActivity.launch(this, "世界杯");
                 return true;
             case R.id.Settings:
+                SettingsActivity.launch(this);
                 return true;
             case R.id.RemoveAd:
                 return true;
+            case R.id.Evaluate:
+                AppApplication.openGooglePlay(this);
+                return true;
             case R.id.AboutDoodles:
+                AboutDoodlesActivity.launch(this, "https://www.google.com/doodles/about");
                 return true;
             case R.id.Share:
-
+                AppApplication.share(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

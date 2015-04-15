@@ -31,6 +31,7 @@ import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.activity.AboutDoodlesActivity;
 import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.properties.SettingsActivity;
 import org.lee.android.util.Log;
@@ -362,22 +363,21 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.Commit:
                 Toast.show("贡献我的涂鸦作品...");
-                Intent data = new Intent(Intent.ACTION_SENDTO);
-                data.setData(Uri.parse("mailto:allnet@live.cn"));
-                data.putExtra(Intent.EXTRA_SUBJECT, "这是标题");
-                data.putExtra(Intent.EXTRA_TEXT, "这是内容");
-                startActivity(data);
+//                Intent data = new Intent(Intent.ACTION_SENDTO);
+//                data.setData(Uri.parse("mailto:allnet@live.cn"));
+//                data.putExtra(Intent.EXTRA_SUBJECT, "这是标题");
+//                data.putExtra(Intent.EXTRA_TEXT, "这是内容");
+//                startActivity(data);
                 return;
             case R.id.AboutDoodles:
-//                AboutDoodlesActivity.launch(getActivity(), "https://www.google.com/doodles/about");
-                String AboutDoodles = getString(R.string.AboutDoodles);
-                WebViewActivity.launch(getActivity(), "https://www.google.com/doodles/about", AboutDoodles);
+                AboutDoodlesActivity.launch(getActivity(), "https://www.google.com/doodles/about");
+//                String AboutDoodles = getString(R.string.AboutDoodles);
+//                WebViewActivity.launch(getActivity(), "https://www.google.com/doodles/about", AboutDoodles);
                 return;
             case R.id.RemoveAd:
                 Toast.show("RemoveAd...");
                 return;
             case R.id.Settings:
-//                AboutUsActivity.launch(getActivity());
                 SettingsActivity.launch(getActivity());
                 return;
             case R.id.Evaluate:
