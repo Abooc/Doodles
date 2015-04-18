@@ -35,7 +35,7 @@ public class AboutDoodlesActivity extends Activity implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_commit_search_api_mtrl_alpha);
+        getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 
         String url = AboutGoogleDoodlesUrl;
 //        if (getIntent().getData() != null){

@@ -11,10 +11,20 @@
     </style>
 
 
+    <style name="App.V7.Theme" parent="style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/V7.Style.ActionBar</item>
+    </style>
+
+
     <!-- ActionBar styles -->
     <style name="Style.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@color/actionBar_background</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="V7.Style.ActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/actionBar_background</item>
     </style>
 

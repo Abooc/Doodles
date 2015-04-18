@@ -3,7 +3,7 @@
     android:id="@+id/CardView"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="10dp"
+    android:layout_margin="4dp"
     android:elevation="6dp">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="140dp"
-            android:src="@drawable/ic_google_birthday"
+            android:src="@color/GRAY_LIGHT"
             android:scaleType="centerCrop" />
 
         <TextView

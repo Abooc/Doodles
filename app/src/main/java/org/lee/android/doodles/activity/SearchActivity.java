@@ -1,10 +1,12 @@
 package org.lee.android.doodles.activity;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import org.lee.android.doodles.FragmentLifecycle;
@@ -17,7 +19,7 @@ import org.lee.android.doodles.fragment.SearchFragment;
  * email:allnet@live.cn
  * on 15-4-5.
  */
-public class SearchActivity extends FragmentActivity implements FragmentLifecycle {
+public class SearchActivity extends ActionBarActivity implements FragmentLifecycle {
 
     /**
      *
@@ -33,8 +35,7 @@ public class SearchActivity extends FragmentActivity implements FragmentLifecycl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_commit_search_api_mtrl_alpha);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         if (intent != null) {

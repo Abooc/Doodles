@@ -25,14 +25,19 @@
         <activity
             android:name=".activity.WebViewActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:icon="@drawable/TRANSPARENT"
+            android:icon="@drawable/abc_ic_ab_back_mtrl_am_alpha"
             android:theme="@style/App.SettingsTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchActivity"
-            android:icon="@drawable/TRANSPARENT"
-            android:theme="@style/App.SettingsTheme"
-            android:screenOrientation="portrait" />
+            android:theme="@style/App.V7.Theme"
+            android:screenOrientation="portrait" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            </activity>
 
         <activity
             android:name=".properties.SettingsActivity"

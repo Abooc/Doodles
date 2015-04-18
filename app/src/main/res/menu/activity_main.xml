@@ -13,7 +13,8 @@
             android:id="@+id/Search"
             android:title="搜索"
             android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
-            support:showAsAction="always" />
+            support:showAsAction="ifRoom|collapseActionView"
+            support:actionViewClass="android.support.v7.widget.SearchView" />
 
         <!--<item-->
         <!--android:id="@+id/Settings"-->

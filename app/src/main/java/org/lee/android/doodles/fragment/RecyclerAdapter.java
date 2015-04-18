@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
+import org.lee.android.util.Log;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -16,38 +17,47 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private OnRecyclerItemChildClickListener mOnItemClickListener;
     private LayoutInflater mInflater;
 
+    private final int TYPE_VIEW_HEADER = 0;
+    private final int TYPE_VIEW_DOODLE = 1;
+    private final int TYPE_VIEW_ADVIEW = 2;
+
+    private boolean mHasHeaderView = false;
+
     public RecyclerAdapter(Context context, Doodle[] doodles, OnRecyclerItemChildClickListener viewClicks) {
         mDoodles = doodles;
         mOnItemClickListener = viewClicks;
         mInflater = LayoutInflater.from(context);
     }
 
-    final int TYPE_HEADER = 0;
-    final int TYPE_DOODLE = 1;
-
-    private boolean hasHeaderView = false;
-
     public void setHasHeader(boolean hasHeader) {
-        hasHeaderView = hasHeader;
+        mHasHeaderView = hasHeader;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (hasHeaderView && position == 0)
-            return TYPE_HEADER;
+        if (mHasHeaderView && position == 0)
+            return TYPE_VIEW_HEADER;
+        else if (position % 4 == 0)
+            return TYPE_VIEW_ADVIEW;
         else
-            return TYPE_DOODLE;
+            return TYPE_VIEW_DOODLE;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
-            View view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
-            return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+        View view;
+        switch (viewType) {
+            case TYPE_VIEW_HEADER:
+                view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
+                return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+            case TYPE_VIEW_ADVIEW:
+                view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
+                return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+            default:
+                TYPE_VIEW_DOODLE:
+                view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
+                return RecyclerItemViewHolder.newInstance(view, mOnItemClickListener);
         }
-
-        View view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
-        return RecyclerItemViewHolder.newInstance(view, mOnItemClickListener);
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder implements Attachable {
@@ -72,8 +82,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        Doodle doodle = mDoodles[position];
-        ((Attachable) viewHolder).attachData(doodle);
+        int viewType = viewHolder.getItemViewType();
+        switch (viewType) {
+            case TYPE_VIEW_HEADER:
+                return;
+            case TYPE_VIEW_ADVIEW:
+                return;
+            default:
+                // TYPE_VIEW_DOODLE:
+                Doodle doodle = mDoodles[position];
+                ((Attachable) viewHolder).attachData(doodle);
+                return;
+
+        }
     }
 
     @Override

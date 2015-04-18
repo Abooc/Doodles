@@ -7,13 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import org.lee.android.doodles.AppApplication;
@@ -93,6 +92,7 @@ public class MainActivity extends LoggerActivity implements
 
     /**
      * 覆写Activity.setTitle()方法，使Toolbar的标题生效
+     *
      * @param title
      */
     @Override
@@ -122,36 +122,6 @@ public class MainActivity extends LoggerActivity implements
     public void hideToolbar() {
         mToolbarContainer.animate().translationY(-mToolbarHeight)
                 .setInterpolator(new DecelerateInterpolator(2)).start();
-    }
-
-    /**
-     * 点击非输入框区域收起软键盘
-     *
-     * @param ev
-     * @return
-     */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev == null) return false;
-        boolean block = false;
-        View v = getCurrentFocus();
-        if (v != null &&
-                (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) &&
-                v instanceof EditText &&
-                !v.getClass().getName().startsWith("android.webkit.")) {
-            int scrcoords[] = new int[2];
-            v.getLocationOnScreen(scrcoords);
-            float x = ev.getRawX() + v.getLeft() - scrcoords[0];
-            float y = ev.getRawY() + v.getTop() - scrcoords[1];
-
-            if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom())
-                block = AppFunction.hideKeyboard(this);
-        }
-        if (block) {
-            getWindow().getDecorView().requestFocus();
-            return true;
-        }
-        return super.dispatchTouchEvent(ev);
     }
 
     public HidingScrollListener getHidingScrollListener() {
@@ -211,7 +181,21 @@ public class MainActivity extends LoggerActivity implements
         }
         switch (item.getItemId()) {
             case R.id.Search:
-                SearchActivity.launch(this, "世界杯");
+                SearchView iSearchView = (SearchView) item.getActionView();
+                iSearchView.setQueryHint("搜索涂鸦");
+                iSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        SearchActivity.launch(MainActivity.this, s);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        return true;
+                    }
+                });
+
                 return true;
             case R.id.Settings:
                 SettingsActivity.launch(this);
