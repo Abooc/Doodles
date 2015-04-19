@@ -1,17 +1,13 @@
 package org.lee.android.doodles.activity;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
 
 import org.lee.android.doodles.FragmentLifecycle;
-import org.lee.android.doodles.R;
-import org.lee.android.doodles.fragment.SearchFragment;
+import org.lee.android.doodles.fragment.SearchResultFragment;
 
 /**
  * 承载搜索结果Activity
@@ -41,21 +37,10 @@ public class SearchActivity extends ActionBarActivity implements FragmentLifecyc
         if (intent != null) {
             String q = intent.getStringExtra("q");
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, SearchFragment.newInstance(q))
+                    .replace(android.R.id.content, SearchResultFragment.newInstance(q))
                     .commit();
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (super.onOptionsItemSelected(item)) {
-            return true;
-        }
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
     }
 
     @Override

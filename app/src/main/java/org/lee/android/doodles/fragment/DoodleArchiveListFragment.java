@@ -105,7 +105,7 @@ public class DoodleArchiveListFragment extends Fragment
 //        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
         recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + toolbarHeight,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(mActivity, mDoodles, this);
+        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(mActivity, mDoodles, this);
         recyclerAdapter.setHasHeader(false);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);

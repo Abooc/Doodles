@@ -10,7 +10,7 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
-        RecyclerAdapter.Attachable, View.OnClickListener {
+        DoodleRecyclerAdapter.Attachable, View.OnClickListener {
 
     public interface OnRecyclerItemClickListener {
         void onItemClick(View itemView, int position);

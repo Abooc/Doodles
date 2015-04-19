@@ -64,7 +64,7 @@ public class TodayFragment extends LifecycleFragment implements
         int paddingTop = Utils.getToolbarHeight(getActivity());
         recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getActivity(), mDoodles, this);
+        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(getActivity(), mDoodles, this);
         recyclerAdapter.setHasHeader(true);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);

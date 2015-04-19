@@ -30,6 +30,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:theme="@style/App.V7.Theme"
             android:screenOrientation="portrait" >
 

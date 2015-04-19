@@ -3,7 +3,7 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,7 @@ import org.lee.android.util.Log;
 /**
  * 搜索Doodles结果页面
  */
-public class SearchFragment extends Fragment implements
+public class SearchResultFragment extends Fragment implements
         RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
 
     /**
@@ -34,8 +34,8 @@ public class SearchFragment extends Fragment implements
      * @param q 要搜索的关键词
      * @return
      */
-    public static SearchFragment newInstance(String q) {
-        SearchFragment fragment = new SearchFragment();
+    public static SearchResultFragment newInstance(String q) {
+        SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
         args.putString("q", q);
         fragment.setArguments(args);
@@ -47,7 +47,6 @@ public class SearchFragment extends Fragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setHasOptionsMenu(true);
         mActivity = activity;
     }
 
@@ -70,8 +69,8 @@ public class SearchFragment extends Fragment implements
         listContainer = view.findViewById(R.id.listContainer);
         internalEmpty = (TextView) view.findViewById(R.id.internalEmpty);
         recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerViewSearch);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+//        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
 
         Bundle args = getArguments();
         if (args != null) {
@@ -84,7 +83,7 @@ public class SearchFragment extends Fragment implements
     }
 
     private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(
+        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(
                 mActivity, doodles, this);
         recyclerView.setAdapter(recyclerAdapter);
     }
@@ -93,7 +92,6 @@ public class SearchFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         mActivity.setTitle("搜索\"" + mQ + "\"");
-
 
         if (mDoodlePkg == null) {
             doSearch(mQ);

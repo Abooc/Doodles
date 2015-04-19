@@ -11,19 +11,28 @@ import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
 import org.lee.android.util.Log;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Doodle[] mDoodles;
     private OnRecyclerItemChildClickListener mOnItemClickListener;
     private LayoutInflater mInflater;
 
+    /**
+     * 最新涂鸦列表-顶部项View
+     */
     private final int TYPE_VIEW_HEADER = 0;
+    /**
+     * 涂鸦View
+     */
     private final int TYPE_VIEW_DOODLE = 1;
+    /**
+     * 广告View
+     */
     private final int TYPE_VIEW_ADVIEW = 2;
 
     private boolean mHasHeaderView = false;
 
-    public RecyclerAdapter(Context context, Doodle[] doodles, OnRecyclerItemChildClickListener viewClicks) {
+    public DoodleRecyclerAdapter(Context context, Doodle[] doodles, OnRecyclerItemChildClickListener viewClicks) {
         mDoodles = doodles;
         mOnItemClickListener = viewClicks;
         mInflater = LayoutInflater.from(context);
@@ -37,7 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemViewType(int position) {
         if (mHasHeaderView && position == 0)
             return TYPE_VIEW_HEADER;
-        else if (position % 4 == 0)
+        else if (position % 4 == 3)
             return TYPE_VIEW_ADVIEW;
         else
             return TYPE_VIEW_DOODLE;

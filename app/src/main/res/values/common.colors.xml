@@ -39,7 +39,7 @@
     <color name="RED">#7f00</color>
     <color name="BLUE">#770000ff</color>
     <color name="GREEN">#7700ff00</color>
-    <color name="YELLOW">#77ffff00</color>
+    <color name="YELLOW">#ffff00</color>
     <color name="GRAY_DARK">#FF666666</color>
     <color name="GRAY_LIGHT">#FF999999</color>
     <color name="TRANSLUCENT">#28000000</color>
