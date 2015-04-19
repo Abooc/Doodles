@@ -61,7 +61,7 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 return HeaderViewHolder.newInstance(view, mOnItemClickListener);
             case TYPE_VIEW_ADVIEW:
                 view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
-                return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+                return new AdViewHolder(view);
             default:
                 TYPE_VIEW_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
@@ -69,19 +69,37 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder implements Attachable {
+    class AdViewHolder extends RecyclerView.ViewHolder{
 
-        public HeaderViewHolder(View itemView) {
+        public AdViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder implements Attachable, View.OnClickListener {
+
+        private OnRecyclerItemChildClickListener mListener;
+
+        public HeaderViewHolder(View itemView, OnRecyclerItemChildClickListener listener) {
+            super(itemView);
+            mListener = listener;
+            itemView.findViewById(R.id.ArchiveDoodles).setOnClickListener(this);
+            itemView.findViewById(R.id.AdView).setOnClickListener(this);
         }
 
         public static RecyclerView.ViewHolder newInstance(View view, OnRecyclerItemChildClickListener listener) {
-            return new HeaderViewHolder(view);
+            return new HeaderViewHolder(view, listener);
         }
 
         @Override
         public void attachData(Object o) {
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mListener != null)
+                mListener.onItemChildClick(v, getAdapterPosition());
         }
     }
 

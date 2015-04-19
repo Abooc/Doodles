@@ -17,7 +17,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
     }
 
     public interface OnRecyclerItemChildClickListener extends OnRecyclerItemClickListener {
-        void onItemChildClick(View itemChildView, int position);
+        void onItemChildClick(View clickView, int position);
     }
 
     private final NetworkImageView imageView;

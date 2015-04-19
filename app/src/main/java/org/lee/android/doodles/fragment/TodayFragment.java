@@ -33,11 +33,12 @@ public class TodayFragment extends LifecycleFragment implements
 
     private RecyclerView.OnScrollListener mOnScrollListener;
     private Doodle[] mDoodles;
+    private MainActivity mainActivity;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        MainActivity mainActivity = (MainActivity) activity;
+        mainActivity = (MainActivity) activity;
         mOnScrollListener = mainActivity.getHidingScrollListener();
     }
 
@@ -93,13 +94,19 @@ public class TodayFragment extends LifecycleFragment implements
     /**
      * RecyclerView中Item项子View点击事件
      *
-     * @param itemChildView
+     * @param clickView 响应点击事件的View
      * @param position
      */
     @Override
-    public void onItemChildClick(View itemChildView, int position) {
-        Toast.show("onItemChildClick");
-
+    public void onItemChildClick(View clickView, int position) {
+        switch (clickView.getId()){
+            case R.id.ArchiveDoodles:
+                mainActivity.onNavigationDrawerItemSelected(1);
+                return;
+            case R.id.AdView:
+                Toast.show("查看广告");
+                return;
+        }
     }
 
     @Override
