@@ -1,11 +1,11 @@
 package org.lee.android.doodles.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +19,7 @@ import org.lee.android.doodles.R;
 /**
  * Created by dayu on 14-11-17.
  */
-public class WebViewActivity extends Activity implements View.OnClickListener {
+public class WebViewActivity extends ActionBarActivity implements View.OnClickListener {
 
     private WebView iWebView;
     private String mTitle;

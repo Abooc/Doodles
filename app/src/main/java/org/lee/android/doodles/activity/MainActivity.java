@@ -176,9 +176,6 @@ public class MainActivity extends LoggerActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.anchor();
-        if (super.onOptionsItemSelected(item)) {
-            return true;
-        }
         switch (item.getItemId()) {
             case R.id.Search:
                 SearchView iSearchView = (SearchView) item.getActionView();
@@ -305,53 +302,3 @@ public class MainActivity extends LoggerActivity implements
     }
 
 }
-
-
-//    private Drawable mToolbarContainerDrawable;
-//    private SearchBar mSearchBar;
-
-
-//    mToolbarContainerDrawable = mToolbarContainer.getBackground();
-
-//    private void initSearchBar() {
-////        mSearchBar = (SearchBar) findViewById(R.id.SearchBar);
-//        mSearchBar.setFragmentManager(mFragmentManager);
-//        mSearchBar.setOnSearchEventListener(new SearchBar.OnSearchEventListener() {
-//            @Override
-//            public void onSearch(String q) {
-//                hideToolbar();
-//
-//                Toast.show("搜索..." + q);
-//                AppFunction.hideKeyboard(MainActivity.this);
-//                FragmentTransaction transaction = mFragmentManager
-//                        .beginTransaction();
-//                transaction
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                transaction.replace(android.R.id.tabcontent,
-//                        SearchFragment.newInstance(q));
-//                transaction.addToBackStack("q").commit();
-//            }
-//        });
-//        mSearchBar.setOnCancleClickListener(new SearchBar.OnCancleClickListener() {
-//            @Override
-//            public void onCancel() {
-//                getWindow().getDecorView().requestFocus();
-//                mFragmentManager.popBackStack();
-//            }
-//        });
-//
-//        mSearchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    FragmentTransaction transaction = mFragmentManager
-//                            .beginTransaction();
-////            transaction
-////                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                    transaction.add(android.R.id.content,
-//                            SearchKeywordsFragment.newInstance("汽车"));
-//                    transaction.addToBackStack("keywords").commit();
-//                }
-//            }
-//        });
-//    }

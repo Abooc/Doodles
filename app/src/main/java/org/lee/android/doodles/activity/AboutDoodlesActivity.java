@@ -1,10 +1,10 @@
 package org.lee.android.doodles.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -19,7 +19,7 @@ import org.lee.android.doodles.R;
  * 关于Google Doodle页面
  * Created by dayu on 14-11-17.
  */
-public class AboutDoodlesActivity extends Activity implements View.OnClickListener {
+public class AboutDoodlesActivity extends ActionBarActivity implements View.OnClickListener {
 
     private WebView iWebView;
     private final String AboutGoogleDoodlesUrl = "file:///android_asset/html/AboutGoogleDoodles.html";
@@ -34,8 +34,6 @@ public class AboutDoodlesActivity extends Activity implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 
         String url = AboutGoogleDoodlesUrl;
 //        if (getIntent().getData() != null){

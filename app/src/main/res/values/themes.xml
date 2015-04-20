@@ -2,25 +2,18 @@
 <resources>
 
     <style name="App.Theme" parent="style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/Theme.OverlayActionBar</item>
-    </style>
-
-
-    <style name="App.SettingsTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Style.ActionBar</item>
     </style>
-
-
-    <style name="App.V7.Theme" parent="style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/V7.Style.ActionBar</item>
-    </style>
-
 
     <!-- ActionBar styles -->
     <style name="Style.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:background">@color/actionBar_background</item>
+    </style>
+
+    <style name="App.V7.Theme" parent="style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/V7.Style.ActionBar</item>
     </style>
 
     <!-- ActionBar styles -->
@@ -33,8 +26,6 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:background">@color/actionBar_background</item>
-        <!--<item name="android:titleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Title</item>-->
-        <!--<item name="android:subtitleTextStyle">@style/App.TextAppearance.Widget.ActionBar.Subtitle</item>-->
     </style>
 
 
@@ -44,21 +35,5 @@
         <item name="colorPrimaryDark">#FF00838F</item>
         <item name="colorAccent">#ffff00</item>
     </style>
-
-    <style name="Theme" />
-
-    <!--&lt;!&ndash; Overlay模式ActionBar &ndash;&gt;-->
-    <!--<style name="Theme.OverlayActionBar"  parent="App.Theme">-->
-        <!--&lt;!&ndash; 去掉actionBar底部的渐变阴影 &ndash;&gt;-->
-    <!--</style>-->
-
-    <style name="App.TextAppearance.Widget.ActionBar.Title" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#ffffff</item>
-    </style>
-    <style name="App.TextAppearance.Widget.ActionBar.Subtitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 
 </resources>

@@ -32,8 +32,6 @@ public class SettingsActivity extends PreferenceActivity implements PreferencesK
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         addPreferencesFromResource(R.xml.settings);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
