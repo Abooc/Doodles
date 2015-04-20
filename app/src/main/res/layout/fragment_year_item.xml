@@ -10,8 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_gravity="center"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_google_birthday"
         android:background="@color/GRAY_LIGHT" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="#F0AAAAAA"/>
 
     <TextView
         android:id="@+id/Name"

@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:padding="12dp"
+    android:background="#FF4B80AF">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        android:layout_margin="6dp"
+        android:background="@drawable/circle_account_avatar_background"/>
+
+    <TextView
+        android:id="@+id/From"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Google账户"
+        android:textColor="@color/WHITE"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp" />
+
+    <TextView
+        android:id="@+id/Loginname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ruiyulee.xxx@gmail.com"
+        android:textColor="#C0FFFFFF"
+        android:textAppearance="@android:style/TextAppearance.Small" />
+
+</LinearLayout>

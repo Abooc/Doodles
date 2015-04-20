@@ -32,13 +32,7 @@
             android:name=".activity.SearchActivity"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/App.V7.Theme"
-            android:screenOrientation="portrait" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            </activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".properties.SettingsActivity"

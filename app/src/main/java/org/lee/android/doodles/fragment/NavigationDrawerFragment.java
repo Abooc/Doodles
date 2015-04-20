@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -149,6 +150,13 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         mDrawerListView.setOnItemClickListener(this);
         mDrawerListView.setAdapter(mDrawerMenuAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        mDrawerListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         return container;
     }
 

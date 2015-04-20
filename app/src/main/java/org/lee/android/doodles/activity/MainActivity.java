@@ -229,7 +229,7 @@ public class MainActivity extends LoggerActivity implements
 
         TabInfo tabInfo = mFragmentHandler.getTabInfo(position);
         Fragment fragment = mFragmentHandler.getItem(position);
-        mFragmentHandler.run(fragment, tabInfo.title);
+        mFragmentHandler.run(fragment, tabInfo.title, position != 0);
     }
 
     @Override

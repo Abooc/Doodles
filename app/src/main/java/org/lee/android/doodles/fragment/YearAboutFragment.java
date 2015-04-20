@@ -4,6 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.Gson;
 
 import org.lee.android.doodles.R;
 import org.lee.android.test.FragmentLog;
@@ -14,10 +19,10 @@ import org.lee.android.util.Log;
  */
 public class YearAboutFragment extends FragmentLog {
 
-    public static YearAboutFragment newInstance(int year) {
+    public static YearAboutFragment newInstance(YearsFragment.Year year) {
         YearAboutFragment fragment = new YearAboutFragment();
         Bundle args = new Bundle();
-        args.putInt("year", year);
+        args.putString("year", new Gson().toJson(year));
         fragment.setArguments(args);
         return fragment;
     }
@@ -28,12 +33,23 @@ public class YearAboutFragment extends FragmentLog {
         return inflater.inflate(R.layout.fragment_year_about, null, false);
     }
 
-    private int mYear;
+    private YearsFragment.Year mYear;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mYear = getArguments().getInt("year");
 
+        String json = getArguments().getString("year");
+        mYear = new Gson().fromJson(json, YearsFragment.Year.class);
+
+        TextView titleText = (TextView) view.findViewById(R.id.Title);
+        NetworkImageView doodleImageView = (NetworkImageView) view.findViewById(R.id.ImageView);
+        titleText.setText(mYear.year);
+        doodleImageView.setDefaultImageResId(R.drawable.ic_google_birthday);
+
+        Log.anchor(mYear.url);
+//        String packageName = getActivity().getPackageName();
+//        int drawable = getResources().getIdentifier(mYear.url, "drawable", packageName);
+//        doodleImageView.setImageResource(drawable);
     }
 
     @Override

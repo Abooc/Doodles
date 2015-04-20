@@ -25,7 +25,7 @@ import java.util.Calendar;
 
 /**
  * 浏览存档涂鸦-父Pager
- * </p>
+ * <br/>
  * 承载"切换年份"页面和其他多个单月份页面
  */
 public class DoodleArchivePagerFragment extends LifecycleFragment {
@@ -74,7 +74,7 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
         ArrayList<TabInfo> tabInfos = getFragments(mYear, monthCount);
 
         Bundle args = new Bundle();
-        args.putInt("year", Integer.valueOf(mYear.year));
+        args.putString("year", new Gson().toJson(mYear));
         TabInfo yearTabInfo = new TabInfo("关于" + mYear.year + "年", YearAboutFragment.class, args);
         tabInfos.add(0, yearTabInfo);
 

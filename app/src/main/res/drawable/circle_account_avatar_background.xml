@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><!--drawable/btn_fab_default.xml-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#30FFFFFF" />
+            <stroke
+                android:color="#40FFFFFF"
+                android:width="0.5dp" />
+        </shape>
+
+    </item>
+
+</layer-list>
+
