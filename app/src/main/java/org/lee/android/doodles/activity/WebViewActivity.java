@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.lee.android.doodles.R;
+import org.lee.android.util.Log;
 
 /**
  * Created by dayu on 14-11-17.
@@ -39,6 +40,7 @@ public class WebViewActivity extends ActionBarActivity implements View.OnClickLi
         if (getIntent().getData() != null){
             url = getIntent().getData().toString();
         }
+        Log.anchor(url);
         mTitle = getIntent().getStringExtra("title");
         setTitle(mTitle);
 
@@ -55,6 +57,7 @@ public class WebViewActivity extends ActionBarActivity implements View.OnClickLi
         webSettings.setDisplayZoomControls(false);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setSupportZoom(true);
+        webSettings.setLoadWithOverviewMode(true);
 
         iWebView.setWebChromeClient(iWebChromeClient);
         iWebView.setWebViewClient(new WebViewClient(){
@@ -109,6 +112,15 @@ public class WebViewActivity extends ActionBarActivity implements View.OnClickLi
                 setTitle(title);
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        if(iWebView.canGoBack()){
+            iWebView.goBack();
+            return;
+        }
+        super.onBackPressed();
+    }
 
     @Override
     public void onDestroy() {

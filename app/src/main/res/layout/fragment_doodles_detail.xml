@@ -25,8 +25,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ImageView"
-            android:text="2015春节"
-            android:textColor="@color/BLACK" />
+            android:padding="4dp"
+            android:text="标题"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/GRAY_DARK"
+            android:shadowColor="#D0D0D0"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="6"  />
 
         <TextView
             android:id="@+id/Date"
@@ -35,35 +42,37 @@
             android:layout_below="@id/Title"
             android:text="2015-02-19"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:padding="4dp"/>
+
+        <TextView
+            android:id="@+id/NameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="英文原文名"
+            android:textStyle="italic"
             android:textColor="@color/GRAY_DARK"
-            android:shadowColor="#D0D0D0"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="6" />
+            android:padding="4dp" />
 
         <TextView
             android:id="@+id/HoverText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
+            android:text="简单介绍"
             android:textStyle="italic"
             android:textColor="@color/GRAY_DARK"
             android:padding="4dp" />
-
 
         <TextView
-            android:id="@+id/Desc"
+            android:id="@+id/Translations"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:minHeight="100dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
+            android:text="支持语言"
             android:textStyle="italic"
             android:textColor="@color/GRAY_DARK"
             android:padding="4dp" />
-
 
         <TextView
             android:id="@+id/Search"

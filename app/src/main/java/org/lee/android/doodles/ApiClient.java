@@ -9,7 +9,7 @@ public class ApiClient {
 
     //    String url = "http://www.woolom.com";
     public static String GOOGLE_DOODLES_ROOT = "https://www.google.com/doodles/";
-    public static String GOOGLE_SEARCH = "https://www.google.com/search?q=d%";
+    public static String GOOGLE_SEARCH = "https://www.google.com/search?q=";
     public static String GOOGLE_DOODLES_SEARCH = "https://www.google.com/doodles/search?q=d%s=d%";
     private String ROOT_url = "https://www.google.com/doodles/json/d%/d%?hl=zh_CN";
 

@@ -2,7 +2,9 @@ package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.transition.Scene;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -17,10 +19,13 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
+import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
+import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.bean.Translations;
 import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Log;
 
@@ -129,29 +134,36 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         mImageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
     }
 
-    private void bindDetail(View parent, Doodle doodle) {
+    private void bindDetail(View parent, final Doodle doodle) {
         mTitleView = (TextView) parent.findViewById(R.id.Title);
+        TextView iNameText = (TextView) parent.findViewById(R.id.NameText);
+        TextView mDateView = (TextView) parent.findViewById(R.id.Date);
+        TextView iHoverText = (TextView) parent.findViewById(R.id.HoverText);
+        TextView iTranslations = (TextView) parent.findViewById(R.id.Translations);
         mImageView = (NetworkImageView) parent.findViewById(R.id.ImageView);
         mImageView.setDefaultImageResId(R.drawable.GRAY_LIGHT);
         mImageView.setErrorImageResId(R.drawable.ic_google_birthday);
 
-        attachData(doodle);
-
-        TextView mDescView = (TextView) parent.findViewById(R.id.Desc);
-        mDescView.setText(
-                doodle.title + "\n"
-                        + doodle.name + "\n"
-                        + doodle.getTranslations().size() + "种语言\n"
-                        + doodle.getTranslations().getItem(0).hover_text + "\n"
-                        + doodle.query);
-
-
-    }
-
-    private void attachData(Doodle doodle) {
         mTitleView.setText(doodle.title);
+        iNameText.setText(doodle.name);
         mImageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
+        mDateView.setText(doodle.getDate());
+        iTranslations.setText(iTranslations.getText().toString() + doodle.getTranslations().size() + "种");
+
+        Translations.Query query = doodle.getTranslations().getItem(0);
+        String hover = TextUtils.isEmpty(query.hover_text) ? "" : query.hover_text;
+        iHoverText.setText(hover
+                + "\n#" + doodle.query + "#");
+
+        parent.findViewById(R.id.Search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String q = Uri.encode(doodle.query);
+                WebViewActivity.launch(getActivity(), ApiClient.GOOGLE_SEARCH + q, doodle.query);
+            }
+        });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

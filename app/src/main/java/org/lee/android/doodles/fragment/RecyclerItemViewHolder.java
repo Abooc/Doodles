@@ -4,10 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.volley.VolleyLoader;
 
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
         DoodleRecyclerAdapter.Attachable, View.OnClickListener {
@@ -20,11 +22,13 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
         void onItemChildClick(View clickView, int position);
     }
 
+
+    private ImageLoader mImageLoader = VolleyLoader.getInstance().getImageLoader();
     private final NetworkImageView imageView;
     private final TextView titleText;
     private final TextView dateText;
     private final TextView hoverText;
-    private final OnRecyclerItemChildClickListener mOnRecylerItemClickListener;
+    private final OnRecyclerItemChildClickListener mOnRecyclerItemClickListener;
 
     public RecyclerItemViewHolder(final View parent,
                                   NetworkImageView imageView,
@@ -36,7 +40,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
         this.titleText = titleText;
         this.dateText = dateText;
         this.hoverText = hoverText;
-        this.mOnRecylerItemClickListener = clicks;
+        this.mOnRecyclerItemClickListener = clicks;
 
         parent.setOnClickListener(this);
         parent.findViewById(R.id.Search).setOnClickListener(this);
@@ -56,13 +60,13 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
 
     @Override
     public void onClick(View v) {
-        if (mOnRecylerItemClickListener != null)
+        if (mOnRecyclerItemClickListener != null)
             switch (v.getId()) {
                 case R.id.Search:
-                    mOnRecylerItemClickListener.onItemChildClick(v, getAdapterPosition());
+                    mOnRecyclerItemClickListener.onItemChildClick(v, getAdapterPosition());
                     return;
                 default:
-                    mOnRecylerItemClickListener.onItemClick(v, getAdapterPosition());
+                    mOnRecyclerItemClickListener.onItemClick(v, getAdapterPosition());
                     return;
             }
     }
@@ -71,9 +75,8 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
     public void attachData(Object o) {
         Doodle doodle = (Doodle) o;
         dateText.setText(doodle.getDate());
-//        imageView.setImageUrl(doodle.hires_url, VolleyLoader.getInstance().getImageLoader());
+        imageView.setImageUrl(doodle.hires_url, mImageLoader);
         titleText.setText(doodle.title);
         hoverText.setText("#" + doodle.query + "#");
-//        hoverText.setText(doodle.getTranslations().getItem(0).hover_text);
     }
 }
