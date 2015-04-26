@@ -126,5 +126,4 @@ public class TodayFragment extends LifecycleFragment implements
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
-
 }

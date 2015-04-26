@@ -22,6 +22,10 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      */
     private final int TYPE_VIEW_HEADER = 0;
     /**
+     * 最新涂鸦列表-今日Doodle View
+     */
+    private final int TYPE_VIEW_TODAY_DOODLE = 3;
+    /**
      * 涂鸦View
      */
     private final int TYPE_VIEW_DOODLE = 1;
@@ -50,6 +54,8 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemViewType(int position) {
         if (mHasHeaderView && position == 0)
             return TYPE_VIEW_HEADER;
+        if (mHasHeaderView && position == 1)
+            return TYPE_VIEW_TODAY_DOODLE;
         else if (position % 4 == 3)
             return TYPE_VIEW_ADVIEW;
         else
@@ -63,6 +69,9 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case TYPE_VIEW_HEADER:
                 view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
                 return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+            case TYPE_VIEW_TODAY_DOODLE:
+                view = mInflater.inflate(R.layout.fragment_today_doodle_item, parent, false);
+                return new RecyclerItemViewHolder(view, mOnItemClickListener, mOnMenuItemClickListener);
             case TYPE_VIEW_ADVIEW:
                 view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
                 return new AdViewHolder(view, mOnMenuItemClickListener);
