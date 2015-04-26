@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -65,7 +67,8 @@ public class TodayFragment extends LifecycleFragment implements
         int paddingTop = Utils.getToolbarHeight(getActivity());
         recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(getActivity(), mDoodles, this);
+        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(
+                getActivity(), mDoodles, this, mMenuItemClickListener);
         recyclerAdapter.setHasHeader(true);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
@@ -108,6 +111,14 @@ public class TodayFragment extends LifecycleFragment implements
                 return;
         }
     }
+
+    private Toolbar.OnMenuItemClickListener mMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            Toast.show("" + menuItem.getTitle());
+            return false;
+        }
+    };
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {

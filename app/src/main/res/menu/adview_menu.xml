@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/Menu">
+
+        <item
+            android:id="@+id/RemoveAd"
+            android:title="移除广告"
+            support:showAsAction="never" />
+
+        <item
+            android:id="@+id/Properties"
+            android:title="属性"
+            support:showAsAction="never" />
+
+        <item
+            android:id="@+id/Jubao"
+            android:title="举报"
+            support:showAsAction="never" />
+    </group>
+</menu>

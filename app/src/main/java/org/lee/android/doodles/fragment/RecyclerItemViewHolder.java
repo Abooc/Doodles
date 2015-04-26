@@ -1,6 +1,8 @@
 package org.lee.android.doodles.fragment;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +12,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.VolleyLoader;
+import org.lee.android.util.Toast;
 
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
         DoodleRecyclerAdapter.Attachable, View.OnClickListener {
@@ -30,32 +33,23 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
     private final TextView hoverText;
     private final OnRecyclerItemChildClickListener mOnRecyclerItemClickListener;
 
-    public RecyclerItemViewHolder(final View parent,
-                                  NetworkImageView imageView,
-                                  TextView titleText,
-                                  TextView dateText,
-                                  TextView hoverText, OnRecyclerItemChildClickListener clicks) {
-        super(parent);
-        this.imageView = imageView;
-        this.titleText = titleText;
-        this.dateText = dateText;
-        this.hoverText = hoverText;
-        this.mOnRecyclerItemClickListener = clicks;
-
-        parent.setOnClickListener(this);
-        parent.findViewById(R.id.Search).setOnClickListener(this);
-    }
-
-    public static RecyclerItemViewHolder newInstance(View convertView, OnRecyclerItemChildClickListener clicks) {
-        NetworkImageView imageView = (NetworkImageView) convertView.findViewById(R.id.ImageView);
-        TextView titleText = (TextView) convertView.findViewById(R.id.Title);
-        TextView dateText = (TextView) convertView.findViewById(R.id.Date);
-        TextView hoverText = (TextView) convertView.findViewById(R.id.HoverText);
-
-
+    public RecyclerItemViewHolder(final View convertView, OnRecyclerItemChildClickListener clicks,
+                                  Toolbar.OnMenuItemClickListener menuItemClickListener) {
+        super(convertView);
+        imageView = (NetworkImageView) convertView.findViewById(R.id.ImageView);
+        titleText = (TextView) convertView.findViewById(R.id.Title);
+        dateText = (TextView) convertView.findViewById(R.id.Date);
+        hoverText = (TextView) convertView.findViewById(R.id.HoverText);
         imageView.setDefaultImageResId(R.drawable.GRAY_DARK);
         imageView.setErrorImageResId(R.drawable.ic_google_birthday);
-        return new RecyclerItemViewHolder(convertView, imageView, titleText, dateText, hoverText, clicks);
+        this.mOnRecyclerItemClickListener = clicks;
+
+        convertView.setOnClickListener(this);
+        convertView.findViewById(R.id.Search).setOnClickListener(this);
+
+        Toolbar toolbar = (Toolbar) convertView.findViewById(R.id.ToolbarMenu);
+        toolbar.setOnMenuItemClickListener(menuItemClickListener);
+        toolbar.inflateMenu(R.menu.doodles_list_menu);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class SearchKeywordsFragment extends FragmentLog implements
     private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(
-                getActivity(), doodles, this);
+                getActivity(), doodles, this, null);
         recyclerView.setAdapter(recyclerAdapter);
     }
 

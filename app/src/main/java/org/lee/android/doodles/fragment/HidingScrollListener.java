@@ -24,6 +24,10 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
         mToolbarHeight = Utils.getToolbarHeight(context);
     }
 
+    public HidingScrollListener(int height) {
+        mToolbarHeight = height;
+    }
+
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);

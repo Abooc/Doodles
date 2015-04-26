@@ -84,7 +84,7 @@ public class SearchResultFragment extends Fragment implements
 
     private void initRecyclerView(RecyclerView recyclerView, Doodle[] doodles) {
         DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(
-                mActivity, doodles, this);
+                mActivity, doodles, this, null);
         recyclerView.setAdapter(recyclerAdapter);
     }
 

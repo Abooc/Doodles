@@ -2,6 +2,7 @@ package org.lee.android.doodles.fragment;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
-import org.lee.android.util.Log;
 
 public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -31,11 +31,15 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final int TYPE_VIEW_ADVIEW = 2;
 
     private boolean mHasHeaderView = false;
+    private Toolbar.OnMenuItemClickListener mOnMenuItemClickListener;
 
-    public DoodleRecyclerAdapter(Context context, Doodle[] doodles, OnRecyclerItemChildClickListener viewClicks) {
+    public DoodleRecyclerAdapter(Context context, Doodle[] doodles,
+                                 OnRecyclerItemChildClickListener viewClicks,
+                                 Toolbar.OnMenuItemClickListener menuItemClickListener) {
         mDoodles = doodles;
         mOnItemClickListener = viewClicks;
         mInflater = LayoutInflater.from(context);
+        mOnMenuItemClickListener = menuItemClickListener;
     }
 
     public void setHasHeader(boolean hasHeader) {
@@ -61,18 +65,22 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 return HeaderViewHolder.newInstance(view, mOnItemClickListener);
             case TYPE_VIEW_ADVIEW:
                 view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
-                return new AdViewHolder(view);
+                return new AdViewHolder(view, mOnMenuItemClickListener);
             default:
                 TYPE_VIEW_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
-                return RecyclerItemViewHolder.newInstance(view, mOnItemClickListener);
+                return new RecyclerItemViewHolder(view, mOnItemClickListener, mOnMenuItemClickListener);
         }
     }
 
-    class AdViewHolder extends RecyclerView.ViewHolder{
+    public static class AdViewHolder extends RecyclerView.ViewHolder {
 
-        public AdViewHolder(View itemView) {
+        public AdViewHolder(View itemView, Toolbar.OnMenuItemClickListener menuItemClickListener) {
             super(itemView);
+
+            Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.ToolbarMenu);
+            toolbar.setOnMenuItemClickListener(menuItemClickListener);
+            toolbar.inflateMenu(R.menu.adview_menu);
         }
     }
 
