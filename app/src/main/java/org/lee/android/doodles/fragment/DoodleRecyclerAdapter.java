@@ -22,6 +22,10 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      */
     private final int TYPE_VIEW_HEADER = 0;
     /**
+     * 最新涂鸦列表-底部项View
+     */
+    private final int TYPE_VIEW_FOOTER = 4;
+    /**
      * 最新涂鸦列表-今日Doodle View
      */
     private final int TYPE_VIEW_TODAY_DOODLE = 3;
@@ -58,6 +62,8 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             return TYPE_VIEW_TODAY_DOODLE;
         else if (position % 4 == 3)
             return TYPE_VIEW_ADVIEW;
+        else if (position == getItemCount()-1)
+            return TYPE_VIEW_FOOTER;
         else
             return TYPE_VIEW_DOODLE;
     }
@@ -69,6 +75,9 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case TYPE_VIEW_HEADER:
                 view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
                 return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+            case TYPE_VIEW_FOOTER:
+                view = mInflater.inflate(R.layout.doodle_list_item_footer, parent, false);
+                return new FooterViewHolder(view);
             case TYPE_VIEW_TODAY_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_today_doodle_item, parent, false);
                 return new RecyclerItemViewHolder(view, mOnItemClickListener, mOnMenuItemClickListener);
@@ -79,6 +88,13 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 TYPE_VIEW_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
                 return new RecyclerItemViewHolder(view, mOnItemClickListener, mOnMenuItemClickListener);
+        }
+    }
+
+    public static class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
         }
     }
 
@@ -129,6 +145,8 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         int viewType = viewHolder.getItemViewType();
         switch (viewType) {
             case TYPE_VIEW_HEADER:
+                return;
+            case TYPE_VIEW_FOOTER:
                 return;
             case TYPE_VIEW_ADVIEW:
                 return;

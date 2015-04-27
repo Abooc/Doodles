@@ -2,11 +2,105 @@
     android:id="@+id/CardView"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/WHITE"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:orientation="vertical">
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/WHITE">
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ad_text_background_yellow"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:text="今天"
+                android:textColor="@color/WHITE"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="#D0D0D0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="6"
+                android:text="2015-02-19"
+                android:textColor="@color/GRAY_DARK"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/ImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="140dp"
+                android:scaleType="centerCrop"
+                android:src="@color/GRAY_LIGHT" />
+
+            <TextView
+                android:id="@+id/Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="2015春节"
+                android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
+                android:textColor="@color/GRAY_DARK" />
+
+            <TextView
+                android:id="@+id/HoverText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
+                android:textColor="@color/GRAY_DARK"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/Search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#4c8aff"
+                android:clickable="true"
+                android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
+                android:padding="4dp"
+                android:text="搜索更多信息"
+                android:textColor="@color/color_clickable_white_gray"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ToolbarMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:minHeight="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dip"
+        android:background="#cccccc"
+        android:layout_marginTop="12dp"/>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -15,91 +109,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/ad_text_background_yellow"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="今天"
+            android:text="更早时候"
             android:textColor="@color/WHITE"
             android:textSize="12sp"
             android:textStyle="normal" />
-
-        <TextView
-            android:id="@+id/Date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:shadowColor="#D0D0D0"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="6"
-            android:text="2015-02-19"
-            android:textColor="@color/GRAY_DARK"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/ImageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="140dp"
-            android:scaleType="centerCrop"
-            android:src="@color/GRAY_LIGHT" />
-
-        <TextView
-            android:id="@+id/Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="2015春节"
-            android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
-            android:textColor="@color/GRAY_DARK" />
-
-        <TextView
-            android:id="@+id/HoverText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="电池发明人亚历山德罗·伏特诞辰 270周年"
-            android:textColor="@color/GRAY_DARK"
-            android:textSize="12sp"
-            android:textStyle="italic" />
-
-        <TextView
-            android:id="@+id/Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#4c8aff"
-            android:clickable="true"
-            android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
-            android:padding="4dp"
-            android:text="搜索更多信息"
-            android:textColor="@color/color_clickable_white_gray"
-            android:textStyle="italic"
-            android:visibility="gone" />
-
-        <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/ToolbarMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
-
-    </LinearLayout>
-
-    <include layout="@layout/line_h_gray" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ad_text_background_yellow"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="6dp"
-        android:text="更多历史"
-        android:textColor="@color/WHITE"
-        android:textSize="12sp"
-        android:textStyle="normal" />
+    </FrameLayout>
 
 </LinearLayout>

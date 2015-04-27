@@ -72,6 +72,7 @@ public class TodayFragment extends LifecycleFragment implements
         recyclerAdapter.setHasHeader(true);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
+
     }
 
     /**
