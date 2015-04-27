@@ -1,0 +1,31 @@
+<ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sample_output"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:layout_weight="1" >
+
+    <ScrollView
+        android:id="@+id/SampleMessage"
+        style="@style/Widget.SampleMessageTile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            style="@style/Widget.SampleMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/vertical_page_margin"
+            android:paddingLeft="@dimen/horizontal_page_margin"
+            android:paddingRight="@dimen/horizontal_page_margin"
+            android:paddingTop="@dimen/vertical_page_margin"
+            android:text="开发者模式，日志显示区域..." />
+    </ScrollView>
+
+    <fragment
+        android:id="@+id/log_fragment"
+        android:name="android.support.common.logger.LogFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</ViewAnimator>
+

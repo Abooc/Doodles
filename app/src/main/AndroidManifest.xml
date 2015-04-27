@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.lee.android.doodles"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:installLocation="auto" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AppApplication"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Custom.NoActionBar"
-        android:icon="@drawable/ic_launcher">
+        android:theme="@style/App.Theme">
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:theme="@style/NoTitle"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,36 +24,31 @@
 
         <activity
             android:name=".activity.WebViewActivity"
-            android:parentActivityName=".activity.MainActivity"
             android:icon="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-            android:theme="@style/App.V7.Theme"
+            android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/App.V7.Theme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".properties.SettingsActivity"
-            android:parentActivityName=".activity.MainActivity"
             android:label="设置"
-            android:theme="@style/App.V7.Theme"
+            android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".properties.AboutUsActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="关于我们"
-            android:theme="@style/App.V7.Theme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"  />
 
         <activity
             android:name=".activity.AboutDoodlesActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/App.V7.Theme"
             android:icon="@drawable/TRANSPARENT"
             android:label="@string/title_section5"
+            android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
     </application>
 </manifest>

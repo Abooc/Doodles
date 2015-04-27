@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -38,7 +39,7 @@ import org.lee.android.util.Log;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class MainActivity extends LoggerActivity implements
+public class MainActivity extends ActionBarActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentLifecycle {
 
     /**
@@ -51,21 +52,23 @@ public class MainActivity extends LoggerActivity implements
     private LinearLayout mToolbarContainer;
     private int mToolbarHeight;
     private SlidingTabLayout mSlidingTabLayout;
-    private Toolbar mToolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mFragmentManager = getSupportFragmentManager();
         super.onCreate(savedInstanceState);
+        mFragmentManager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
-        initToolbar();
 
+        initToolbar();
         initDrawerFragment();
 
     }
 
     private void initToolbar() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbarContainer = (LinearLayout) findViewById(R.id.toolbarContainer);
         mSlidingTabLayout = (SlidingTabLayout) mToolbarContainer.findViewById(R.id.SlidingTabs);
         mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -79,8 +82,6 @@ public class MainActivity extends LoggerActivity implements
                 return Color.TRANSPARENT;
             }
         });
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
         setTitle(getString(R.string.app_name));
         mToolbarHeight = Utils.getToolbarHeight(this);
 
@@ -98,6 +99,7 @@ public class MainActivity extends LoggerActivity implements
     @Override
     public void setTitle(CharSequence title) {
         super.setTitle(title);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle(title);
     }
 

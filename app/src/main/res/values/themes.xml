@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="App.Theme" parent="style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/Style.ActionBar</item>
+
+
+    <style name="App.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="actionBarTheme">@style/AppTheme.ToolbarTheme</item>
+        <item name="actionBarStyle">@style/AppTheme.ToolbarStyle</item>
+        <item name="actionModeStyle">@style/AppTheme.ActionModeStyle</item>
+        <item name="android:actionModeStyle">@style/AppTheme.ActionModeStyle</item>
     </style>
+
+    <style name="NoTitle" parent="App.Theme">
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="AppTheme.ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:colorControlNormal">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/actionbar_highlight</item>
+        <item name="colorControlHighlight">@color/actionbar_highlight</item>
+    </style>
+
+    <style name="AppTheme.ToolbarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/actionBar_background</item>
+        <item name="background">@color/actionBar_background</item>
+        <item name="navigationIcon">?attr/homeAsUpIndicator</item>
+        <item name="elevation">4dp</item>
+        <item name="titleTextStyle">@style/AppTheme.ToolBarTitleText</item>
+    </style>
+
+    <style name="AppTheme.ToolBarTitleText"
+        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
+    </style>
+
+    <style name="AppTheme.ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/actionBar_background</item>
+        <item name="android:background">@color/actionBar_background</item>
+        <item name="backgroundSplit">@color/actionBar_background</item>
+        <item name="titleTextStyle">@style/AppTheme.ActionModeTitleStyle</item>
+        <item name="subtitleTextStyle">@style/AppTheme.ActionModeSubtitleStyle</item>
+    </style>
+
+    <style name="AppTheme.ActionModeTitleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.ActionModeSubtitleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+    <!--<item name="titleTextStyle">@style/AppTheme.ToolBarTitleText</item>-->
+
+    <!--<style name="App.Theme" parent="style/Theme.AppCompat.Light.DarkActionBar">-->
+        <!--<item name="android:actionBarStyle">@style/Style.ActionBar</item>-->
+    <!--</style>-->
+
 
     <!-- ActionBar styles -->
     <style name="Style.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">

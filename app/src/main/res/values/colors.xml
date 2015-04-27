@@ -16,4 +16,5 @@
 
 <resources>
     <color name="actionBar_background">#FF00838F</color>
+    <color name="actionbar_highlight">#ff808080</color>
 </resources>

@@ -1,54 +1,19 @@
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.FixedDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:saveEnabled="false"
+    android:layout_height="match_parent" >
 
-    <LinearLayout
+    <FrameLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
 
-        <ViewAnimator
-            android:id="@+id/sample_output"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:visibility="gone"
-            android:layout_weight="1">
-
-            <ScrollView
-                android:id="@+id/SampleMessage"
-                style="@style/Widget.SampleMessageTile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    style="@style/Widget.SampleMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="@dimen/horizontal_page_margin"
-                    android:paddingRight="@dimen/horizontal_page_margin"
-                    android:paddingTop="@dimen/vertical_page_margin"
-                    android:paddingBottom="@dimen/vertical_page_margin"
-                    android:text="开发者模式，日志显示区域..." />
-            </ScrollView>
-
-            <fragment
-                android:name="android.support.common.logger.LogFragment"
-                android:id="@+id/log_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </ViewAnimator>
-
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
             <!-- As the main content view, the view below consumes the entire
                  space available using match_parent in both dimensions. -->
@@ -64,25 +29,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:elevation="10dp"
-                android:background="?attr/colorPrimaryDark">
+                android:background="@color/actionBar_background">
 
                 <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/toolbar"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:minHeight="?attr/actionBarSize"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                    app:theme="@style/AppTheme.ToolbarTheme" />
 
                 <android.support.common.view.SlidingTabLayout
                     android:id="@+id/SlidingTabs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/actionBar_background"/>
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:id="@+id/main_toolbar_shadow"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/toolbar_bottom_shadow" />
             </LinearLayout>
 
         </FrameLayout>
-    </LinearLayout>
+    </FrameLayout>
 
     <fragment
         android:id="@+id/navigation_drawer"
@@ -91,4 +61,4 @@
         android:layout_gravity="start"
         android:name="org.lee.android.doodles.fragment.NavigationDrawerFragment" />
 
-</android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.FixedDrawerLayout>

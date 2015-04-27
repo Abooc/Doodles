@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
         <TextView
@@ -40,26 +41,17 @@
 
     <include layout="@layout/line_h_gray" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/ArchiveDoodles"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawablePadding="6dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/ArchiveDoodles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:drawablePadding="6dp"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:text="存档日期：2013年11月02日-2013年11月30日"
-            android:textColor="@color/GRAY_DARK"
-            android:textSize="12sp"
-            android:textStyle="italic"/>
-    </LinearLayout>
+        android:padding="8dp"
+        android:text="存档日期：2013年11月02日-2013年11月30日"
+        android:textColor="@color/GRAY_DARK"
+        android:textSize="12sp"
+        android:textStyle="italic" />
 
 </LinearLayout><!--</android.support.v7.widget.CardView>-->
