@@ -8,17 +8,17 @@
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="actionBarTheme">@style/AppTheme.ToolbarTheme</item>
         <item name="actionBarStyle">@style/AppTheme.ToolbarStyle</item>
-        <item name="actionModeStyle">@style/AppTheme.ActionModeStyle</item>
-        <item name="android:actionModeStyle">@style/AppTheme.ActionModeStyle</item>
+        <!--<item name="actionModeStyle">@style/AppTheme.ActionModeStyle</item>-->
+        <!--<item name="android:actionModeStyle">@style/AppTheme.ActionModeStyle</item>-->
     </style>
 
     <style name="NoTitle" parent="App.Theme">
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="AppTheme.ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:colorControlNormal">@android:color/white</item>
-        <item name="colorControlNormal">@android:color/white</item>
+    <style name="AppTheme.ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:colorControlNormal">@color/WHITE</item>
+        <item name="colorControlNormal">@color/WHITE</item>
         <item name="colorControlActivated">@color/actionbar_highlight</item>
         <item name="colorControlHighlight">@color/actionbar_highlight</item>
     </style>
@@ -29,6 +29,7 @@
         <item name="navigationIcon">?attr/homeAsUpIndicator</item>
         <item name="elevation">4dp</item>
         <item name="titleTextStyle">@style/AppTheme.ToolBarTitleText</item>
+        <item name="android:titleTextStyle">@style/AppTheme.ToolBarTitleText</item>
     </style>
 
     <style name="AppTheme.ToolBarTitleText"

@@ -36,7 +36,8 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:minHeight="?attr/actionBarSize"
-                    app:theme="@style/AppTheme.ToolbarTheme" />
+                    app:theme="@style/AppTheme.ToolbarTheme"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
                 <android.support.common.view.SlidingTabLayout
                     android:id="@+id/SlidingTabs"
@@ -46,8 +47,9 @@
                 <View
                     android:id="@+id/main_toolbar_shadow"
                     android:layout_width="match_parent"
-                    android:layout_height="3dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
+                    android:layout_marginTop="-1dp"
                     android:background="@drawable/toolbar_bottom_shadow" />
             </LinearLayout>
 

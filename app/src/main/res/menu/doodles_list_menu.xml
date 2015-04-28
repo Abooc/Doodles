@@ -5,11 +5,6 @@
     <group android:id="@+id/Menu">
 
         <item
-            android:id="@+id/Plus_1"
-            android:title="+1"
-            support:showAsAction="always" />
-
-        <item
             android:id="@+id/Favorite"
             android:title="收藏"
             android:icon="@drawable/abc_ratingbar_full_material"
@@ -19,8 +14,8 @@
             android:id="@+id/Search"
             android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
             android:title="搜索"
+            android:visible="false"
             support:showAsAction="ifRoom|collapseActionView" />
-
 
         <item
             android:id="@+id/Share"
