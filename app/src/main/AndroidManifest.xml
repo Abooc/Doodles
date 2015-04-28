@@ -33,13 +33,13 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".properties.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="设置"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".properties.AboutUsActivity"
+            android:name=".settings.AboutUsActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="关于我们"
             android:screenOrientation="portrait"  />

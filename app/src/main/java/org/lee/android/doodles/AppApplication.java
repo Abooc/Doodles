@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
 import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Toast;
@@ -22,17 +24,60 @@ public class AppApplication extends Application {
     private static final String GOOGLE_PLAY = "https://play.google.com/apps/testing/org.lee.android.app.adworld";
 
     private static final String GOOGLE_MARKET = "market://details?id=";
+
+    /**
+     * Singleton instance of WikipediaApp
+     */
+    private static AppApplication INSTANCE;
+
+    public AppApplication() {
+        INSTANCE = this;
+    }
+
+    /**
+     * Returns the singleton instance of the WikipediaApp
+     *
+     * This is ok, since android treats it as a singleton anyway.
+     */
+    public static AppApplication getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void onCreate() {
         Toast.init(this);
         AppContext.getInstance().setContext(this);
         VolleyLoader.initialize(this);
 
+        this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+    }
+
+    /**
+     * Preference manager for storing things like the app's install IDs for EventLogging, theme,
+     * font size, etc.
+     */
+    private SharedPreferences prefs;
+    public static final int THEME_LIGHT = R.style.App_Theme;
+    public static final int THEME_DARK = R.style.App_Theme;
+    private int currentTheme = 0;
+    /**
+     * Gets the currently-selected theme for the app.
+     * @return Theme that is currently selected, which is the actual theme ID that can
+     * be passed to setTheme() when creating an activity.
+     */
+    public int getCurrentTheme() {
+        if (currentTheme == 0) {
+            currentTheme = prefs.getInt("theme", THEME_LIGHT);
+            if (currentTheme != THEME_LIGHT && currentTheme != THEME_DARK) {
+                currentTheme = THEME_LIGHT;
+            }
+        }
+        return currentTheme;
     }
 
     /**

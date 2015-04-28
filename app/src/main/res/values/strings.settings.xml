@@ -25,4 +25,12 @@
     <string name="pre_update_title">"查看最新版本？"</string>
     <string name="pre_update_summary">"我们的最新版本提供更完善的功能，且旧版本会停止服务！"</string>
 
+
+    <string name="error_browser_not_found">无法打开网页（未找到浏览器应用程序）。</string>
+
+    <string name="about_description">关于维基百科应用程序</string>
+    <string name="privacy_policy_description">隐私政策</string>
+    <string name="terms_of_use_description">使用条款</string>
+    <string name="privacy_policy_url">https://m.wikimediafoundation.org/wiki/Special:MyLanguage/Privacy_Policy</string>
+    <string name="terms_of_use_url">https://wikimediafoundation.org/wiki/Terms_of_Use</string>
 </resources>

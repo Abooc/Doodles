@@ -1,4 +1,4 @@
-package org.lee.android.doodles.properties;
+package org.lee.android.doodles.settings;
 
 import android.content.res.Resources;
 

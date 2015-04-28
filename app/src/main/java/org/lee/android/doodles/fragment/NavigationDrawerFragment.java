@@ -32,8 +32,7 @@ import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.AboutDoodlesActivity;
-import org.lee.android.doodles.properties.SettingsActivity;
-import org.lee.android.util.Log;
+import org.lee.android.doodles.settings.SettingsActivity;
 import org.lee.android.util.Toast;
 
 import java.util.ArrayList;

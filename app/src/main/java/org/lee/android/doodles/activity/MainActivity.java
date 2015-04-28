@@ -28,7 +28,7 @@ import org.lee.android.doodles.fragment.DoodleDetailsFragment;
 import org.lee.android.doodles.fragment.HidingScrollListener;
 import org.lee.android.doodles.fragment.NavigationDrawerFragment;
 import org.lee.android.doodles.fragment.TodayFragment;
-import org.lee.android.doodles.properties.SettingsActivity;
+import org.lee.android.doodles.settings.SettingsActivity;
 import org.lee.android.util.Log;
 
 
