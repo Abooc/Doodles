@@ -90,6 +90,12 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
         mViewPager.setCurrentItem(mHasYearPage ? 1 : 0);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(getTag());
+    }
+
     private ArrayList<TabInfo> getFragments(Year year, int count) {
         ArrayList<TabInfo> tabInfos = new ArrayList<>();
         int month = count;

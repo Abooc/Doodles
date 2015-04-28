@@ -2,16 +2,15 @@ package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +32,6 @@ import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.AboutDoodlesActivity;
-import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.properties.SettingsActivity;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
@@ -182,23 +180,23 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return mTabInfoList;
     }
 
-    public void drawerOnMenu(){
+    public void drawerOnMenu() {
         mDrawerToggle.onDrawerClosed(mFragmentContainerView);
     }
 
-    public void drawerOnBack(){
+    public void drawerOnBack() {
         mDrawerToggle.onDrawerOpened(mFragmentContainerView);
     }
 
     public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(Gravity.START);
     }
 
     public void toggleDrawer() {
         if (isDrawerOpen()) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
+            mDrawerLayout.closeDrawer(Gravity.START);
         } else {
-            mDrawerLayout.openDrawer(mFragmentContainerView);
+            mDrawerLayout.openDrawer(Gravity.START);
         }
     }
 
@@ -240,7 +238,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-            mDrawerLayout.openDrawer(mFragmentContainerView);
+            mDrawerLayout.openDrawer(Gravity.START);
         }
 
         // Defer code dependent on restoration of previous instance state.
@@ -295,8 +293,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     }
 
-    public void setMenuSelection(int position) {
+    public void performItemClick(int position) {
         mDrawerListView.performItemClick(null, position, 0);
+    }
+
+    public void setMenuSelection(int position) {
+        mDrawerListView.setItemChecked(position, true);
     }
 
     /**
@@ -310,11 +312,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
         if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
+            mDrawerLayout.closeDrawer(Gravity.START);
         }
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
@@ -354,7 +353,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.anchor();
         return mDrawerToggle.onOptionsItemSelected(item);
     }
 
@@ -366,7 +364,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
+            mDrawerLayout.closeDrawer(Gravity.START);
         }
         switch (v.getId()) {
             case R.id.Commit:
@@ -378,7 +376,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 //                startActivity(data);
                 return;
             case R.id.AboutDoodles:
-                AboutDoodlesActivity.launch(getActivity(), "https://www.google.com/doodles/about");
+                AboutDoodlesActivity.launch(getActivity());
 //                String AboutDoodles = getString(R.string.AboutDoodles);
 //                WebViewActivity.launch(getActivity(), "https://www.google.com/doodles/about", AboutDoodles);
                 return;

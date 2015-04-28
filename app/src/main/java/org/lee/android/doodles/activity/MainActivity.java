@@ -53,7 +53,6 @@ public class MainActivity extends ActionBarActivity implements
     private int mToolbarHeight;
     private SlidingTabLayout mSlidingTabLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,25 +81,12 @@ public class MainActivity extends ActionBarActivity implements
                 return Color.TRANSPARENT;
             }
         });
-        setTitle(getString(R.string.app_name));
         mToolbarHeight = Utils.getToolbarHeight(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    /**
-     * 覆写Activity.setTitle()方法，使Toolbar的标题生效
-     *
-     * @param title
-     */
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(title);
     }
 
     private DrawerLayout mDrawerLayout;
@@ -113,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawerFragment.setUpDrawerMenu(
                 R.id.navigation_drawer, mDrawerLayout);
-        mNavigationDrawerFragment.setMenuSelection(0);
+        mNavigationDrawerFragment.performItemClick(0);
     }
 
     public void showToolbar() {
@@ -152,21 +138,10 @@ public class MainActivity extends ActionBarActivity implements
         };
     }
 
-    private void restoreActionBar(String title) {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(title);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        return super.onPrepareOptionsMenu(menu);
     }
 
     /**
@@ -177,24 +152,9 @@ public class MainActivity extends ActionBarActivity implements
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.anchor();
         switch (item.getItemId()) {
             case R.id.Search:
-                SearchView iSearchView = (SearchView) item.getActionView();
-                iSearchView.setQueryHint("搜索涂鸦");
-                iSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
-                        SearchActivity.launch(MainActivity.this, s);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        return true;
-                    }
-                });
-
+                openSearch(item);
                 return true;
             case R.id.Settings:
                 SettingsActivity.launch(this);
@@ -205,13 +165,35 @@ public class MainActivity extends ActionBarActivity implements
                 AppApplication.openGooglePlay(this);
                 return true;
             case R.id.AboutDoodles:
-                AboutDoodlesActivity.launch(this, "https://www.google.com/doodles/about");
+                AboutDoodlesActivity.launch(this);
                 return true;
             case R.id.Share:
                 AppApplication.share(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 开启搜索框
+     * @param item
+     */
+    private void openSearch(MenuItem item){
+        SearchView iSearchView = (SearchView) item.getActionView();
+        iSearchView.setQueryHint("搜索涂鸦");
+        iSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                SearchActivity.launch(MainActivity.this, s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return true;
+            }
+        });
+
     }
 
     /**
@@ -242,7 +224,7 @@ public class MainActivity extends ActionBarActivity implements
         Log.anchor(title + ", " + fragment.getClass().getSimpleName());
 
         if (fragment instanceof DoodleArchivePagerFragment) {
-            restoreActionBar(title);
+            mNavigationDrawerFragment.setMenuSelection(1);
             mSlidingTabLayout.setVisibility(View.VISIBLE);
 
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
@@ -257,10 +239,9 @@ public class MainActivity extends ActionBarActivity implements
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
         } else if (fragment instanceof TodayFragment) {
-            restoreActionBar(title);
+            mNavigationDrawerFragment.setMenuSelection(0);
             mNavigationDrawerFragment.drawerOnMenu();
         } else if (fragment instanceof DoodleDetailsFragment) {
-            restoreActionBar(title);
             mNavigationDrawerFragment.drawerOnBack();
 
             mSlidingTabLayout.setVisibility(View.GONE);

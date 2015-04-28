@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
@@ -75,6 +76,12 @@ public class TodayFragment extends LifecycleFragment implements
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.setTitle(getTag());
+    }
+
     /**
      * RecyclerView每一项View的点击事件
      *
@@ -103,7 +110,7 @@ public class TodayFragment extends LifecycleFragment implements
      */
     @Override
     public void onItemChildClick(View clickView, int position) {
-        switch (clickView.getId()){
+        switch (clickView.getId()) {
             case R.id.ArchiveDoodles:
                 mainActivity.onNavigationDrawerItemSelected(1);
                 return;
@@ -113,10 +120,18 @@ public class TodayFragment extends LifecycleFragment implements
         }
     }
 
+    /**
+     * Doodles列表卡片上的Toolbar菜单
+     */
     private Toolbar.OnMenuItemClickListener mMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             Toast.show("" + menuItem.getTitle());
+            switch (menuItem.getItemId()) {
+                case R.id.Share:
+                    AppApplication.share(getActivity());
+                    return true;
+            }
             return false;
         }
     };
@@ -127,4 +142,8 @@ public class TodayFragment extends LifecycleFragment implements
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 }

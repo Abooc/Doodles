@@ -13,8 +13,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.lee.android.doodles.R;
-
 /**
  * 关于Google Doodle页面
  * Created by dayu on 14-11-17.
@@ -24,9 +22,9 @@ public class AboutDoodlesActivity extends ActionBarActivity implements View.OnCl
     private WebView iWebView;
     private final String AboutGoogleDoodlesUrl = "file:///android_asset/html/AboutGoogleDoodles.html";
 
-    public static void launch(Context context, String url){
+    public static void launch(Context context){
         Intent intent = new Intent(context, AboutDoodlesActivity.class);
-        intent.setData(Uri.parse(url));
+        intent.setData(Uri.parse("https://www.google.com/doodles/about"));
         context.startActivity(intent);
     }
 
@@ -99,15 +97,11 @@ public class AboutDoodlesActivity extends ActionBarActivity implements View.OnCl
 
     @Override
     public void onDestroy() {
-        destoryWebView();
-        super.onDestroy();
-    }
-
-    private void destoryWebView() {
         iWebView.stopLoading();
         iWebView.clearHistory();
         iWebView.clearCache(true);
         iWebView.destroy();
+        super.onDestroy();
     }
 
 }

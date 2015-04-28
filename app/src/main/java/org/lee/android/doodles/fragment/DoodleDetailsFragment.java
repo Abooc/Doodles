@@ -97,6 +97,12 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
         addOriginView(view);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(getTag());
+    }
+
     private void addOriginView(View view) {
         FrameLayout root = (FrameLayout) view;
         Context context = view.getContext();

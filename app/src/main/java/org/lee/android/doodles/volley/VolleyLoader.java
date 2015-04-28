@@ -11,6 +11,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.Volley;
 
+import org.lee.android.util.Log;
+
 import java.io.File;
 
 
@@ -49,7 +51,8 @@ public class VolleyLoader {
     public void cancelAll() {
         mRequestQueue.cancelAll(new RequestFilter() {
             @Override
-            public boolean apply(Request<?> arg0) {
+            public boolean apply(Request<?> request) {
+                Log.anchor("取消请求：" + request);
                 return true;
             }
         });
