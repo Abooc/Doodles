@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.lee.android.test.CustomScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:id="@+id/Content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/HeaderView"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="#CCC"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/FooterView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/HeaderView"
+            android:layout_marginTop="?android:actionBarSize"
+            android:background="@color/GRAY_DARK"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/XYTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:text="0, 0"
+                android:textColor="@color/WHITE"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/ViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/CardView"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            android:layout_below="@id/HeaderView">
+
+            <android.support.common.view.SlidingTabLayout
+                android:id="@+id/SlidingTabs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CCCCCC" />
+        </FrameLayout>
+
+    </RelativeLayout>
+</org.lee.android.test.CustomScrollView>

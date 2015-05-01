@@ -36,11 +36,6 @@ public class WebViewActivity extends ActionBarActivity implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String url = "about:blank";
-        if (getIntent().getData() != null){
-            url = getIntent().getData().toString();
-        }
-        Log.anchor(url);
         mTitle = getIntent().getStringExtra("title");
         setTitle(mTitle);
 
@@ -72,8 +67,24 @@ public class WebViewActivity extends ActionBarActivity implements View.OnClickLi
             }
         });
 
-        iWebView.loadUrl(url);
+        handleIntent(getIntent());
 
+    }
+
+    private void handleIntent(Intent intent){
+        String url = "about:blank";
+        Uri uri = intent.getData();
+        if (uri != null){
+            url = uri.toString();
+            iWebView.loadUrl(url);
+        }
+        Log.anchor(url);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
