@@ -30,6 +30,7 @@ public class WebViewActivity extends ActionBarActivity implements View.OnClickLi
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.setData(Uri.parse(url));
         intent.putExtra("title", title);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

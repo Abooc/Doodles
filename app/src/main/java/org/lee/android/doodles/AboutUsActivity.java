@@ -1,4 +1,4 @@
-package org.lee.android.doodles.settings;
+package org.lee.android.doodles;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import org.lee.android.doodles.R;
+import org.lee.android.doodles.settings.PreferencesKeys;
 
 
 /**

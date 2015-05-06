@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import org.lee.android.doodles.AboutUsActivity;
 import org.lee.android.doodles.AppSettings;
 import org.lee.android.doodles.R;
 import org.lee.android.util.Log;

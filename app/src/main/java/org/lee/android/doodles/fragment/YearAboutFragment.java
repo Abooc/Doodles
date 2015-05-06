@@ -43,7 +43,7 @@ public class YearAboutFragment extends FragmentLog {
 
         TextView titleText = (TextView) view.findViewById(R.id.Title);
         NetworkImageView doodleImageView = (NetworkImageView) view.findViewById(R.id.ImageView);
-        titleText.setText(mYear.year);
+        titleText.setText(mYear.year + "年");
         doodleImageView.setDefaultImageResId(R.drawable.ic_google_birthday);
 
         Log.anchor(mYear.url);

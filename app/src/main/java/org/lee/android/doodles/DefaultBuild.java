@@ -14,6 +14,6 @@ public class DefaultBuild {
      * @return
      */
     public static YearsFragment.Year defaultYear(){
-        return new YearsFragment.Year("2015", "i_2002");
+        return new YearsFragment.Year(2015, "i_2002");
     }
 }

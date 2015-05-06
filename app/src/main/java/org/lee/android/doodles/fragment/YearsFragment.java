@@ -179,13 +179,13 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
         /**
          * 年份值，如2015
          */
-        public String year;
+        public int year;
         /**
          * 这一年Doodle代表作品
          */
         public String url;
 
-        public Year(String year, String drawable) {
+        public Year(int year, String drawable) {
             this.year = year;
             this.url = drawable;
         }
@@ -197,12 +197,12 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
     }
 
     private static Year[] loadYears(Context context) {
-        final String[] yearNames = context.getResources().getStringArray(R.array.yearNames);
+        final int[] yearValues = context.getResources().getIntArray(R.array.yearNames);
         final String[] imageIds = context.getResources().getStringArray(R.array.yearDrawables);
 
-        Year[] years = new Year[yearNames.length];
-        for (int i = 0; i < yearNames.length; i++) {
-            Year year = new Year(yearNames[i], imageIds[i]);
+        Year[] years = new Year[yearValues.length];
+        for (int i = 0; i < yearValues.length; i++) {
+            Year year = new Year(yearValues[i], imageIds[i]);
             years[i] = year;
         }
         return years;

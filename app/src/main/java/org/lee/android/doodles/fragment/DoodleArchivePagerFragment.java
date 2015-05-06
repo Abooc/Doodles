@@ -19,6 +19,7 @@ import org.lee.android.doodles.CustomFragmentPagerAdapter.TabInfo;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
+import org.lee.android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +56,7 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_pager, container, false);
         mViewPager = (ViewPager) container.findViewById(R.id.ViewPager);
 
+        Log.anchor(savedInstanceState);
         if (savedInstanceState != null) {
             mYear = (Year) savedInstanceState.getSerializable("year");
             mHasYearPage = savedInstanceState.getBoolean("hasYearPage");
@@ -70,22 +72,11 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //优先计算当前年有几个月份，为了添加显示每个月份的Fragment
-        int monthCount = calculateYear(mYear);
-        ArrayList<TabInfo> tabInfos = getFragments(mYear, monthCount);
-
-        Bundle args = new Bundle();
-        args.putString("year", new Gson().toJson(mYear));
-        TabInfo yearTabInfo = new TabInfo("关于" + mYear.year + "年", YearAboutFragment.class, args);
-        tabInfos.add(0, yearTabInfo);
-
-        if (mHasYearPage) {
-            //添加需要带有"切换年份"的Fragment
-            TabInfo tabInfo = new TabInfo("切换年份", YearsFragment.class);
-            tabInfos.add(0, tabInfo);
-        }
-
+        int monthCount = calculateMonthCount(mYear);
+        ArrayList<TabInfo> tabs = getFragments(mYear, monthCount);
+        tabs = installYearFragment(tabs);
         CustomFragmentPagerAdapter adapter = new CustomFragmentPagerAdapter(
-                getChildFragmentManager(), getActivity(), tabInfos);
+                getChildFragmentManager(), getActivity(), tabs);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(mHasYearPage ? 1 : 0);
     }
@@ -96,8 +87,33 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
         getActivity().setTitle(getTag());
     }
 
+    /**
+     * 装配“关于年份“页面和”切换年份“页面
+     * @param tabs
+     * @return
+     */
+    private ArrayList<TabInfo> installYearFragment(ArrayList<TabInfo> tabs){
+        Bundle args = new Bundle();
+        args.putString("year", new Gson().toJson(mYear));
+        TabInfo yearTabInfo = new TabInfo("关于" + mYear.year + "年", YearAboutFragment.class, args);
+        tabs.add(0, yearTabInfo);
+
+        if (mHasYearPage) {
+            //添加需要带有"切换年份"的Fragment
+            TabInfo tabInfo = new TabInfo("切换年份", YearsFragment.class);
+            tabs.add(0, tabInfo);
+        }
+        return tabs;
+    }
+
+    /**
+     * 装配月份列表
+     * @param year 年份
+     * @param count 多少个月
+     * @return
+     */
     private ArrayList<TabInfo> getFragments(Year year, int count) {
-        ArrayList<TabInfo> tabInfos = new ArrayList<>();
+        ArrayList<TabInfo> tabs = new ArrayList<>();
         int month = count;
         TabInfo tabInfo;
         for (; month > 0; month--) {
@@ -107,9 +123,9 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
 
             tabInfo = new TabInfo((month < 10 ? "0" + month : month) + "月份",
                     DoodleArchiveListFragment.class, args);
-            tabInfos.add(tabInfo);
+            tabs.add(tabInfo);
         }
-        return tabInfos;
+        return tabs;
     }
 
     /**
@@ -117,9 +133,9 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
      * 主要用在计算当前时间是几月份，则表示有几个月的Doodles产生了
      *
      * @param year
-     * @return
+     * @return 返回该年份有效月份数
      */
-    private int calculateYear(Year year) {
+    private int calculateMonthCount(Year year) {
         int yearNum = Integer.valueOf(year.year);
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
         if (currYear > yearNum) {
@@ -154,10 +170,19 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBoolean("hasYearPage", mHasYearPage);
         outState.putSerializable("year", mYear);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.anchor();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.anchor();
+    }
 }

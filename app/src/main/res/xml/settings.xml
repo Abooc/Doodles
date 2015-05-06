@@ -15,11 +15,11 @@
             android:checked="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="关于" >
+    <PreferenceCategory android:title="软件版本" >
         <PreferenceScreen
             android:key="@string/pre_key_about_us"
-            android:summary="「维护用户，做用户喜欢的精致产品」是我们的理念！"
-            android:title="关于我们" />
+            android:summary="v0.3.3492"
+            android:title="版本号" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pre_aboutus">
@@ -27,7 +27,7 @@
             android:key="about"
             android:title="@string/about_description">
             <intent android:action="android.intent.action.VIEW"
-                android:targetClass="org.lee.android.doodles.settings.AboutUsActivity"
+                android:targetClass="org.lee.android.doodles.AboutUsActivity"
                 android:targetPackage="org.lee.android.doodles"
                 />
         </org.lee.android.doodles.settings.PreferenceMultiLine>

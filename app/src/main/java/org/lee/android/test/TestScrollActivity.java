@@ -48,7 +48,7 @@ public class TestScrollActivity extends Activity {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = inflater.inflate(R.layout.doodle_list_item_adview, parent, false);
-                return new DoodleRecyclerAdapter.AdViewHolder(view, null);
+                return new DoodleRecyclerAdapter.AdViewHolder(view);
             }
 
             @Override

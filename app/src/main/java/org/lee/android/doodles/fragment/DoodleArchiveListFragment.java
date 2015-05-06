@@ -21,6 +21,7 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.bean.Month;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
@@ -66,21 +67,27 @@ public class DoodleArchiveListFragment extends Fragment
 
     private int year;
     private int month;
-    private Doodle[] mDoodles;
+    private DoodleRecyclerAdapter.Card[] mCards;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDoodles = DataGeter.getDoodles();
+        Doodle[] mDoodles = DataGeter.getDoodles();
         if (mDoodles == null || mDoodles.length == 0) return;
         year = getArguments().getInt("year");
         month = getArguments().getInt("month");
-        Log.anchor("year:" + year + ", month:" + month);
+
+        mCards = DataGeter.toCards(mDoodles);
+        Month monthBean = new Month(year, month);
+        mCards = DataGeter.getListCards(mCards, monthBean);
+        Log.anchor(monthBean.toString());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.anchor(savedInstanceState);
+        Log.anchor("year:" + year + ", month:" + month);
         View rootView = inflater.inflate(R.layout.fragment_doodles_list, container, false);
         return rootView;
     }
@@ -97,6 +104,12 @@ public class DoodleArchiveListFragment extends Fragment
         }
     }
 
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.anchor("year:" + year + ", month:" + month);
+    }
+
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -105,15 +118,15 @@ public class DoodleArchiveListFragment extends Fragment
 //        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
         recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + toolbarHeight,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(mActivity, mDoodles, this, null);
-        recyclerAdapter.setHasHeader(false);
+        DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(mActivity, mCards, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
     }
 
     @Override
     public void onItemClick(View parent, int position) {
-        Doodle doodle = mDoodles[position];
+        DoodleRecyclerAdapter.Card card = mCards[position];
+        Doodle doodle = (Doodle) card.obj;
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent,
@@ -175,5 +188,18 @@ public class DoodleArchiveListFragment extends Fragment
             outState.putString("data", doodlesJson);
             Log.anchor("year:" + year + ", month:" + month);
         }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.anchor();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.anchor();
     }
 }

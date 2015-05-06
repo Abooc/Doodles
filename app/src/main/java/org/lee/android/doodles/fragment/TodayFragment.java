@@ -1,6 +1,7 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,12 +13,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.activity.SearchActivity;
+import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.bean.Month;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Toast;
 
@@ -35,14 +40,23 @@ public class TodayFragment extends LifecycleFragment implements
     }
 
     private RecyclerView.OnScrollListener mOnScrollListener;
-    private Doodle[] mDoodles;
-    private MainActivity mainActivity;
+    private DoodleRecyclerAdapter.Card[] mCards;
+    private MainActivity mMainActivity;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mainActivity = (MainActivity) activity;
-        mOnScrollListener = mainActivity.getHidingScrollListener();
+        mMainActivity = (MainActivity) activity;
+        mOnScrollListener = mMainActivity.getHidingScrollListener();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Doodle[] mDoodles = DataGeter.getDoodles();
+        mCards = DataGeter.toCards(mDoodles);
+        Month monthBean = new Month(2015, 05);
+        mCards = DataGeter.getTodayListCards(mCards, monthBean);
     }
 
     @Override
@@ -54,9 +68,6 @@ public class TodayFragment extends LifecycleFragment implements
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mDoodles = DataGeter.getDoodles();
-        if (mDoodles == null || mDoodles.length == 0) return;
-
         initRecyclerView(view);
 
     }
@@ -69,8 +80,7 @@ public class TodayFragment extends LifecycleFragment implements
         recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop,
                 recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         DoodleRecyclerAdapter recyclerAdapter = new DoodleRecyclerAdapter(
-                getActivity(), mDoodles, this, mMenuItemClickListener);
-        recyclerAdapter.setHasHeader(true);
+                getActivity(), mCards, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(mOnScrollListener);
 
@@ -79,7 +89,7 @@ public class TodayFragment extends LifecycleFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        mainActivity.setTitle(getTag());
+        mMainActivity.setTitle(getTag());
     }
 
     /**
@@ -90,7 +100,7 @@ public class TodayFragment extends LifecycleFragment implements
      */
     @Override
     public void onItemClick(View itemView, int position) {
-        Doodle doodle = mDoodles[position];
+        Doodle doodle = (Doodle) mCards[position].obj;
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent,
@@ -112,29 +122,20 @@ public class TodayFragment extends LifecycleFragment implements
     public void onItemChildClick(View clickView, int position) {
         switch (clickView.getId()) {
             case R.id.ArchiveDoodles:
-                mainActivity.onNavigationDrawerItemSelected(1);
+                mMainActivity.onNavigationDrawerItemSelected(1);
+                return;
+            case R.id.Search:
+                mMainActivity.showToolbar();
+
+                return;
+            case R.id.Share:
+                AppApplication.share(mMainActivity);
                 return;
             case R.id.AdView:
                 Toast.show("查看广告");
                 return;
         }
     }
-
-    /**
-     * Doodles列表卡片上的Toolbar菜单
-     */
-    private Toolbar.OnMenuItemClickListener mMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            Toast.show("" + menuItem.getTitle());
-            switch (menuItem.getItemId()) {
-                case R.id.Share:
-                    AppApplication.share(getActivity());
-                    return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {

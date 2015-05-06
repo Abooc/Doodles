@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.common.view.SlidingTabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -228,7 +229,8 @@ public class MainActivity extends ActionBarActivity implements
             mSlidingTabLayout.setVisibility(View.VISIBLE);
 
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
-            mSlidingTabLayout.setViewPager(pagerFragment.getPager());
+            ViewPager pager = pagerFragment.getPager();
+            mSlidingTabLayout.setViewPager(pager);
             if (pagerFragment.mHasYearPage) {
                 mNavigationDrawerFragment.drawerOnMenu();
                 mNavigationDrawerFragment.setHasOptionsMenu(true);

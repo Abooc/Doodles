@@ -4,112 +4,149 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.bean.Doodle;
+import org.lee.android.doodles.bean.Month;
 import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
+import org.lee.android.util.Toast;
 
 public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Doodle[] mDoodles;
+    private Card[] mCards;
     private OnRecyclerItemChildClickListener mOnItemClickListener;
     private LayoutInflater mInflater;
 
-    /**
-     * 最新涂鸦列表-顶部项View
-     */
-    private final int TYPE_VIEW_HEADER = 0;
-    /**
-     * 最新涂鸦列表-底部项View
-     */
-    private final int TYPE_VIEW_FOOTER = 4;
-    /**
-     * 最新涂鸦列表-今日Doodle View
-     */
-    private final int TYPE_VIEW_TODAY_DOODLE = 3;
-    /**
-     * 涂鸦View
-     */
-    private final int TYPE_VIEW_DOODLE = 1;
-    /**
-     * 广告View
-     */
-    private final int TYPE_VIEW_ADVIEW = 2;
+    public static class Card {
+        public int type;
+        public int resourceId;
+        public Object obj;
 
-    private boolean mHasHeaderView = false;
-    private Toolbar.OnMenuItemClickListener mOnMenuItemClickListener;
+        public Card(int type, int resourceId, Object obj) {
+            this.type = type;
+            this.resourceId = resourceId;
+            this.obj = obj;
+        }
 
-    public DoodleRecyclerAdapter(Context context, Doodle[] doodles,
-                                 OnRecyclerItemChildClickListener viewClicks,
-                                 Toolbar.OnMenuItemClickListener menuItemClickListener) {
-        mDoodles = doodles;
-        mOnItemClickListener = viewClicks;
-        mInflater = LayoutInflater.from(context);
-        mOnMenuItemClickListener = menuItemClickListener;
+        /**
+         * 最新涂鸦列表-顶部页眉View
+         */
+        public static final int TYPE_VIEW_HEADER = 0;
+        /**
+         * 最新涂鸦列表-底部页脚View
+         */
+        public static final int TYPE_VIEW_FOOTER = 4;
+        /**
+         * 最新涂鸦列表-今日Doodle View
+         */
+        public static final int TYPE_VIEW_TODAY_DOODLE = 3;
+        /**
+         * 涂鸦View
+         */
+        public static final int TYPE_VIEW_DOODLE = 1;
+        /**
+         * 广告View
+         */
+        public static final int TYPE_VIEW_ADVIEW = 2;
+
+
     }
 
-    public void setHasHeader(boolean hasHeader) {
-        mHasHeaderView = hasHeader;
+    public DoodleRecyclerAdapter(Context context, Card[] cards,
+                                 OnRecyclerItemChildClickListener viewClicks) {
+        mCards = cards;
+        mOnItemClickListener = viewClicks;
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mHasHeaderView && position == 0)
-            return TYPE_VIEW_HEADER;
-        if (mHasHeaderView && position == 1)
-            return TYPE_VIEW_TODAY_DOODLE;
-        else if (position % 4 == 3)
-            return TYPE_VIEW_ADVIEW;
-        else if (position == getItemCount()-1)
-            return TYPE_VIEW_FOOTER;
-        else
-            return TYPE_VIEW_DOODLE;
+        return mCards[position].type;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         switch (viewType) {
-            case TYPE_VIEW_HEADER:
+            case Card.TYPE_VIEW_HEADER:
                 view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
                 return HeaderViewHolder.newInstance(view, mOnItemClickListener);
-            case TYPE_VIEW_FOOTER:
+            case Card.TYPE_VIEW_FOOTER:
                 view = mInflater.inflate(R.layout.doodle_list_item_footer, parent, false);
-                return new FooterViewHolder(view);
-            case TYPE_VIEW_TODAY_DOODLE:
+                return new FooterViewHolder(view, mOnItemClickListener);
+            case Card.TYPE_VIEW_TODAY_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_today_doodle_item, parent, false);
-                return new RecyclerItemViewHolder(view, mOnItemClickListener, mOnMenuItemClickListener);
-            case TYPE_VIEW_ADVIEW:
+                return new RecyclerItemViewHolder(view, mOnItemClickListener);
+            case Card.TYPE_VIEW_ADVIEW:
                 view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
-                return new AdViewHolder(view, mOnMenuItemClickListener);
+                return new AdViewHolder(view);
             default:
                 TYPE_VIEW_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
-                return new RecyclerItemViewHolder(view, mOnItemClickListener, mOnMenuItemClickListener);
+                return new RecyclerItemViewHolder(view, mOnItemClickListener);
         }
     }
 
-    public static class FooterViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * 底部页脚
+     */
+    public static class FooterViewHolder extends RecyclerView.ViewHolder implements Attachable, View.OnClickListener {
 
-        public FooterViewHolder(View itemView) {
+        private final OnRecyclerItemChildClickListener mOnRecyclerItemClickListener;
+        private TextView mArchiveDate;
+
+        public FooterViewHolder(View itemView, OnRecyclerItemChildClickListener clicks) {
             super(itemView);
+            mOnRecyclerItemClickListener = clicks;
+            itemView.findViewById(R.id.Share).setOnClickListener(this);
+            itemView.findViewById(R.id.Search).setOnClickListener(this);
+            mArchiveDate = (TextView) itemView.findViewById(R.id.ArchiveDate);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnRecyclerItemClickListener != null)
+                mOnRecyclerItemClickListener.onItemChildClick(v, getAdapterPosition());
+        }
+
+
+        @Override
+        public void attachData(Object o) {
+            Month month = (Month) o;
+            String date = (String) mArchiveDate.getText();
+            date = String.format(date, Integer.valueOf(month.year), month.month);
+            mArchiveDate.setText(date);
         }
     }
 
-    public static class AdViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * 广告
+     */
+    public static class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnMenuItemClickListener {
 
-        public AdViewHolder(View itemView, Toolbar.OnMenuItemClickListener menuItemClickListener) {
+        public AdViewHolder(View itemView) {
             super(itemView);
 
             Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.ToolbarMenu);
-            toolbar.setOnMenuItemClickListener(menuItemClickListener);
+            toolbar.setOnMenuItemClickListener(this);
             toolbar.inflateMenu(R.menu.adview_menu);
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+
+            Toast.show("" + menuItem.getTitle());
+            return false;
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder implements Attachable, View.OnClickListener {
+    /**
+     * 顶部页眉
+     */
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder implements Attachable, View.OnClickListener {
 
         private OnRecyclerItemChildClickListener mListener;
 
@@ -144,16 +181,16 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         int viewType = viewHolder.getItemViewType();
         switch (viewType) {
-            case TYPE_VIEW_HEADER:
+            case Card.TYPE_VIEW_HEADER:
                 return;
-            case TYPE_VIEW_FOOTER:
+            case Card.TYPE_VIEW_FOOTER:
+                ((Attachable) viewHolder).attachData(mCards[position].obj);
                 return;
-            case TYPE_VIEW_ADVIEW:
+            case Card.TYPE_VIEW_ADVIEW:
                 return;
             default:
                 // TYPE_VIEW_DOODLE:
-                Doodle doodle = mDoodles[position];
-                ((Attachable) viewHolder).attachData(doodle);
+                ((Attachable) viewHolder).attachData(mCards[position].obj);
                 return;
 
         }
@@ -161,7 +198,7 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return mDoodles == null ? 0 : mDoodles.length;
+        return mCards == null ? 0 : mCards.length;
     }
 
 }

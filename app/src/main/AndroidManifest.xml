@@ -50,7 +50,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".settings.AboutUsActivity"
+            android:name=".AboutUsActivity"
             android:icon="@drawable/TRANSPARENT"
             android:label="关于我们"
             android:screenOrientation="portrait"  />

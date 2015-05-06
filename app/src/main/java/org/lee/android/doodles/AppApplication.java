@@ -105,7 +105,7 @@ public class AppApplication extends Application {
             + "\n点击看一下\n" + GOOGLE_PLAY;
 
 
-    public static void share(Activity activity){
+    public static void share(Context activity){
         share(activity, title, "", content, "");
     }
 
@@ -117,13 +117,12 @@ public class AppApplication extends Application {
      * @param content
      * @param footer
      */
-    public static void share(Activity activity, String title, String header,
+    public static void share(Context activity, String title, String header,
                       String content, String footer) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TITLE, title);
         intent.putExtra(Intent.EXTRA_TEXT, content + "\n" + header);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(Intent.createChooser(intent, title));
     }
 }
