@@ -1,29 +1,24 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
-import org.lee.android.doodles.activity.SearchActivity;
-import org.lee.android.doodles.activity.WebViewActivity;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.bean.Month;
 import org.lee.android.test.data.DataGeter;
+import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 /**
@@ -46,6 +41,7 @@ public class TodayFragment extends LifecycleFragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.anchor();
         mMainActivity = (MainActivity) activity;
         mOnScrollListener = mMainActivity.getHidingScrollListener();
     }
@@ -53,6 +49,7 @@ public class TodayFragment extends LifecycleFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.anchor();
         Doodle[] mDoodles = DataGeter.getDoodles();
         mCards = DataGeter.toCards(mDoodles);
         Month monthBean = new Month(2015, 05);
@@ -143,8 +140,4 @@ public class TodayFragment extends LifecycleFragment implements
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 }

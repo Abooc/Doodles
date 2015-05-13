@@ -2,16 +2,13 @@ package org.lee.android.doodles.volley;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v4.util.LruCache;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.Volley;
-
-import org.lee.android.util.Log;
 
 import java.io.File;
 
@@ -40,22 +37,8 @@ public class VolleyLoader {
         return mBitmapCache.getBitmap(url);
     }
 
-    public RequestQueue getRequestQueue() {
-        return mRequestQueue;
-    }
-
     public ImageLoader getImageLoader() {
         return mImageLoader;
-    }
-
-    public void cancelAll() {
-        mRequestQueue.cancelAll(new RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                Log.anchor("取消请求：" + request);
-                return true;
-            }
-        });
     }
 
     public boolean clearCache(Context context) {
@@ -69,12 +52,15 @@ public class VolleyLoader {
 
         public BitmapCache() {
             int maxMemory = (int) Runtime.getRuntime().maxMemory();
-//			int mCacheSize = maxMemory / 8;
-            int mCacheSize = 20;
+			int mCacheSize = maxMemory / 8;
             mCache = new LruCache<String, Bitmap>(mCacheSize) {
                 @Override
                 protected int sizeOf(String key, Bitmap value) {
-                    return value.getRowBytes() * value.getHeight();
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+                        return value.getRowBytes() * value.getHeight();
+                    } else {
+                        return value.getByteCount();
+                    }
                 }
 
             };

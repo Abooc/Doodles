@@ -6,6 +6,16 @@
     android:padding="12dp"
     android:background="#FF4B80AF">
 
+    <TextView
+        android:id="@+id/ChangeAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="2dp"
+        android:text="切换账号"
+        android:textColor="@color/color_clickable_gray_white"
+        android:textAppearance="@android:style/TextAppearance.Small" />
+
     <ImageView
         android:layout_width="70dp"
         android:layout_height="70dp"

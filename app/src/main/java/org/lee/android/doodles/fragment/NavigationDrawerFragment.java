@@ -2,6 +2,7 @@ package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.AccountPicker;
 import com.google.gson.Gson;
 
 import org.lee.android.doodles.AppApplication;
@@ -32,6 +34,7 @@ import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.AboutDoodlesActivity;
+import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.settings.SettingsActivity;
 import org.lee.android.util.Toast;
 
@@ -165,7 +168,17 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         view.findViewById(R.id.Settings).setOnClickListener(this);
         view.findViewById(R.id.Evaluate).setOnClickListener(this);
         view.findViewById(R.id.Share).setOnClickListener(this);
+        TextView ChangeAccountText = (TextView) view.findViewById(R.id.ChangeAccount);
+        ChangeAccountText.setOnClickListener(this);
+
+        String versionName = AppApplication.getVersionName(getActivity());
+        int versionCode = AppApplication.getVersionCode(getActivity());
+
+        CharSequence str = ChangeAccountText.getText();
+        ChangeAccountText.setText(str + "\n" + versionName + " (build:" + versionCode + ")");
     }
+
+
 
     private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
         DrawerMenuItem[] menuItems = {
@@ -390,6 +403,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 return;
             case R.id.Share:
                 AppApplication.share(getActivity());
+                return;
+            case R.id.ChangeAccount:
+                Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+                        false, null, null, null, null);
+                startActivityForResult(intent, MainActivity.SOME_REQUEST_CODE);
                 return;
 
         }

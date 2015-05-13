@@ -1,5 +1,7 @@
 package org.lee.android.doodles.activity;
 
+import android.accounts.AccountManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.common.view.SlidingTabLayout;
@@ -16,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
+
+import com.google.android.gms.common.AccountPicker;
 
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.AppFunction;
@@ -54,6 +58,8 @@ public class MainActivity extends ActionBarActivity implements
     private int mToolbarHeight;
     private SlidingTabLayout mSlidingTabLayout;
 
+    public static final int SOME_REQUEST_CODE = 0x2323;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,14 @@ public class MainActivity extends ActionBarActivity implements
 
         initToolbar();
         initDrawerFragment();
+
+        try{
+            Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+                    false, null, null, null, null);
+            startActivityForResult(intent, SOME_REQUEST_CODE);
+        }catch (Exception e){
+
+        }
 
     }
 
@@ -269,6 +283,15 @@ public class MainActivity extends ActionBarActivity implements
             if (!pagerFragment.mHasYearPage) {
                 mNavigationDrawerFragment.drawerOnMenu();
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode,
+                                    final Intent data) {
+        if (requestCode == SOME_REQUEST_CODE && resultCode == RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            Log.anchor(accountName);
         }
     }
 

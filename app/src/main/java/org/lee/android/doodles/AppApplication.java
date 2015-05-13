@@ -1,10 +1,11 @@
 package org.lee.android.doodles;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
@@ -125,4 +126,29 @@ public class AppApplication extends Application {
         intent.putExtra(Intent.EXTRA_TEXT, content + "\n" + header);
         activity.startActivity(Intent.createChooser(intent, title));
     }
+
+    public static int getVersionCode(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            return packInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static String getVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            return packInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
