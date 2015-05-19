@@ -1,5 +1,30 @@
 apply plugin: 'com.android.application'
 
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd')
+    return formattedDate
+}
+
+def computeVersionName(label) {
+    return "0.3.${android.defaultConfig.versionCode}-${label}-${date}"
+}
+
+def appendVersionNameVersionCode(variant, defaultConfig) {
+    //check if staging variant
+    if(variant.name == android.buildTypes.staging.name){
+        if(variant.zipAlign) {
+            def file = variant.outputFile
+            def fileName = file.name.replace(".apk", "-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk")
+            variant.outputFile = new File(file.parent, fileName)
+        }
+
+        def file = variant.packageApplication.outputFile
+        def fileName = file.name.replace(".apk", "-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk")
+        variant.packageApplication.outputFile = new File(file.parent, fileName)
+    }
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
@@ -7,7 +32,7 @@ android {
         applicationId "org.lee.android.doodles"
         minSdkVersion 15
         targetSdkVersion 19
-        versionCode 2
+        versionCode 3
         testApplicationId 'org.lee.android.doodles.test'
     }
     signingConfigs {
@@ -18,15 +43,29 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.release
+
+//            applicationVariants.all { variant ->
+//                appendVersionNameVersionCode(variant, android.defaultConfig)
+//            }
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def formattedDate = computeVersionName("");
+                    output.outputFile = new File(output.outputFile.parent,
+                            output.outputFile.name.replace(".apk", "-v" + formattedDate + ".apk")
+                    )
+                }
+            }
         }
+
     }
     productFlavors {
         alpha {
-            versionName ("alpha")
+            versionName computeVersionName("alpha")
             applicationId 'org.lee.android.doodles.alpha'
         }
         beta {
-            versionName ("beta")
+            versionName computeVersionName("beta")
             applicationId 'org.lee.android.doodles.beta'
         }
     }
@@ -47,7 +86,7 @@ dependencies {
 // Copy the signing.properties.sample file to ~/.sign/signing.properties and adjust the values.
 def Properties props = new Properties()
 //def propFile = new File(System.getProperty('user.home'), '.sign/signing.properties')
-def propFile = new File(System.getProperty('user.home'), '/Documents/DAYU/keystore/.signingConfigs/[app-dayu-dev]signing.properties')
+def propFile = new File(System.getProperty('user.home'), '/Documents/DAYU/keystore/.signingConfigs/[app-google-doodles]signing.properties')
 if (propFile.canRead()) {
     props.load(new FileInputStream(propFile))
 

@@ -29,6 +29,9 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.gson.Gson;
 
 import org.lee.android.BillingBuilder;
+import org.lee.android.billing.util.IabHelper;
+import org.lee.android.billing.util.IabResult;
+import org.lee.android.billing.util.Purchase;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.DefaultBuild;
@@ -37,6 +40,7 @@ import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.AboutDoodlesActivity;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.settings.SettingsActivity;
+import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
 
 import java.util.ArrayList;
@@ -402,7 +406,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 return;
             case R.id.RemoveAd:
                 mBillingBuilder.flagEndAsync();
-                mBillingBuilder.removeAds(null);
+                mBillingBuilder.removeAds(mPurchaseFinishedListener);
                 return;
             case R.id.Settings:
                 SettingsActivity.launch(getActivity());
@@ -421,6 +425,39 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         }
     }
+
+        // Callback for when a purchase is finished
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.anchor("Purchase finished: " + result + ", purchase: " + purchase);
+
+            // if we were disposed of in the meantime, quit.
+            if (mBillingBuilder.isDisposed()) return;
+
+            if (result.isFailure()) {
+//                complain("Error purchasing: " + result);
+                Toast.show("购买错误: " + result);
+//                setWaitScreen(false);
+                return;
+            }
+            if (!mBillingBuilder.verifyDeveloperPayload(purchase)) {
+//                complain("Error purchasing. Authenticity verification failed.");
+                Toast.show("购买错误. Authenticity verification failed.");
+//                setWaitScreen(false);
+                return;
+            }
+
+            Log.anchor("Purchase successful.");
+            Log.anchor("购买成功.");
+            getView().findViewById(R.id.RemoveAd).setVisibility(View.GONE);
+
+//            if (purchase.getSku().equals(BillingBuilder.SKU_REMOVE_ADS)) {
+//                // bought 1/4 tank of gas. So consume it.
+//                Log.anchor("Purchase is gas. Starting gas consumption.");
+//                mBillingBuilder.getIabHelper().consumeAsync(purchase, mConsumeFinishedListener);
+//            }
+        }
+    };
 
     @Override
     public void onDetach() {

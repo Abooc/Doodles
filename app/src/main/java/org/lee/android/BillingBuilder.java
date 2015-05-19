@@ -58,6 +58,10 @@ public class BillingBuilder {
         });
     }
 
+    public IabHelper getIabHelper(){
+        return mHelper;
+    }
+
     public void removeAds(IabHelper.OnIabPurchaseFinishedListener listener){
         /* TODO: for security, generate your payload here for verification. See the comments on
          *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use
@@ -148,7 +152,7 @@ public class BillingBuilder {
 
 
     /** Verifies the developer payload of a purchase. */
-    boolean verifyDeveloperPayload(Purchase p) {
+    public boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
         return true;
     }
