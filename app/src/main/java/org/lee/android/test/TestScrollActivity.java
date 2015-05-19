@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.fragment.DoodleRecyclerAdapter;
 import org.lee.android.doodles.fragment.HidingScrollListener;
+import org.lee.android.doodles.widget.AdViewHolder;
 import org.lee.android.util.Log;
 
 /**
@@ -48,7 +49,7 @@ public class TestScrollActivity extends Activity {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = inflater.inflate(R.layout.doodle_list_item_adview, parent, false);
-                return new DoodleRecyclerAdapter.AdViewHolder(view);
+                return new AdViewHolder(view, TestScrollActivity.this);
             }
 
             @Override

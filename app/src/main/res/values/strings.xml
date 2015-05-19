@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BattleGround</string>
+    <string name="app_name">Google涂鸦</string>
     <string name="title_section1">涂鸦存档</string>
     <string name="title_section2">推荐</string>
     <string name="title_section3">排行榜</string>
@@ -11,5 +11,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">设置</string>
+
+
+    <string name="activity_label_browser">快速查看</string>
+    <string name="activity_label_settings">设置</string>
+    <string name="activity_label_about_us">关于我们</string>
+    <string name="activity_label_about_google_doodle">关于Google涂鸦</string>
 
 </resources>

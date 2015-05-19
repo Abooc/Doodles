@@ -12,11 +12,6 @@
             support:actionViewClass="android.support.v7.widget.SearchView" />
 
         <item
-            android:id="@+id/RemoveAd"
-            android:title="@string/RemoveAd"
-            support:showAsAction="never" />
-
-        <item
             android:id="@+id/AboutDoodles"
             android:title="@string/AboutDoodles"
             support:showAsAction="never" />

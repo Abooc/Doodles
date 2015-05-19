@@ -5,6 +5,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- VERY IMPORTANT! Don't forget this permission, or in-app billing won't work. -->
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application
         android:name=".AppApplication"
         android:icon="@drawable/ic_launcher"
@@ -25,7 +28,7 @@
         <activity
             android:name=".activity.WebViewActivity"
             android:icon="@drawable/ic_menu_play_128"
-            android:label="快速查看"
+            android:label="@string/activity_label_browser"
             android:parentActivityName=".activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
@@ -45,20 +48,18 @@
 
         <activity
             android:name=".settings.SettingsActivity"
-            android:label="设置"
+            android:label="@string/activity_label_settings"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".AboutUsActivity"
-            android:icon="@drawable/TRANSPARENT"
-            android:label="关于我们"
+            android:label="@string/activity_label_about_us"
             android:screenOrientation="portrait"  />
 
         <activity
             android:name=".activity.AboutDoodlesActivity"
-            android:icon="@drawable/TRANSPARENT"
-            android:label="@string/title_section5"
+            android:label="@string/activity_label_about_google_doodle"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
     </application>

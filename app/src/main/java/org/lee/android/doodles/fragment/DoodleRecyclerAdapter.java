@@ -1,24 +1,27 @@
 package org.lee.android.doodles.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.lee.android.billing.util.IabHelper;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Month;
 import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
-import org.lee.android.util.Toast;
+import org.lee.android.doodles.widget.AdViewHolder;
 
 public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Card[] mCards;
     private OnRecyclerItemChildClickListener mOnItemClickListener;
     private LayoutInflater mInflater;
+    private Activity mActivity;
+
+    IabHelper mHelper;
 
     public static class Card {
         public int type;
@@ -55,11 +58,12 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    public DoodleRecyclerAdapter(Context context, Card[] cards,
+    public DoodleRecyclerAdapter(Activity activity, Card[] cards,
                                  OnRecyclerItemChildClickListener viewClicks) {
         mCards = cards;
         mOnItemClickListener = viewClicks;
-        mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(activity);
+        mActivity = activity;
     }
 
     @Override
@@ -82,7 +86,7 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 return new RecyclerItemViewHolder(view, mOnItemClickListener);
             case Card.TYPE_VIEW_ADVIEW:
                 view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
-                return new AdViewHolder(view);
+                return new AdViewHolder(view, mActivity);
             default:
                 TYPE_VIEW_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
@@ -119,27 +123,6 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             String date = (String) mArchiveDate.getText();
             date = String.format(date, Integer.valueOf(month.year), month.month);
             mArchiveDate.setText(date);
-        }
-    }
-
-    /**
-     * 广告
-     */
-    public static class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnMenuItemClickListener {
-
-        public AdViewHolder(View itemView) {
-            super(itemView);
-
-            Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.ToolbarMenu);
-            toolbar.setOnMenuItemClickListener(this);
-            toolbar.inflateMenu(R.menu.adview_menu);
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-
-            Toast.show("" + menuItem.getTitle());
-            return false;
         }
     }
 

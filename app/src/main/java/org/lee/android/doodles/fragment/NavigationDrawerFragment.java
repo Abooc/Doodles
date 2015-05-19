@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.AccountPicker;
 import com.google.gson.Gson;
 
+import org.lee.android.BillingBuilder;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.DefaultBuild;
@@ -88,6 +89,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private boolean mUserLearnedDrawer;
 
     private ArrayList<TabInfo> mTabInfoList;
+
+    private BillingBuilder mBillingBuilder;
 
     private String[] mNames = {
             "最新涂鸦",
@@ -275,6 +278,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onDrawerOpened(View drawerView) {
         AppFunction.hideKeyboard(getActivity(), mDrawerLayout);
 
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mBillingBuilder = mainActivity.getBillingBuilder();
+
         if (!isAdded()) {
             return;
         }
@@ -293,6 +299,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onDrawerClosed(View drawerView) {
+        mBillingBuilder = null;
+
         if (!isAdded()) {
             return;
         }
@@ -393,7 +401,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 //                WebViewActivity.launch(getActivity(), "https://www.google.com/doodles/about", AboutDoodles);
                 return;
             case R.id.RemoveAd:
-                Toast.show("RemoveAd...");
+                mBillingBuilder.flagEndAsync();
+                mBillingBuilder.removeAds(null);
                 return;
             case R.id.Settings:
                 SettingsActivity.launch(getActivity());
@@ -423,6 +432,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBillingBuilder = null;
     }
 
     private static class DrawerMenuItem {

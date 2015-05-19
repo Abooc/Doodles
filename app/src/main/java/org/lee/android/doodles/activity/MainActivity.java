@@ -19,8 +19,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.common.AccountPicker;
-
+import org.lee.android.BillingBuilder;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter;
@@ -60,6 +59,8 @@ public class MainActivity extends ActionBarActivity implements
 
     public static final int SOME_REQUEST_CODE = 0x2323;
 
+    private BillingBuilder mBillingBuilder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,14 +70,7 @@ public class MainActivity extends ActionBarActivity implements
         initToolbar();
         initDrawerFragment();
 
-        try{
-            Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
-                    false, null, null, null, null);
-            startActivityForResult(intent, SOME_REQUEST_CODE);
-        }catch (Exception e){
-
-        }
-
+        mBillingBuilder = new BillingBuilder(this);
     }
 
     private void initToolbar() {
@@ -153,6 +147,10 @@ public class MainActivity extends ActionBarActivity implements
         };
     }
 
+    public BillingBuilder getBillingBuilder(){
+        return mBillingBuilder;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -173,8 +171,6 @@ public class MainActivity extends ActionBarActivity implements
                 return true;
             case R.id.Settings:
                 SettingsActivity.launch(this);
-                return true;
-            case R.id.RemoveAd:
                 return true;
             case R.id.Evaluate:
                 AppApplication.openGooglePlay(this);
