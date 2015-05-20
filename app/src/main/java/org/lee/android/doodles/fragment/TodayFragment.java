@@ -60,8 +60,6 @@ public class TodayFragment extends LifecycleFragment implements
         mCards = DataGeter.toCards(mDoodles);
         Month monthBean = new Month(2015, 05);
         mCards = DataGeter.getTodayListCards(mCards, monthBean);
-
-
     }
 
     private AdListener mAdListener = new AdListener() {
@@ -180,4 +178,15 @@ public class TodayFragment extends LifecycleFragment implements
                 enter ? android.R.anim.fade_in : android.R.anim.fade_out);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.anchor();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.anchor();
+    }
 }

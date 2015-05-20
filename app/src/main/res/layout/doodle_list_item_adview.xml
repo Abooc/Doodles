@@ -7,7 +7,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="6dp">
 
@@ -16,10 +16,9 @@
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="250dp"
             android:layout_marginBottom="?android:actionBarSize"
             ads:adUnitId="ca-app-pub-1083558812447193/2770531060"
-            ads:adSize="MEDIUM_RECTANGLE"/>
+            ads:adSize="BANNER"/>
 
         <TextView
             android:id="@+id/DateTime"
@@ -49,11 +48,8 @@
             android:id="@+id/ToolbarMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:background="@color/GRAY_LIGHT"
+            android:layout_marginBottom="-10dp"
             android:layout_gravity="bottom|right"
-            android:layout_marginTop="-50dp"
-            android:minHeight="?android:actionBarSize"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
     </FrameLayout>

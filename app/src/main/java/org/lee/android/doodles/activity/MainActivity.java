@@ -175,9 +175,6 @@ public class MainActivity extends ActionBarActivity implements
             case R.id.Evaluate:
                 AppApplication.openGooglePlay(this);
                 return true;
-            case R.id.AboutDoodles:
-                AboutDoodlesActivity.launch(this);
-                return true;
             case R.id.Share:
                 AppApplication.share(this);
                 return true;
@@ -305,4 +302,15 @@ public class MainActivity extends ActionBarActivity implements
         super.onBackPressed();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.anchor();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.anchor();
+    }
 }

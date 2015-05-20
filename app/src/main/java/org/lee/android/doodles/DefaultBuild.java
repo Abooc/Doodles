@@ -21,4 +21,9 @@ public class DefaultBuild {
     public static YearsFragment.Year defaultYear(){
         return new YearsFragment.Year(2015, "i_2002");
     }
+
+    /**
+     * 列表中广告显示的间隔数
+     */
+    public static final int ADVIEW_DIVIDER = 6;
 }

@@ -23,6 +23,17 @@ import java.util.ArrayList;
  */
 public class DataGeter {
 
+    /**
+     * 列表中广告显示的间隔器
+     * @param position
+     * @return
+     */
+    public static boolean adViewFilter(int position) {
+        int size = DefaultBuild.ADVIEW_DIVIDER;
+        if (position % size == (size - 1)) return true;
+        return false;
+    }
+
     public static Card[] toCards(Doodle[] doodles) {
         Card[] cards = new Card[doodles.length];
         for (int i = 0; i < doodles.length; i++) {
@@ -33,6 +44,7 @@ public class DataGeter {
 
     /**
      * 最新列表
+     *
      * @param cards
      * @return
      */
@@ -40,7 +52,7 @@ public class DataGeter {
         ArrayList<Card> cardList = new ArrayList<>();
         int adSize = 0;
         for (int i = 0; i < cards.length; i++) {
-            if (i % 4 == 3) {
+            if (adViewFilter(i)) {
                 Card card = new Card(Card.TYPE_VIEW_ADVIEW, 0, null);
                 cardList.add(card);
                 adSize++;
@@ -59,6 +71,7 @@ public class DataGeter {
 
     /**
      * 月份列表
+     *
      * @param cards
      * @return
      */
@@ -66,7 +79,7 @@ public class DataGeter {
         ArrayList<Card> cardList = new ArrayList<>();
         int adSize = 0;
         for (int i = 0; i < cards.length; i++) {
-            if (i % 4 == 3) {
+            if (adViewFilter(i)) {
                 Card card = new Card(Card.TYPE_VIEW_ADVIEW, 0, null);
                 cardList.add(card);
                 adSize++;

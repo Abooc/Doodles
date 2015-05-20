@@ -26,7 +26,6 @@
     <PreferenceCategory android:title="按年龄展示广告">
 
         <EditTextPreference
-            android:enabled="false"
             android:key="birthday"
             android:summary="有效的生日有助于您感兴趣的广告"
             android:title="设置生日" />

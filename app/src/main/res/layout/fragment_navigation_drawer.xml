@@ -33,8 +33,6 @@
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0dp" />
 
-            <include layout="@layout/line_h_gray" />
-
             <TextView
                 android:id="@+id/Commit"
                 android:layout_width="match_parent"
@@ -54,6 +52,8 @@
                 android:clickable="true"
                 android:padding="@dimen/activity_horizontal_margin"
                 android:background="@drawable/default_item_selector" />
+
+            <include layout="@layout/line_h_gray" />
 
             <TextView
                 android:id="@+id/RemoveAd"

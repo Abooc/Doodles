@@ -107,6 +107,21 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if(holder.getItemViewType() == Card.TYPE_VIEW_ADVIEW){
+            Log.anchor();
+        }
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+        if(holder.getItemViewType() == Card.TYPE_VIEW_ADVIEW){
+            Log.anchor();
+        }
+        return super.onFailedToRecycleView(holder);
+    }
+
     /**
      * 底部页脚
      */

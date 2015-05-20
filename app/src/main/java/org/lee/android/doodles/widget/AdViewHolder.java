@@ -12,15 +12,11 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import org.lee.android.BillingBuilder;
-import org.lee.android.billing.util.IabHelper;
-import org.lee.android.billing.util.IabResult;
-import org.lee.android.billing.util.Purchase;
 import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.adview.PropertiesActivity;
 import org.lee.android.util.Log;
-import org.lee.android.util.Toast;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -37,6 +33,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
 
     public AdViewHolder(View itemView, Activity activity) {
         super(itemView);
+        Log.anchor();
         mActivity = activity;
         MainActivity mainActivity = (MainActivity) activity;
         mBillingBuilder = mainActivity.getBillingBuilder();
@@ -47,7 +44,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
         toolbar.setOnMenuItemClickListener(this);
         toolbar.inflateMenu(R.menu.adview_menu);
 
-        mAdView = (AdView)itemView.findViewById(R.id.adView);
+        mAdView = (AdView) itemView.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice(DefaultBuild.MEDIUM_RECTANGLE_AD_UNIT_ID)
@@ -58,8 +55,10 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
     }
 
     private AdListener mAdListener = new AdListener() {
+
         @Override
         public void onAdLoaded() {
+            isAvailable = true;
             DateFormat format = DateFormat.getDateTimeInstance();
             mDateText.setText(format.format(new Date()));
         }
@@ -70,6 +69,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
+            mDateText.setText("ERROR: " + errorMessage(errorCode));
         }
 
         @Override
@@ -78,12 +78,13 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
 
         @Override
         public void onAdOpened() {
+
         }
     };
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.RemoveAd:
                 mBillingBuilder.flagEndAsync();
                 mBillingBuilder.removeAds(null);
@@ -95,12 +96,36 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
         return false;
     }
 
+    private boolean isAvailable;
+
     public void resume() {
-        mAdView.resume();
+        if (isAvailable) {
+            mAdView.resume();
+        } else
+            mAdView.loadAd(new AdRequest.Builder().build());
     }
 
     public void pause() {
         mAdView.pause();
+    }
+
+    private String errorMessage(int errorCode) {
+        String error = null;
+        switch (errorCode) {
+            case AdRequest.ERROR_CODE_INTERNAL_ERROR:
+                error = "ERROR_CODE_INTERNAL_ERROR";
+                break;
+            case AdRequest.ERROR_CODE_INVALID_REQUEST:
+                error = "ERROR_CODE_INVALID_REQUEST";
+                break;
+            case AdRequest.ERROR_CODE_NETWORK_ERROR:
+                error = "ERROR_CODE_NETWORK_ERROR";
+                break;
+            case AdRequest.ERROR_CODE_NO_FILL:
+                error = "ERROR_CODE_NO_FILL";
+                break;
+        }
+        return error;
     }
 
 //    // Callback for when a purchase is finished

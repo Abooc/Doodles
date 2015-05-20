@@ -14,9 +14,5 @@
             android:title="属性"
             support:showAsAction="never" />
 
-        <item
-            android:id="@+id/Jubao"
-            android:title="举报"
-            support:showAsAction="never" />
     </group>
 </menu>
