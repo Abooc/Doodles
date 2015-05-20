@@ -69,8 +69,6 @@ public class MainActivity extends ActionBarActivity implements
 
         initToolbar();
         initDrawerFragment();
-
-        mBillingBuilder = new BillingBuilder(this);
     }
 
     private void initToolbar() {
@@ -148,6 +146,9 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     public BillingBuilder getBillingBuilder(){
+        if(mBillingBuilder == null){
+            mBillingBuilder = new BillingBuilder(this);
+        }
         return mBillingBuilder;
     }
 

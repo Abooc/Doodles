@@ -15,6 +15,7 @@ import org.lee.android.BillingBuilder;
 import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.adview.AdManager;
 import org.lee.android.doodles.adview.PropertiesActivity;
 import org.lee.android.util.Log;
 
@@ -69,7 +70,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
-            mDateText.setText("ERROR: " + errorMessage(errorCode));
+            mDateText.setText("ERROR: " + AdManager.errorMessage(errorCode));
         }
 
         @Override
@@ -109,24 +110,6 @@ public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnM
         mAdView.pause();
     }
 
-    private String errorMessage(int errorCode) {
-        String error = null;
-        switch (errorCode) {
-            case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                error = "ERROR_CODE_INTERNAL_ERROR";
-                break;
-            case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                error = "ERROR_CODE_INVALID_REQUEST";
-                break;
-            case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                error = "ERROR_CODE_NETWORK_ERROR";
-                break;
-            case AdRequest.ERROR_CODE_NO_FILL:
-                error = "ERROR_CODE_NO_FILL";
-                break;
-        }
-        return error;
-    }
 
 //    // Callback for when a purchase is finished
 //    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {

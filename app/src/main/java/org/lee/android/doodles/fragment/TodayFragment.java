@@ -20,10 +20,12 @@ import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.adview.AdManager;
 import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.bean.Month;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
+import org.lee.android.util.Toast;
 
 /**
  * 最新Doodles页面
@@ -61,14 +63,6 @@ public class TodayFragment extends LifecycleFragment implements
         Month monthBean = new Month(2015, 05);
         mCards = DataGeter.getTodayListCards(mCards, monthBean);
     }
-
-    private AdListener mAdListener = new AdListener() {
-        @Override
-        public void onAdLoaded() {
-            Log.anchor();
-            displayInterstitial();
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,6 +158,18 @@ public class TodayFragment extends LifecycleFragment implements
         interstitial.loadAd(adRequest);
         interstitial.setAdListener(mAdListener);
     }
+
+    private AdListener mAdListener = new AdListener() {
+        @Override
+        public void onAdLoaded() {
+            displayInterstitial();
+        }
+
+        @Override
+        public void onAdFailedToLoad(int errorCode) {
+            Toast.show(AdManager.errorMessage(errorCode));
+        }
+    };
 
     // Invoke displayInterstitial() when you are ready to display an interstitial.
     public void displayInterstitial() {

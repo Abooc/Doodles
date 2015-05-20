@@ -19,6 +19,10 @@ import org.lee.android.util.Toast;
  */
 public class BillingBuilder {
 
+    public interface OnInvalidateUi{
+        void onInvalidate();
+    }
+
     // 移除广告
     public static final String SKU_REMOVE_ADS = "remove_ads";
     // (arbitrary) request code for the purchase flow
@@ -56,6 +60,12 @@ public class BillingBuilder {
                 mHelper.queryInventoryAsync(mGotInventoryListener);
             }
         });
+    }
+
+    private OnInvalidateUi mOnInvalidateUi;
+
+    public void setOnInvalidateUi(OnInvalidateUi onInvalidateUi){
+        mOnInvalidateUi = onInvalidateUi;
     }
 
     public IabHelper getIabHelper(){
@@ -146,8 +156,11 @@ public class BillingBuilder {
     };
 
     private void updateUi(){
-        Toast.show(mTank > 0 ?
-                "广告移除成功！" : "出错！");
+//        Toast.show(mTank > 0 ?
+//                "广告移除成功！" : "出错！");
+        if(mOnInvalidateUi != null){
+            mOnInvalidateUi.onInvalidate();
+        }
     }
 
 

@@ -28,6 +28,16 @@
 
     <string name="error_browser_not_found">无法打开网页（未找到浏览器应用程序）。</string>
 
+
+    <string name="preferences_general_heading">常规</string>
+    <string name="preference_title_language">Google涂鸦语言</string>
+    <string name="preference_title_eventlogging_opt_in">发送使用情况报告</string>
+    <string name="preference_summary_eventlogging_opt_in">允许收集关于您使用该应用的信息，以改进该应用</string>
+    <string name="preference_title_logout">退出登录</string>
+    <string name="preference_summary_logout">退出您的维基百科账户</string>
+    <string name="preference_summary_notloggedin">没有登录。</string>
+    <string name="toast_logout_complete">已退出登录</string>
+
     <string name="about_description">关于维基百科应用程序</string>
     <string name="privacy_policy_description">隐私政策</string>
     <string name="terms_of_use_description">使用条款</string>

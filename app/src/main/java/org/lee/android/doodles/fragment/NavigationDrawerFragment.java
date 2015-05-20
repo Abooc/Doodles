@@ -185,8 +185,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         ChangeAccountText.setText(str + "\n" + versionName + " (build:" + versionCode + ")");
     }
 
-
-
     private DrawerMenuItem[] getMenus(String[] names, int[] iconIds) {
         DrawerMenuItem[] menuItems = {
                 new DrawerMenuItem(names[0], iconIds[0]),
@@ -387,9 +385,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public void onClick(View v) {
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(Gravity.START);
-        }
+//        if (mDrawerLayout != null) {
+//            mDrawerLayout.closeDrawer(Gravity.START);
+//        }
         switch (v.getId()) {
             case R.id.Commit:
                 Toast.show("贡献我的涂鸦作品...");
@@ -407,6 +405,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             case R.id.RemoveAd:
                 mBillingBuilder.flagEndAsync();
                 mBillingBuilder.removeAds(mPurchaseFinishedListener);
+
+//                TextView RemoveAdText = (TextView) getView().findViewById(R.id.RemoveAd);
+//                RemoveAdText.setClickable(false);
+//                RemoveAdText.setEnabled(false);
+//                RemoveAdText.setText("无广告VIP版");
                 return;
             case R.id.Settings:
                 SettingsActivity.launch(getActivity());
