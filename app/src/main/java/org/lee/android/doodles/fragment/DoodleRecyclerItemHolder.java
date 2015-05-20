@@ -19,7 +19,7 @@ import org.lee.android.doodles.bean.Doodle;
 import org.lee.android.doodles.volley.VolleyLoader;
 import org.lee.android.util.Toast;
 
-public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
+public class DoodleRecyclerItemHolder extends RecyclerView.ViewHolder implements
         DoodleRecyclerAdapter.Attachable, View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
     public interface OnRecyclerItemClickListener {
@@ -38,7 +38,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder implements
     private final TextView hoverText;
     private final OnRecyclerItemChildClickListener mOnRecyclerItemClickListener;
 
-    public RecyclerItemViewHolder(final View convertView, OnRecyclerItemChildClickListener clicks) {
+    public DoodleRecyclerItemHolder(final View convertView, OnRecyclerItemChildClickListener clicks) {
         super(convertView);
         imageView = (NetworkImageView) convertView.findViewById(R.id.ImageView);
         titleText = (TextView) convertView.findViewById(R.id.Title);

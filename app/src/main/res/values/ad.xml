@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ad_gender_keys">
+        <item>male</item>
+        <item>female</item>
+        <item>unknown</item>
+    </string-array>
+
+    <string-array name="ad_gender_values">
+        <item>男</item>
+        <item>女</item>
+        <item>未知</item>
+    </string-array>
+</resources>

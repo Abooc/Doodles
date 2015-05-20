@@ -11,23 +11,24 @@
         android:orientation="vertical"
         android:padding="6dp">
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/ImageView"
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="250dp"
             android:layout_marginBottom="?android:actionBarSize"
-            android:minHeight="180dp"
-            android:scaleType="centerCrop"
-            android:src="@color/GRAY_LIGHT" />
+            ads:adUnitId="ca-app-pub-1083558812447193/2770531060"
+            ads:adSize="MEDIUM_RECTANGLE"/>
 
         <TextView
-            android:id="@+id/HoverText"
+            android:id="@+id/DateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:layout_marginLeft="40dp"
             android:layout_gravity="bottom"
-            android:text="生效时间：2015-04-16 11:22:23"
+            android:text="..."
             android:textColor="@color/GRAY_DARK"
             android:textSize="12sp"
             android:textStyle="italic" />
@@ -48,9 +49,11 @@
             android:id="@+id/ToolbarMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:background="@color/GRAY_LIGHT"
             android:layout_gravity="bottom|right"
             android:layout_marginTop="-50dp"
-            android:minHeight="?attr/actionBarSize"
+            android:minHeight="?android:actionBarSize"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
     </FrameLayout>

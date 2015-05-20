@@ -34,7 +34,7 @@ import org.lee.android.util.Toast;
  * on 15-2-22.
  */
 public class DoodleArchiveListFragment extends Fragment
-        implements RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
+        implements DoodleRecyclerItemHolder.OnRecyclerItemChildClickListener {
 
     /**
      * Returns a new instance of this fragment for the given section

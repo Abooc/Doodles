@@ -1,18 +1,17 @@
 package org.lee.android.doodles.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.lee.android.billing.util.IabHelper;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.bean.Month;
-import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemChildClickListener;
+import org.lee.android.doodles.fragment.DoodleRecyclerItemHolder.OnRecyclerItemChildClickListener;
 import org.lee.android.doodles.widget.AdViewHolder;
+import org.lee.android.util.Log;
 
 public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -20,8 +19,6 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private OnRecyclerItemChildClickListener mOnItemClickListener;
     private LayoutInflater mInflater;
     private Activity mActivity;
-
-    IabHelper mHelper;
 
     public static class Card {
         public int type;
@@ -77,20 +74,36 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch (viewType) {
             case Card.TYPE_VIEW_HEADER:
                 view = mInflater.inflate(R.layout.doodle_list_item_header, parent, false);
-                return HeaderViewHolder.newInstance(view, mOnItemClickListener);
+                return new HeaderViewHolder(view, mOnItemClickListener);
             case Card.TYPE_VIEW_FOOTER:
                 view = mInflater.inflate(R.layout.doodle_list_item_footer, parent, false);
                 return new FooterViewHolder(view, mOnItemClickListener);
             case Card.TYPE_VIEW_TODAY_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_today_doodle_item, parent, false);
-                return new RecyclerItemViewHolder(view, mOnItemClickListener);
+                return new DoodleRecyclerItemHolder(view, mOnItemClickListener);
             case Card.TYPE_VIEW_ADVIEW:
                 view = mInflater.inflate(R.layout.doodle_list_item_adview, parent, false);
                 return new AdViewHolder(view, mActivity);
             default:
                 TYPE_VIEW_DOODLE:
                 view = mInflater.inflate(R.layout.fragment_doodles_list_item, parent, false);
-                return new RecyclerItemViewHolder(view, mOnItemClickListener);
+                return new DoodleRecyclerItemHolder(view, mOnItemClickListener);
+        }
+    }
+
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        if(holder.getItemViewType() == Card.TYPE_VIEW_ADVIEW){
+            AdViewHolder adViewHolder = (AdViewHolder) holder;
+            adViewHolder.resume();
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        if(holder.getItemViewType() == Card.TYPE_VIEW_ADVIEW){
+            AdViewHolder adViewHolder = (AdViewHolder) holder;
+            adViewHolder.pause();
         }
     }
 
@@ -116,7 +129,6 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 mOnRecyclerItemClickListener.onItemChildClick(v, getAdapterPosition());
         }
 
-
         @Override
         public void attachData(Object o) {
             Month month = (Month) o;
@@ -138,10 +150,6 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             mListener = listener;
             itemView.findViewById(R.id.ArchiveDoodles).setOnClickListener(this);
             itemView.findViewById(R.id.AdView).setOnClickListener(this);
-        }
-
-        public static RecyclerView.ViewHolder newInstance(View view, OnRecyclerItemChildClickListener listener) {
-            return new HeaderViewHolder(view, listener);
         }
 
         @Override

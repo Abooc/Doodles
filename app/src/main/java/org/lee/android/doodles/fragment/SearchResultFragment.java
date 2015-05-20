@@ -27,7 +27,7 @@ import org.lee.android.util.Log;
  * 搜索Doodles结果页面
  */
 public class SearchResultFragment extends Fragment implements
-        RecyclerItemViewHolder.OnRecyclerItemChildClickListener {
+        DoodleRecyclerItemHolder.OnRecyclerItemChildClickListener {
 
     /**
      *

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceScreen
+        android:enabled="true"
+        android:key="removeAd"
+        android:title="移除广告" />
+
+    <PreferenceCategory android:title="按性别展示广告">
+
+        <CheckBoxPreference
+            android:checked="true"
+            android:key="all_gender"
+            android:summary="展示所有性别相关的广告内容"
+            android:title="所有性别" />
+
+        <ListPreference
+            android:enabled="false"
+            android:entries="@array/ad_gender_values"
+            android:entryValues="@array/ad_gender_keys"
+            android:key="gender"
+            android:summary="真实的性别有助于展示您感兴趣的广告"
+            android:title="选择特定性别" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="按年龄展示广告">
+
+        <EditTextPreference
+            android:enabled="false"
+            android:key="birthday"
+            android:summary="有效的生日有助于您感兴趣的广告"
+            android:title="设置生日" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

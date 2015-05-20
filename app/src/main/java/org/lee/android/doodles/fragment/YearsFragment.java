@@ -16,7 +16,7 @@ import android.widget.TextView;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
-import org.lee.android.doodles.fragment.RecyclerItemViewHolder.OnRecyclerItemClickListener;
+import org.lee.android.doodles.fragment.DoodleRecyclerItemHolder.OnRecyclerItemClickListener;
 
 import java.io.Serializable;
 

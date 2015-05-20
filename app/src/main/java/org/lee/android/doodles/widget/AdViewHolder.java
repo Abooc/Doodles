@@ -5,45 +5,102 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.lee.android.BillingBuilder;
 import org.lee.android.billing.util.IabHelper;
 import org.lee.android.billing.util.IabResult;
 import org.lee.android.billing.util.Purchase;
+import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.activity.MainActivity;
+import org.lee.android.doodles.adview.PropertiesActivity;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * 广告
  */
 public class AdViewHolder extends RecyclerView.ViewHolder implements Toolbar.OnMenuItemClickListener {
 
-    // 移除广告
-    static final String SKU_REMOVE_ADS = "remove_ads";
-    // (arbitrary) request code for the purchase flow
-    static final int RC_REQUEST = 10001;
-    int mTank;
-    // The helper object
-    IabHelper mHelper;
+    private Activity mActivity;
     private BillingBuilder mBillingBuilder;
+    private TextView mDateText;
+    private AdView mAdView;
 
     public AdViewHolder(View itemView, Activity activity) {
         super(itemView);
+        mActivity = activity;
         MainActivity mainActivity = (MainActivity) activity;
         mBillingBuilder = mainActivity.getBillingBuilder();
+
+        mDateText = (TextView) itemView.findViewById(R.id.DateTime);
 
         Toolbar toolbar = (Toolbar) itemView.findViewById(R.id.ToolbarMenu);
         toolbar.setOnMenuItemClickListener(this);
         toolbar.inflateMenu(R.menu.adview_menu);
+
+        mAdView = (AdView)itemView.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(DefaultBuild.MEDIUM_RECTANGLE_AD_UNIT_ID)
+                .build();
+        mAdView.setAdListener(mAdListener);
+        mAdView.loadAd(adRequest);
+
     }
+
+    private AdListener mAdListener = new AdListener() {
+        @Override
+        public void onAdLoaded() {
+            DateFormat format = DateFormat.getDateTimeInstance();
+            mDateText.setText(format.format(new Date()));
+        }
+
+        @Override
+        public void onAdClosed() {
+        }
+
+        @Override
+        public void onAdFailedToLoad(int errorCode) {
+        }
+
+        @Override
+        public void onAdLeftApplication() {
+        }
+
+        @Override
+        public void onAdOpened() {
+        }
+    };
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        mBillingBuilder.flagEndAsync();
-        mBillingBuilder.removeAds(null);
+        switch (menuItem.getItemId()){
+            case R.id.RemoveAd:
+                mBillingBuilder.flagEndAsync();
+                mBillingBuilder.removeAds(null);
+                break;
+            case R.id.Properties:
+                PropertiesActivity.launch(mActivity);
+                break;
+        }
         return false;
+    }
+
+    public void resume() {
+        mAdView.resume();
+    }
+
+    public void pause() {
+        mAdView.pause();
     }
 
 //    // Callback for when a purchase is finished
