@@ -207,7 +207,7 @@ public class DoodleDetailsFragment extends LifecycleFragment implements Animatio
                 R.layout.fragment_doodles_detail, getActivity());
         TransitionManager.go(scene);
         // Note that we need to bind views with data after we call TransitionManager.go().
-        bindDetail(scene.getSceneRoot().findViewById(R.id.CardView), mDoodle);
+        bindDetail(scene.getSceneRoot(), mDoodle);
 //        bind(scene.getSceneRoot().findViewById(R.id.CardView), mDoodle);
     }
 

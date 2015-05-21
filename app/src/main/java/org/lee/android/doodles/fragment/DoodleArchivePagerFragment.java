@@ -119,7 +119,7 @@ public class DoodleArchivePagerFragment extends LifecycleFragment {
         for (; month > 0; month--) {
             Bundle args = new Bundle();
             args.putInt("year", Integer.valueOf(year.year));
-            args.putInt("month", month);
+            args.putInt("monthOfYear", month);
 
             tabInfo = new TabInfo((month < 10 ? "0" + month : month) + "月份",
                     DoodleArchiveListFragment.class, args);

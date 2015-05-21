@@ -79,6 +79,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.loopj.android:android-async-http:1.4.7'
 }
 
 // The next block is for setting the release signing config from a file outside the git repo

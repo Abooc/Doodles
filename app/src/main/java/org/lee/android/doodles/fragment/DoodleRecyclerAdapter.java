@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.lee.android.doodles.R;
-import org.lee.android.doodles.bean.Month;
+import org.lee.android.doodles.bean.Today;
 import org.lee.android.doodles.fragment.DoodleRecyclerItemHolder.OnRecyclerItemChildClickListener;
 import org.lee.android.doodles.widget.AdViewHolder;
 import org.lee.android.util.Log;
@@ -146,9 +146,9 @@ public class DoodleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @Override
         public void attachData(Object o) {
-            Month month = (Month) o;
+            Today today = (Today) o;
             String date = (String) mArchiveDate.getText();
-            date = String.format(date, Integer.valueOf(month.year), month.month);
+            date = String.format(date, Integer.valueOf(today.year), today.monthOfYear);
             mArchiveDate.setText(date);
         }
     }

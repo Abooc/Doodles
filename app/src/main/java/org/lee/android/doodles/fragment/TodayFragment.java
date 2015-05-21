@@ -9,11 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import org.apache.http.Header;
+import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.LifecycleFragment;
@@ -22,10 +28,13 @@ import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.adview.AdManager;
 import org.lee.android.doodles.bean.Doodle;
-import org.lee.android.doodles.bean.Month;
+import org.lee.android.doodles.bean.Today;
+import org.lee.android.doodles.volley.HttpHandler;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
+
+import java.io.IOException;
 
 /**
  * 最新Doodles页面
@@ -43,8 +52,11 @@ public class TodayFragment extends LifecycleFragment implements
     private RecyclerView.OnScrollListener mOnScrollListener;
     private DoodleRecyclerAdapter.Card[] mCards;
     private MainActivity mMainActivity;
+    private View mProgressBar;
+    private TextView mMessageText;
 
     private InterstitialAd interstitial;
+    private OkHttpClient client = new OkHttpClient();
 
     @Override
     public void onAttach(Activity activity) {
@@ -57,11 +69,47 @@ public class TodayFragment extends LifecycleFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.anchor();
-        Doodle[] mDoodles = DataGeter.getDoodles();
-        mCards = DataGeter.toCards(mDoodles);
-        Month monthBean = new Month(2015, 05);
-        mCards = DataGeter.getTodayListCards(mCards, monthBean);
+        Today today = DefaultBuild.defaultMonth();
+        new ApiClient(mMainActivity).requestDoodles(today.year, today.monthOfYear, iHttpHandler);
+    }
+
+    private HttpHandler iHttpHandler = new HttpHandler<Doodle[]>() {
+
+        @Override
+        public void onStart() {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onFinish() {
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onSuccess(int i, Header[] headers, String response, Doodle[] doodles) {
+            Log.anchor();
+            mCards = DataGeter.toCards(doodles);
+            Today today = DefaultBuild.defaultMonth();
+            mCards = DataGeter.getTodayListCards(mCards, today);
+
+            initRecyclerView(getView());
+        }
+
+        @Override
+        public void onFailure(int statusCode, String error) {
+            mMessageText.setVisibility(View.VISIBLE);
+            mMessageText.setText(error);
+            Log.anchor();
+        }
+    };
+
+    String run(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
     }
 
     @Override
@@ -73,12 +121,17 @@ public class TodayFragment extends LifecycleFragment implements
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initRecyclerView(view);
+        mProgressBar = view.findViewById(android.R.id.progress);
+        mMessageText = (TextView) view.findViewById(android.R.id.text1);
 
+        if(mCards != null){
+            initRecyclerView(view);
+        }
     }
 
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         int paddingTop = Utils.getToolbarHeight(getActivity());
@@ -193,6 +246,11 @@ public class TodayFragment extends LifecycleFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mOnScrollListener = null;
+        client = null;
+        interstitial = null;
+        mMainActivity = null;
+        mCards = null;
         Log.anchor();
     }
 }

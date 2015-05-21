@@ -13,15 +13,17 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.loopj.android.http.TextHttpResponseHandler;
+import com.google.gson.Gson;
 
 import org.apache.http.Header;
+import org.apache.http.HttpStatus;
 import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.activity.MainActivity;
 import org.lee.android.doodles.bean.Doodle;
-import org.lee.android.doodles.bean.Month;
+import org.lee.android.doodles.bean.Today;
+import org.lee.android.doodles.volley.HttpHandler;
 import org.lee.android.test.data.DataGeter;
 import org.lee.android.util.Log;
 import org.lee.android.util.Toast;
@@ -48,8 +50,6 @@ public class DoodleArchiveListFragment extends Fragment
 
     private MessageView mMessageView;
 
-    private ApiClient mApiClient = new ApiClient();
-
     public DoodleArchiveListFragment() {
     }
 
@@ -65,8 +65,7 @@ public class DoodleArchiveListFragment extends Fragment
 
     }
 
-    private int year;
-    private int month;
+    private Today mToday;
     private DoodleRecyclerAdapter.Card[] mCards;
 
     @Override
@@ -74,20 +73,57 @@ public class DoodleArchiveListFragment extends Fragment
         super.onCreate(savedInstanceState);
         Doodle[] mDoodles = DataGeter.getDoodles();
         if (mDoodles == null || mDoodles.length == 0) return;
-        year = getArguments().getInt("year");
-        month = getArguments().getInt("month");
+        int year = getArguments().getInt("year");
+        int month = getArguments().getInt("monthOfYear");
+        mToday = new Today(year, month, 0);
 
-        mCards = DataGeter.toCards(mDoodles);
-        Month monthBean = new Month(year, month);
-        mCards = DataGeter.getListCards(mCards, monthBean);
-        Log.anchor(monthBean.toString());
+        if(savedInstanceState == null){
+            new ApiClient().requestDoodles(mToday.year, mToday.monthOfYear, iHttpHandler);
+        }else {
+            doodlesJson = savedInstanceState.getString("data");
+            if(TextUtils.isEmpty(doodlesJson)) return;
+            Gson gson = new Gson();
+            Doodle[] doodles = gson.fromJson(doodlesJson, Doodle[].class);
+            iHttpHandler.onSuccess(HttpStatus.SC_OK, null, doodlesJson, doodles);
+        }
     }
+
+    private HttpHandler iHttpHandler = new HttpHandler<Doodle[]>() {
+
+        @Override
+        public void onStart() {
+            mMessageView.setVisibility(View.VISIBLE);
+            mMessageView.loading();
+        }
+
+        @Override
+        public void onFinish() {
+            mMessageView.stop();
+        }
+
+        @Override
+        public void onSuccess(int i, Header[] headers, String response, Doodle[] doodles) {
+            Log.anchor();
+            doodlesJson = response;
+            mCards = DataGeter.toCards(doodles);
+            mCards = DataGeter.getListCards(mCards, mToday);
+
+            mMessageView.setVisibility(View.INVISIBLE);
+            initRecyclerView(getView());
+        }
+
+        @Override
+        public void onFailure(int statusCode, String error) {
+            mMessageView.setMessage(error);
+            Log.anchor();
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.anchor(savedInstanceState);
-        Log.anchor("year:" + year + ", month:" + month);
+        Log.anchor("year:" + mToday.year + ", monthOfYear:" + mToday.monthOfYear);
         View rootView = inflater.inflate(R.layout.fragment_doodles_list, container, false);
         return rootView;
     }
@@ -95,23 +131,21 @@ public class DoodleArchiveListFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mMessageView = (MessageView) view.findViewById(R.id.MessageView);
-        initRecyclerView(view);
 
-        if (TextUtils.isEmpty(doodlesJson)) {
-//            mApiClient.requestDoodles(year, month, callbacks);
-        } else {
-            Log.anchor("year:" + year + ", month:" + month + ", from savedInstanceState");
+        if(mCards != null){
+            initRecyclerView(view);
         }
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        Log.anchor("year:" + year + ", month:" + month);
+        Log.anchor("year:" + mToday.year + ", monthOfYear:" + mToday.monthOfYear);
     }
 
     private void initRecyclerView(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
         int toolbarHeight = Utils.getToolbarHeight(getActivity());
@@ -144,36 +178,6 @@ public class DoodleArchiveListFragment extends Fragment
 
     }
 
-    /**
-     * 请求Doodles列表回调
-     */
-    private TextHttpResponseHandler callbacks = new TextHttpResponseHandler() {
-        @Override
-        public void onStart() {
-            Log.anchor();
-            mMessageView.setVisibility(View.VISIBLE);
-            mMessageView.loading();
-
-        }
-
-        @Override
-        public void onFinish() {
-            Log.anchor();
-            mMessageView.stop();
-        }
-
-        @Override
-        public void onFailure(int i, Header[] headers, String sources, Throwable throwable) {
-            mMessageView.setMessage(throwable.getMessage());
-            mMessageView.setRetryEnable(true);
-        }
-
-        @Override
-        public void onSuccess(int i, Header[] headers, String sources) {
-            mMessageView.setVisibility(View.GONE);
-        }
-    };
-
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         return AnimationUtils.loadAnimation(getActivity(),
@@ -186,7 +190,7 @@ public class DoodleArchiveListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         if (!TextUtils.isEmpty(doodlesJson)) {
             outState.putString("data", doodlesJson);
-            Log.anchor("year:" + year + ", month:" + month);
+            Log.anchor("year:" + mToday.year + ", monthOfYear:" + mToday.monthOfYear);
         }
     }
 
@@ -200,6 +204,7 @@ public class DoodleArchiveListFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
+        doodlesJson = null;
         Log.anchor();
     }
 }

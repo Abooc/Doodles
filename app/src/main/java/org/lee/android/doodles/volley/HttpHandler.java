@@ -10,6 +10,7 @@ import org.lee.android.util.Log;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.SocketTimeoutException;
 
 /**
  * @author liruiyu allnet@live.cn
@@ -71,7 +72,8 @@ public abstract class HttpHandler<T> extends BaseJsonHttpResponseHandler<T> {
     public abstract void onFailure(int statusCode, String error);
 
     private String getErrorMessage(Throwable throwable) {
-        if (throwable instanceof ConnectTimeoutException) {
+        if (throwable instanceof ConnectTimeoutException
+                || throwable instanceof SocketTimeoutException) {
             return "网络请求超时，请稍后重试！";
         } else if (throwable instanceof IOException) {
             return "请检查网络连接是否可用！";

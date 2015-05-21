@@ -28,7 +28,7 @@
             android:id="@+id/ImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="140dp"
+            android:minHeight="120dp"
             android:scaleType="centerCrop"
             android:src="@color/GRAY_LIGHT" />
 
@@ -36,8 +36,7 @@
             android:id="@+id/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
+            android:layout_marginRight="60dp"
             android:text="2015春节"
             android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
             android:textColor="@color/GRAY_DARK" />

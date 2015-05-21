@@ -66,6 +66,7 @@ public class YearsFragment extends Fragment implements OnRecyclerItemClickListen
         mYears = loadYears(mActivity);
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
         int toolbarHeight = Utils.getToolbarHeight(getActivity());
 //        int slidingTabLayoutHeight = getActivity().findViewById(R.id.SlidingTabs).getHeight();
         recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight + toolbarHeight,

@@ -1,6 +1,9 @@
 package org.lee.android.doodles;
 
+import org.lee.android.doodles.bean.Today;
 import org.lee.android.doodles.fragment.YearsFragment;
+
+import java.util.Calendar;
 
 /**
  * Created by author:李瑞宇
@@ -20,6 +23,18 @@ public class DefaultBuild {
      */
     public static YearsFragment.Year defaultYear(){
         return new YearsFragment.Year(2015, "i_2002");
+    }
+
+    /**
+     * 默认的月份
+     * @return
+     */
+    public static Today defaultMonth(){
+        Calendar iCalendar = Calendar.getInstance();
+        int year = iCalendar.get(Calendar.YEAR);
+        int month = iCalendar.get(Calendar.MONTH) + 1;
+        int day = iCalendar.get(Calendar.DAY_OF_MONTH);
+        return new Today(year, month, day);
     }
 
     /**
