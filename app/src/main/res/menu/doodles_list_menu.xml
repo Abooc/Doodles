@@ -7,12 +7,10 @@
         <item
             android:id="@+id/Favorite"
             android:title="收藏"
-            android:icon="@drawable/abc_ratingbar_full_material"
             support:showAsAction="always" />
 
         <item
             android:id="@+id/Search"
-            android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
             android:title="搜索更多内容"
             support:showAsAction="never|collapseActionView" />
 

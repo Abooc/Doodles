@@ -78,7 +78,7 @@ public class DoodleArchiveListFragment extends Fragment
         mToday = new Today(year, month, 0);
 
         if(savedInstanceState == null){
-            new ApiClient().requestDoodles(mToday.year, mToday.monthOfYear, iHttpHandler);
+            new ApiClient(mActivity).requestDoodles(mToday.year, mToday.monthOfYear, iHttpHandler);
         }else {
             doodlesJson = savedInstanceState.getString("data");
             if(TextUtils.isEmpty(doodlesJson)) return;

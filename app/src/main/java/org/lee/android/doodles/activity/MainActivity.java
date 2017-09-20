@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import org.lee.android.doodles.AppFunction;
 import org.lee.android.doodles.FragmentHandlerAdapter;
 import org.lee.android.doodles.FragmentHandlerAdapter.TabInfo;
 import org.lee.android.doodles.FragmentLifecycle;
+import org.lee.android.doodles.OnBackPressedEnable;
 import org.lee.android.doodles.R;
 import org.lee.android.doodles.Utils;
 import org.lee.android.doodles.fragment.DoodleArchivePagerFragment;
@@ -43,7 +45,7 @@ import org.lee.android.util.Log;
  * email:allnet@live.cn
  * on 15-2-22.
  */
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends AppCompatActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentLifecycle {
 
     /**
@@ -119,6 +121,7 @@ public class MainActivity extends ActionBarActivity implements
                 .setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
+    private boolean isShowing;
     public HidingScrollListener getHidingScrollListener() {
         return new HidingScrollListener(this) {
 
@@ -126,10 +129,15 @@ public class MainActivity extends ActionBarActivity implements
             public void onMoved(int distance, int dx, int dy) {
 //                mToolbarContainerDrawable.setAlpha(255 - Math.min(255, distance * 2));
                 mToolbarContainer.setTranslationY(-distance);
+                if(mToolbarHeight == distance){
+                    isShowing = false;
+                }else
+                    isShowing = true;
             }
 
             @Override
             public void onShow() {
+                isShowing = true;
                 Log.anchor();
 //                mToolbarContainerDrawable.setAlpha(0);
                 showToolbar();
@@ -137,6 +145,7 @@ public class MainActivity extends ActionBarActivity implements
 
             @Override
             public void onHide() {
+                isShowing = false;
                 Log.anchor();
 //                mToolbarContainerDrawable.setAlpha(254);
                 hideToolbar();
@@ -145,8 +154,8 @@ public class MainActivity extends ActionBarActivity implements
         };
     }
 
-    public BillingBuilder getBillingBuilder(){
-        if(mBillingBuilder == null){
+    public BillingBuilder getBillingBuilder() {
+        if (mBillingBuilder == null) {
             mBillingBuilder = new BillingBuilder(this);
         }
         return mBillingBuilder;
@@ -185,9 +194,10 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * 开启搜索框
+     *
      * @param item
      */
-    private void openSearch(MenuItem item){
+    private void openSearch(MenuItem item) {
         SearchView iSearchView = (SearchView) item.getActionView();
         iSearchView.setQueryHint("搜索涂鸦");
         iSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -223,9 +233,18 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        showToolbar();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+
     }
+
+    private Fragment mDetailsFragment;
 
     @Override
     public void onFragmentStart(Fragment fragment) {
@@ -237,8 +256,8 @@ public class MainActivity extends ActionBarActivity implements
             mSlidingTabLayout.setVisibility(View.VISIBLE);
 
             DoodleArchivePagerFragment pagerFragment = (DoodleArchivePagerFragment) fragment;
-            ViewPager pager = pagerFragment.getPager();
-            mSlidingTabLayout.setViewPager(pager);
+//            ViewPager pager = pagerFragment.getPager();
+//            mSlidingTabLayout.setViewPager(pager);
             if (pagerFragment.mHasYearPage) {
                 mNavigationDrawerFragment.drawerOnMenu();
                 mNavigationDrawerFragment.setHasOptionsMenu(true);
@@ -252,6 +271,7 @@ public class MainActivity extends ActionBarActivity implements
             mNavigationDrawerFragment.setMenuSelection(0);
             mNavigationDrawerFragment.drawerOnMenu();
         } else if (fragment instanceof DoodleDetailsFragment) {
+            mDetailsFragment = fragment;
             mNavigationDrawerFragment.drawerOnBack();
 
             mSlidingTabLayout.setVisibility(View.GONE);
@@ -277,6 +297,8 @@ public class MainActivity extends ActionBarActivity implements
             if (!pagerFragment.mHasYearPage) {
                 mNavigationDrawerFragment.drawerOnMenu();
             }
+
+            mDetailsFragment = null;
         }
     }
 
@@ -295,10 +317,20 @@ public class MainActivity extends ActionBarActivity implements
             mNavigationDrawerFragment.toggleDrawer();
             return;
         }
-        if (AppFunction.hideKeyboard(this)) {
-            getWindow().getDecorView().requestFocus();
-            Log.anchor();
+//        if (AppFunction.hideKeyboard(this)) {
+//            getWindow().getDecorView().requestFocus();
+//            Log.anchor();
+//            return;
+//        }
+
+        if(!isShowing){
+            showToolbar();
             return;
+        }
+
+        if (mDetailsFragment != null && mDetailsFragment instanceof OnBackPressedEnable) {
+            if (((OnBackPressedEnable) mDetailsFragment).onBackPressed())
+                return;
         }
         super.onBackPressed();
     }

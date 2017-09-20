@@ -3,7 +3,6 @@ package org.lee.android.doodles.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +17,7 @@ import org.lee.android.doodles.CustomFragmentPagerAdapter;
 import org.lee.android.doodles.CustomFragmentPagerAdapter.TabInfo;
 import org.lee.android.doodles.LifecycleFragment;
 import org.lee.android.doodles.R;
+import org.lee.android.doodles.ViewPager;
 import org.lee.android.doodles.fragment.YearsFragment.Year;
 import org.lee.android.util.Log;
 

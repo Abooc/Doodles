@@ -19,7 +19,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import org.apache.http.Header;
-import org.lee.android.doodles.ApiClient;
 import org.lee.android.doodles.AppApplication;
 import org.lee.android.doodles.DefaultBuild;
 import org.lee.android.doodles.LifecycleFragment;
@@ -70,7 +69,7 @@ public class TodayFragment extends LifecycleFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Today today = DefaultBuild.defaultMonth();
-        new ApiClient(mMainActivity).requestDoodles(today.year, today.monthOfYear, iHttpHandler);
+//        new ApiClient(mMainActivity).requestDoodles(today.year, today.monthOfYear, iHttpHandler);
     }
 
     private HttpHandler iHttpHandler = new HttpHandler<Doodle[]>() {
@@ -88,11 +87,7 @@ public class TodayFragment extends LifecycleFragment implements
         @Override
         public void onSuccess(int i, Header[] headers, String response, Doodle[] doodles) {
             Log.anchor();
-            mCards = DataGeter.toCards(doodles);
-            Today today = DefaultBuild.defaultMonth();
-            mCards = DataGeter.getTodayListCards(mCards, today);
-
-            initRecyclerView(getView());
+            attachData(doodles);
         }
 
         @Override
@@ -102,6 +97,14 @@ public class TodayFragment extends LifecycleFragment implements
             Log.anchor();
         }
     };
+
+    private void attachData(Doodle[] doodles){
+        mCards = DataGeter.toCards(doodles);
+        Today today = DefaultBuild.defaultMonth();
+        mCards = DataGeter.getTodayListCards(mCards, today);
+
+        initRecyclerView(getView());
+    }
 
     String run(String url) throws IOException {
         Request request = new Request.Builder()
@@ -127,6 +130,10 @@ public class TodayFragment extends LifecycleFragment implements
         if(mCards != null){
             initRecyclerView(view);
         }
+
+        mProgressBar.setVisibility(View.INVISIBLE);
+        Doodle[] doodles = DataGeter.getDoodles();
+        attachData(doodles);
     }
 
     private void initRecyclerView(View view) {

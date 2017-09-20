@@ -75,7 +75,6 @@
                 android:layout_height="wrap_content"
                 android:background="#4c8aff"
                 android:clickable="true"
-                android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
                 android:padding="4dp"
                 android:text="搜索更多信息"
                 android:textColor="@color/color_clickable_white_gray"
